@@ -1,240 +1,112 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
-    <title>Infos - Polyjoule</title>
-    <style>
-        :root {
-            --primary-color: #1B6FFF;
-            --secondary-color: #332780;
-            --background-color: #f4f4f4;
-            --text-color: #333;
-            --font-family: 'Arial', sans-serif;
-        }
-
-
-        .container {
-            max-width: 1200px;
-            margin: auto;
-            padding: 10px;
-            text-align: center;
-        }
-
-
-
-        .timeline {
-    white-space: nowrap;
-    overflow-x: auto;
-    width: max-content; /* s'adapte à la largeur du contenu */
-    margin: 0 ;
-    padding-top: 100px; /* espace depuis le haut */
-    padding-bottom: 100px; /* espace depuis le bas */
-    position: relative ; /* pas besoin de absolute ici */
-    left: 0 ;
-    max-width: 100% !important; /* s'assure que la timeline ne dépasse pas la largeur de l'écran */
-}
-
-.timeline ol {
-    font-size: 0;
-    display: flex;
-    align-items: flex-start;
-    padding: 250px 20px;
-    margin: 0;
-    width: max-content; /* s'adapte à la largeur du contenu */
-    
-}
-
-
-  
-        
-  .timeline ol li {
-    position: relative;
-    display: inline-block;
-    list-style-type: none;
-    width: 160px;
-    height: 3px;
-    background: #fff;
-  }
-  
-  .timeline ol li:last-child {
-    width: 280px;
-  }
-  
-  .timeline ol li:not(:first-child) {
-    margin-left: 14px;
-  }
-  
-  .timeline ol li:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: calc(100% + 1px);
-    bottom: 0;
-    width: 12px;
-    height: 12px;
-    transform: translateY(-50%);
-    border-radius: 50%;
-    background: #F45B69;
-  }
-  
-  .timeline ol li div {
-    position: absolute;
-    left: calc(100% + 7px);
-    width: 280px;
-    padding: 15px;
-    font-size: 1rem;
-    white-space: normal;
-    color: black;
-    background: white;
-  }
-  
-  .timeline ol li div::before {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 0;
-    height: 0;
-    border-style: solid;
-  }
-  
-  .timeline ol li:nth-child(odd) div {
-    top: -16px;
-    transform: translateY(-100%);
-  }
-  
-  .timeline ol li:nth-child(odd) div::before {
-    top: 100%;
-    border-width: 8px 8px 0 0;
-    border-color: white transparent transparent transparent;
-  }
-  
-  .timeline ol li:nth-child(even) div {
-    top: calc(100% + 16px);
-  }
-  
-  .timeline ol li:nth-child(even) div::before {
-    top: -8px;
-    border-width: 8px 0 0 8px;
-    border-color: transparent transparent transparent white;
-  }
-
-
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/polyjoule.css">
+  <title>Palmarès - Polyjoule</title>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+      <div class="container">
+        <a class="navbar-brand" href="home.html">Polyjoule</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Basculer la navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-lg-5 mb-2 mb-lg-0 gap-lg-2">
+            <li class="nav-item"><a class="nav-link" href="home.html">Accueil</a></li>
+            <li class="nav-item"><a class="nav-link" href="Presentation_de_l_asso.html">Présentation</a></li>
+            <li class="nav-item"><a class="nav-link" href="historique.html">Historique</a></li>
+            <li class="nav-item"><a class="nav-link active" aria-current="page" href="palmares.html">Palmarès</a></li>
+            <li class="nav-item"><a class="nav-link" href="infos_vehicule.html">Véhicules</a></li>
+            <li class="nav-item"><a class="nav-link" href="calendrier-updated.html">Calendrier</a></li>
+            <li class="nav-item"><a class="nav-link" href="gallery.html">Galerie</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="flex-grow-1 py-5">
     <div class="container">
-        <nav>
-            <ul class="nav__links nav__left">
-                <li><a href="home.html" class="logo">Accueil</a></li>
-                <li><a href="../historique.html">Historique</a></li>
-            </ul>
-            <ul class="nav__links nav__right">
-                <li><a href="../calendrier-updated.html">Calendrier</a></li>
-                <li><a href="../gallery.html">Gallerie</a></li>
-            </ul>
-        </nav>
-       
-        
-        
+      <div class="text-center mb-5">
+        <span class="badge badge-soft-primary">Records &amp; distinctions</span>
+        <h1 class="mt-3 fw-bold text-primary">Palmarès Polyjoule</h1>
+        <p class="text-secondary mb-0">
+          Depuis 2005, Polyjoule remporte des compétitions internationales et signe des performances énergétiques de
+          référence en Europe.
+        </p>
+      </div>
 
-
-        
-<div class="timeline">
-    <ol>
-      <li>
-        <div>
-          <time>2015</time> CHIWEN B.V. established
+      <div class="timeline-horizontal">
+        <div class="timeline-scroll overflow-auto pb-3">
+          <div class="timeline-card">
+            <span class="timeline-year">2022</span>
+            <h3 class="h5 fw-bold">7051 km/LEE à l’Eco Green Gas</h3>
+            <p class="text-secondary mb-0">Retour gagnant sur piste : le prototype électrique atteint une performance
+              record à Fay-de-Bretagne.</p>
+          </div>
+          <div class="timeline-card">
+            <span class="timeline-year">2019</span>
+            <h3 class="h5 fw-bold">Record Cityjoule : 2853 km/LEE</h3>
+            <p class="text-secondary mb-0">Performance Urban Concept électrique sur le site Toyota France lors de
+              l’EducEco Onnaing.</p>
+          </div>
+          <div class="timeline-card">
+            <span class="timeline-year">2016</span>
+            <h3 class="h5 fw-bold">Double victoire hydrogène</h3>
+            <p class="text-secondary mb-0">Cityjoule s’impose à l’EducEco de Valenciennes et au Shell Eco Marathon de
+              Londres.</p>
+          </div>
+          <div class="timeline-card">
+            <span class="timeline-year">2015</span>
+            <h3 class="h5 fw-bold">12 788 km/LEE en solaire</h3>
+            <p class="text-secondary mb-0">Cityjoule bat le record du monde Urban Concept solaire à l’EducEco de
+              Colomiers.</p>
+          </div>
+          <div class="timeline-card">
+            <span class="timeline-year">2014</span>
+            <h3 class="h5 fw-bold">6 329 km/LEE en hydrogène</h3>
+            <p class="text-secondary mb-0">Le prototype Polyjoule pulvérise le record mondial lors de l’EducEco.</p>
+          </div>
+          <div class="timeline-card">
+            <span class="timeline-year">2013</span>
+            <h3 class="h5 fw-bold">Cityjoule dévoilé</h3>
+            <p class="text-secondary mb-0">Inauguration du véhicule Urban Concept et double record pour sa première
+              saison de compétition.</p>
+          </div>
+          <div class="timeline-card">
+            <span class="timeline-year">2012</span>
+            <h3 class="h5 fw-bold">10 017 km/LEE électrique</h3>
+            <p class="text-secondary mb-0">Record mondial du prototype Polyjoule à l’EducEco de Nogaro.</p>
+          </div>
+          <div class="timeline-card">
+            <span class="timeline-year">2010</span>
+            <h3 class="h5 fw-bold">Victoire au Shell Eco Marathon</h3>
+            <p class="text-secondary mb-0">Polyjoule remporte la catégorie hydrogène à Lausitz avec 4872 km/LEE.</p>
+          </div>
         </div>
-      </li>
-      <li>
-        <div>
-          <time>2016</time> Established long-term research partnership with University of Groningen
-        </div>
-      </li>
-      <li>
-        <div>
-          <time>2017</time> Research on machine learning, deep learning, distributed training, brain-inspired pattern recognition algorithms, Neo4J and Blockchain, and distributed computing
-        </div>
-      </li>
-      <li>
-        <div>
-          <time>2018 Jan-Mar</time> Started TuDoLink project Team building Project Feasibility Analysis
-        </div>
-      </li>
-      <li>
-        <div>
-          <time>2018 Apr-Jul</time> System Framework Design Social Interaction Optimize Partnerships Optimize Business Plan Seed Funding Prepare MVP Prepare Pre-ICO Active on Social Media
-        </div>
-      </li>
-      <li>
-        <div>
-          <time>2018 Aug-Dec</time> MVP Development Collect Feedbacks of MVP Improve and Update MVP Optimize Team Development Optimize Business Development Release System Beta V1.0 System Testing Prepare ICO Prepare to List
-        </div>
-      </li>
-      <li>
-        <div>
-          <time>2019 Jan-Jun</time> ICO List Tokens Release APP & Trading Platform V1.0 Works on most of CPUs, GPUs, VPUs Distribute Globally
-        </div>
-      </li>
-      <li>
-        <div>
-          <time>2019 Jan-Jun</time> ICO List Tokens Release APP & Trading Platform V1.0 Works on most of CPUs, GPUs, VPUs Distribute Globally
-        </div>
-      </li>
-      <li>
-        <div>
-          <time>2019 Jan-Jun</time> ICO List Tokens Release APP & Trading Platform V1.0 Works on most of CPUs, GPUs, VPUs Distribute Globally
-        </div>
-      </li>
-      <li>
-        <div>
-          <time>2019 Jan-Jun</time> ICO List Tokens Release APP & Trading Platform V1.0 Works on most of CPUs, GPUs, VPUs Distribute Globally
-        </div>
-      </li>
-      <li>
-        <div>
-          <time>2019 Jan-Jun</time> ICO List Tokens Release APP & Trading Platform V1.0 Works on most of CPUs, GPUs, VPUs Distribute Globally
-        </div>
-      </li>
-
-    </ol>
-  </div>
-
-
-
-
-
-
-
-
-
-
-
-        <footer class="footer">
-            <p>Copyright © 2025 Polyjoule. All rights reserved.</p>
-            <ul class="footer__links">
-                <li><a href="https://www.facebook.com/polyjoule">Facebook</a></li>
-                <li><a href="https://www.instagram.com/polyjoule?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==">Instagram</a></li>
-                <li><a href="https://www.linkedin.com/company/polyjoule/">Linkedin</a></li>
-            </ul>
-        </footer>
+      </div>
     </div>
-    
-    <script>
-        function scrollToSection(id) {
-            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
-        }
-    </script>
-    <script src="https://unpkg.com/scrollreveal"></script>
-    <script src="main.js"></script>
+  </main>
+
+  <footer class="site-footer py-4 mt-auto">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+      <p class="mb-0 small">&copy; 2025 Polyjoule. Tous droits réservés.</p>
+      <ul class="list-unstyled d-flex gap-3 mb-0">
+        <li><a href="https://www.facebook.com/polyjoule" target="_blank" rel="noopener">Facebook</a></li>
+        <li><a href="https://www.instagram.com/polyjoule?utm_source=ig_web_button_share_sheet&amp;igsh=ZDNlZDc0MzIxNw=="
+            target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="https://www.linkedin.com/company/polyjoule/" target="_blank" rel="noopener">LinkedIn</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
-
-<!-- </head>
- -->
-  

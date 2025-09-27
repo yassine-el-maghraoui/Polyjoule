@@ -1,104 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
-    <title>Infos - Polyjoule</title>
-    <style>
-        :root {
-            --primary-color: #1B6FFF;
-            --secondary-color: #332780;
-            --background-color: #f4f4f4;
-            --text-color: #333;
-            --font-family: 'Arial', sans-serif;
-        }
-
-
-        .container {
-            max-width: 1200px;
-            margin: auto;
-            padding: 10px;
-            text-align: center;
-        }
-
-
-        .about-section {
-            margin-top: 20px;
-            width: 100%;
-            position: relative;
-            padding: 30px 20px;
-            text-align: center;
-            background: white;
-            border-radius: 10px;
-            margin-bottom: 50px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .about-section h2 {
-            font-size: 28px;
-            margin-bottom: 20px;
-        }
-
-        .about-section p {
-            font-size: 16px;
-            max-width: 800px;
-            margin: auto;
-        }
-        .about-section img {
-            width: 100%; 
-            height: auto; 
-            position: relative;
-            border-radius: 10px;
-
-        }
-        
-
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/polyjoule.css">
+  <title>Shell Eco-marathon 2024 - Polyjoule</title>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+      <div class="container">
+        <a class="navbar-brand" href="../home.html">Polyjoule</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Basculer la navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-lg-5 mb-2 mb-lg-0 gap-lg-2">
+            <li class="nav-item"><a class="nav-link" href="../home.html">Accueil</a></li>
+            <li class="nav-item"><a class="nav-link" href="../Presentation_de_l_asso.html">Présentation</a></li>
+            <li class="nav-item"><a class="nav-link" href="../historique.html">Historique</a></li>
+            <li class="nav-item"><a class="nav-link" href="../palmares.html">Palmarès</a></li>
+            <li class="nav-item"><a class="nav-link" href="../infos_vehicule.html">Véhicules</a></li>
+            <li class="nav-item"><a class="nav-link" href="../calendrier-updated.html">Calendrier</a></li>
+            <li class="nav-item"><a class="nav-link" href="../gallery.html">Galerie</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="flex-grow-1 py-5">
     <div class="container">
-        <nav>
-            <ul class="nav__links nav__left">
-                <li><a href="home.html" class="logo">Accueil</a></li>
-                <li><a href="../historique.html">Historique</a></li>
-            </ul>
-            <ul class="nav__links nav__right">
-                <li><a href="../calendrier-updated.html">Calendrier</a></li>
-                <li><a href="../gallery.html">Gallerie</a></li>
-            </ul>
-        </nav>
-        
-        <!-- Section Qui sommes-nous -->
-        <section id="about" class="about-section">
-            <h2>Polyjoule au @shell_ecomarathon 2024 🏎️🏁</h2>
-            <p>Un premier objectif qui a été réalisé grâce à l’équipe de Polyjoule et de @la.joliverie 🔧
-                Les essais vont pouvoir commencer !
-                
-                les voitures sont prêtes à rouler au Shell Eco Marathon 2024 ✅
-                
-                Continuez à suivre nos aventures sur les réseaux 📸</p>
-        </section>
-        <section id="about" class="about-section">
-            <img src="calendrier_photos/event 5_2.jpeg" alt="Image">
-        </section>
-        <footer class="footer">
-            <p>Copyright © 2025 Polyjoule. All rights reserved.</p>
-            <ul class="footer__links">
-                <li><a href="https://www.facebook.com/polyjoule">Facebook</a></li>
-                <li><a href="https://www.instagram.com/polyjoule?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==">Instagram</a></li>
-                <li><a href="https://www.linkedin.com/company/polyjoule/">Linkedin</a></li>
-            </ul>
-        </footer>
+      <div class="section-card mx-auto" style="max-width: 960px;">
+        <div class="row g-4 align-items-center">
+          <div class="col-lg-6 order-lg-2 text-center">
+            <img src="calendrier_photos/event 5_2.jpeg" class="img-fluid rounded-4 shadow" alt="Shell Eco-marathon 2024" />
+          </div>
+          <div class="col-lg-6 order-lg-1">
+            <span class="badge badge-soft-primary">Événement passé</span>
+            <h1 class="h3 fw-bold text-primary mt-3">Shell Eco-marathon 2024</h1>
+            <p class="text-secondary fs-5">Objectif atteint : contrôles techniques validés pour nos deux véhicules grâce au
+              travail conjoint de Polyjoule et des équipes de La Joliverie.</p>
+            <p class="text-secondary fs-5 mb-0">Les essais peuvent débuter ! Suivez les prochaines étapes de la compétition
+              et les performances de l'équipe sur nos réseaux.</p>
+          </div>
+        </div>
+      </div>
     </div>
-    
-    <script>
-        function scrollToSection(id) {
-            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
-        }
-    </script>
-    <script src="https://unpkg.com/scrollreveal"></script>
-    <script src="main.js"></script>
+  </main>
+
+  <footer class="site-footer py-4 mt-auto">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+      <p class="mb-0 small">&copy; 2025 Polyjoule. Tous droits réservés.</p>
+      <ul class="list-unstyled d-flex gap-3 mb-0">
+        <li><a href="https://www.facebook.com/polyjoule" target="_blank" rel="noopener">Facebook</a></li>
+        <li><a href="https://www.instagram.com/polyjoule?utm_source=ig_web_button_share_sheet&amp;igsh=ZDNlZDc0MzIxNw=="
+            target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="https://www.linkedin.com/company/polyjoule/" target="_blank" rel="noopener">LinkedIn</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,73 +1,157 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="home.css" />
-    <title>Polyjoule</title>
-  </head>
-  <body>
-    <div class="container">
-      <!-- Main content -->
-      <div class="main-content">
-        <nav>
-          <ul class="nav__links nav__left">
-            <li><a href="./home.html" class="logo">Accueil</a></li>
-            <!--<li><a href="#">Histoire</a></li> -->
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/polyjoule.css" />
+  <title>Polyjoule</title>
+</head>
+<body class="d-flex flex-column min-vh-100">
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+      <div class="container">
+        <a class="navbar-brand" href="home.html">Polyjoule</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Basculer la navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-lg-5 mb-2 mb-lg-0 gap-lg-2">
+            <li class="nav-item"><a class="nav-link active" aria-current="page" href="home.html">Accueil</a></li>
+            <li class="nav-item"><a class="nav-link" href="Presentation_de_l_asso.html">Présentation</a></li>
+            <li class="nav-item"><a class="nav-link" href="historique.html">Historique</a></li>
+            <li class="nav-item"><a class="nav-link" href="palmares.html">Palmarès</a></li>
+            <li class="nav-item"><a class="nav-link" href="infos_vehicule.html">Véhicules</a></li>
+            <li class="nav-item"><a class="nav-link" href="calendrier-updated.html">Calendrier</a></li>
+            <li class="nav-item"><a class="nav-link" href="gallery.html">Galerie</a></li>
           </ul>
-          <ul class="nav__links nav__right">
-            <!-- <li><a href="#">Calendrier</a></li> -->
-            <li><a href="Presentation_de_l_asso.html">Présentation de l'association</a></li>
-          </ul>
-        </nav>
-
-        <span>
-          <img 
-            src="assets/header.png"
-            alt="header"
-            class="imgHome"
-          />
-        </span>
-
-        <h4 class="text__left">POLY</h4>
-        <h4 class="text__right">JOULE</h4>
-        <!--<button class="btn explore">EN SAVOIR PLUS</button> -->
-        <!--<button class="btn print">EXPLORER</button>
-        <button class="btn catalog">CATALOGUE</button> -->
-
-        <a href="historique.html"><h5 class="feature-1">Historique</h5> </a>
-        <a href="calendrier-updated.html"><h5 class="feature-2">Calendrier</h5></a>
-        <a href="gallery.html"><h5 class="feature-3">Gallerie</h5></a>
-        <a href="infos_vehicule.html"><h5 class="feature-4">Informations des véhicules</h5></a>
-      </div>
-
-      <!-- Partners section -->
-      <div class="partners-bar">
-        <h6>Nos Partenaires</h6>
-        <div class="partner-logos"><img src="assets/POLYTECH-NANTES.png" alt="Partner 2" />
-          <a href="https://www.la-joliverie.com/" style="padding-left : 60px; padding-right : 60px;"><img src="assets/logo_joliverie_hd_rvb_j.png" alt="Partner 3" href="https://www.la-joliverie.com/"/></a>
-          <a href="https://www.abalone-emploi.com/" style="padding-left : 60px; padding-right : 60px;"><img src="assets/Logo_Abalone_Group_2019_contour.png" alt="Partner 4" /></a>
-          <a href="https://www.ten.com/fr" style="padding-left : 60px; padding-right : 60px;" ><img src="assets/logo.webp" alt="Partner 5"/></a>
-          <img src="assets/logo-pole_sciences-technologie-noir.png" alt="Partner 1" />
         </div>
       </div>
+    </nav>
+  </header>
 
-      <!-- Footer -->
-      <footer class="footer">
-        <p>Copyright © 2025 Polyjoule. All rights reserved.</p>
-        <ul class="footer__links">
-            <li><a href="https://www.facebook.com/polyjoule">Facebook</a></li>
-            <li><a href="https://www.instagram.com/polyjoule?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==">Instagram</a></li>
-            <li><a href="https://www.linkedin.com/company/polyjoule/">Linkedin</a></li>
-        </ul>
-    </footer>
+  <main class="flex-grow-1">
+    <section class="hero-section py-5 py-lg-5">
+      <div class="container py-4">
+        <div class="row align-items-center g-5">
+          <div class="col-lg-6 text-center text-lg-start">
+            <span class="badge badge-soft-primary small-caps mb-3">Innovation énergétique &amp; mobilité durable</span>
+            <h1 class="display-4 fw-bold text-primary mb-3">Polyjoule</h1>
+            <p class="lead text-secondary mb-4">
+              L’association Polyjoule rassemble des étudiantes et étudiants passionnés qui imaginent, conçoivent et
+              testent des véhicules sobres en énergie pour relever les défis de la mobilité de demain.
+            </p>
+            <div class="d-flex flex-wrap justify-content-center justify-content-lg-start gap-3">
+              <a class="btn btn-primary btn-lg px-4" href="Presentation_de_l_asso.html">Découvrir l’association</a>
+              <a class="btn btn-outline-primary btn-lg px-4" href="calendrier-updated.html">Nos événements</a>
+            </div>
+          </div>
+          <div class="col-lg-6 text-center">
+            <img src="assets/header.png" class="img-fluid hero-illustration" alt="Prototype Polyjoule" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-5 bg-white">
+      <div class="container">
+        <div class="row g-4">
+          <div class="col-12 text-center mb-2">
+            <h2 class="h3 text-primary">Explorer Polyjoule</h2>
+            <p class="text-secondary mb-0">Accédez rapidement aux pages clés de l’association.</p>
+          </div>
+        </div>
+        <div class="row g-4 mt-1">
+          <div class="col-sm-6 col-xl-3">
+            <a class="card quick-link-card h-100 text-center text-decoration-none" href="historique.html">
+              <div class="card-body py-4">
+                <i class="ri-timer-flash-line display-5 text-primary mb-3"></i>
+                <h5 class="card-title">Historique</h5>
+                <p class="card-text text-secondary">Revivez près de vingt ans d’exploits et de records.</p>
+              </div>
+            </a>
+          </div>
+          <div class="col-sm-6 col-xl-3">
+            <a class="card quick-link-card h-100 text-center text-decoration-none" href="palmares.html">
+              <div class="card-body py-4">
+                <i class="ri-trophy-line display-5 text-primary mb-3"></i>
+                <h5 class="card-title">Palmarès</h5>
+                <p class="card-text text-secondary">Parcourez les performances marquantes de nos équipes.</p>
+              </div>
+            </a>
+          </div>
+          <div class="col-sm-6 col-xl-3">
+            <a class="card quick-link-card h-100 text-center text-decoration-none" href="infos_vehicule.html">
+              <div class="card-body py-4">
+                <i class="ri-roadster-line display-5 text-primary mb-3"></i>
+                <h5 class="card-title">Véhicules</h5>
+                <p class="card-text text-secondary">Découvrez les prototypes et Urban Concepts Polyjoule.</p>
+              </div>
+            </a>
+          </div>
+          <div class="col-sm-6 col-xl-3">
+            <a class="card quick-link-card h-100 text-center text-decoration-none" href="gallery.html">
+              <div class="card-body py-4">
+                <i class="ri-gallery-line display-5 text-primary mb-3"></i>
+                <h5 class="card-title">Galerie</h5>
+                <p class="card-text text-secondary">Plongez dans les coulisses de l’association en images.</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-5">
+      <div class="container">
+        <h2 class="h3 text-center text-primary mb-4">Nos partenaires</h2>
+        <p class="text-secondary text-center mb-5">
+          Polyjoule bénéficie du soutien précieux d’acteurs académiques et industriels engagés pour l’innovation.
+        </p>
+        <div class="row justify-content-center align-items-center g-4">
+          <div class="col-6 col-md-3 col-lg-2 text-center">
+            <img src="assets/POLYTECH-NANTES.png" class="partner-logo" alt="Polytech Nantes" />
+          </div>
+          <div class="col-6 col-md-3 col-lg-2 text-center">
+            <a href="https://www.la-joliverie.com/" class="d-inline-block">
+              <img src="assets/logo_joliverie_hd_rvb_j.png" class="partner-logo" alt="La Joliverie" />
+            </a>
+          </div>
+          <div class="col-6 col-md-3 col-lg-2 text-center">
+            <a href="https://www.abalone-emploi.com/" class="d-inline-block">
+              <img src="assets/Logo_Abalone_Group_2019_contour.png" class="partner-logo" alt="Abalone" />
+            </a>
+          </div>
+          <div class="col-6 col-md-3 col-lg-2 text-center">
+            <a href="https://www.ten.com/fr" class="d-inline-block">
+              <img src="assets/logo.webp" class="partner-logo" alt="TEN" />
+            </a>
+          </div>
+          <div class="col-6 col-md-3 col-lg-2 text-center">
+            <img src="assets/logo-pole_sciences-technologie-noir.png" class="partner-logo"
+              alt="Pôle Sciences et Technologie" />
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer py-4 mt-auto">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+      <p class="mb-0 small">&copy; 2025 Polyjoule. Tous droits réservés.</p>
+      <ul class="list-unstyled d-flex gap-3 mb-0 footer-links">
+        <li><a href="https://www.facebook.com/polyjoule" target="_blank" rel="noopener">Facebook</a></li>
+        <li><a href="https://www.instagram.com/polyjoule?utm_source=ig_web_button_share_sheet&amp;igsh=ZDNlZDc0MzIxNw=="
+            target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="https://www.linkedin.com/company/polyjoule/" target="_blank" rel="noopener">LinkedIn</a></li>
+      </ul>
     </div>
+  </footer>
 
-    <script src="https://unpkg.com/scrollreveal"></script>
-    <script src="main.js"></script>
-  </body>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

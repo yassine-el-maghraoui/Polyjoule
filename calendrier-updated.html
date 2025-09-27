@@ -1,156 +1,139 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <title>Calendrier - Polyjoule</title>
-    <style>
-        .events-container {
-            max-width: 1200px;
-            margin: auto;
-            padding: 40px;
-        }
-        .events-container h2 {
-            margin-bottom: 20px; /* Add margin to create space between the titles and the event cards */
-        }
-        .upcoming-events, .past-events {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 50px;
-            margin-bottom: 60px;
-        }
-        .event-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-        .event-card {
-            background: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 280px;
-            text-align: center;
-            border-radius: 10px;
-        }
-        .event-card img {
-            width: 100%;
-            height: 160px;
-            object-fit: cover;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-        .event-card h3 {
-            margin: 10px 0;
-            font-size: 18px;
-        }
-        .event-card p {
-            font-size: 14px;
-            color: #555;
-        }
-        .event-card .details {
-            margin-top: 15px;
-            display: inline-block;
-            padding: 8px 12px;
-            background: #1B6FFF;
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-        .event-card .details:hover {
-            background: #0E4DCC;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/polyjoule.css">
+  <title>Calendrier - Polyjoule</title>
 </head>
-<body>
-    <div class="container">
-        <nav>
-            <ul class="nav__links nav__left">
-                <li><a href="home.html" class="logo">Accueil</a></li>
-                <li><a href="historique.html">Historique</a></li>
-            </ul>
-            <ul class="nav__links nav__right">
-                <li><a href="calendrier-updated.html">Calendrier</a></li>
-                <li><a href="gallery.html">Gallerie</a></li>
-            </ul>
-        </nav>
-        
-        <div class="events-container">
-            <h2>Événements à venir</h2>
-            <div class="upcoming-events">
-                <div class="event-wrapper">
-                  <div class="event-card">
-                    <img src="calendrier_pages/calendrier_photos/event 1.jfif" alt="afterwork! TEST">
-                    <h3>afterwork! TEST</h3>
-                    <p>Rejoignez-nous le lundi 30 septembre au KOKO pour un afterwork!</p>
-                    <a href="./calendrier_pages/even_aven_page1.html
-" class="details">Plus de détails</a>
-                  </div>
-                </div>
-                <div class="event-wrapper">
-                  <div class="event-card">
-                    <img src="calendrier_pages/calendrier_photos/event 2.jfif" alt="Journée Portes Ouvertes">
-                    <h3>Journée Portes Ouvertes</h3>
-                    <p>Aujourd'hui, c'est le premier jour du @challenge_ecogreen_energy !</p>
-                    <a href="./calendrier_pages/even_aven_page2.html
-" class="details">Plus de détails</a>
-                  </div>
-                </div>
-                <div class="event-wrapper">
-                  <div class="event-card">
-                    <img src="calendrier_pages/calendrier_photos/event 3.jfif" alt="tournoi Mario kart.">
-                    <h3>tournoi Mario kart.</h3>
-                    <p>Ce jeudi, rejoignez-nous à la cahute pour un tournoi Mario kart. 🏎</p>
-                    <a href="./calendrier_pages/even_aven_page3.html" class="details">Plus de détails</a>
-                  </div>
-                </div></div>
-            
-            <h2>Événements passés</h2>
-            <div class="past-events">
-                <div class="event-wrapper">
-                  <div class="event-card">
-                    <img src="calendrier_pages/calendrier_photos/event 4.png" alt="Hyvolution">
-                    <h3>Hyvolution</h3>
-                    <p>L’équipe Polyjoule a eu la chance de participer à Hyvolution, le salon incontournable dédié à l’hydrogène</p>
-                    <a href="./calendrier_pages/even_passe_page1.html
-" class="details">Plus de détails</a>
-                  </div>
-                </div>
-                <div class="event-wrapper">
-                  <div class="event-card">
-                    <img src="calendrier_pages/calendrier_photos/event 5.jfif" alt="Polyjoule au @shell_ecomarathon 2024 🏎️🏁">
-                    <h3>Polyjoule au @shell_ecomarathon 2024 🏎️🏁</h3>
-                    <p>Les contrôles techniques sont validés 👏</p>
-                    <a href="./calendrier_pages/even_passe_page2.html
-" class="details">Plus de détails</a>
-                  </div>
-                </div>
-                <div class="event-wrapper">
-                  <div class="event-card">
-                    <img src="calendrier_pages/calendrier_photos/event 6.jfif" alt="ASSEMBLÉE GÉNÉRALE ✨">
-                    <h3>ASSEMBLÉE GÉNÉRALE ✨</h3>
-                    <p>Nous avons eu le plaisir de nous retrouver pour notre Assemblée Générale le mercredi 16 octobre 2024</p>
-                    <a href="./calendrier_pages/even_passe_page3.html" class="details">Plus de détails</a>
-                  </div>
-                </div></div>
+<body class="d-flex flex-column min-vh-100">
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+      <div class="container">
+        <a class="navbar-brand" href="home.html">Polyjoule</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Basculer la navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-lg-5 mb-2 mb-lg-0 gap-lg-2">
+            <li class="nav-item"><a class="nav-link" href="home.html">Accueil</a></li>
+            <li class="nav-item"><a class="nav-link" href="Presentation_de_l_asso.html">Présentation</a></li>
+            <li class="nav-item"><a class="nav-link" href="historique.html">Historique</a></li>
+            <li class="nav-item"><a class="nav-link" href="palmares.html">Palmarès</a></li>
+            <li class="nav-item"><a class="nav-link" href="infos_vehicule.html">Véhicules</a></li>
+            <li class="nav-item"><a class="nav-link active" aria-current="page" href="calendrier-updated.html">Calendrier</a></li>
+            <li class="nav-item"><a class="nav-link" href="gallery.html">Galerie</a></li>
+          </ul>
         </div>
-        
-        <footer class="footer">
-            <p>Copyright © 2025 Polyjoule. All rights reserved.</p>
-            <ul class="footer__links">
-                <li><a href="https://www.facebook.com/polyjoule">Facebook</a></li>
-                <li><a href="https://www.instagram.com/polyjoule?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==">Instagram</a></li>
-                <li><a href="https://www.linkedin.com/company/polyjoule/">Linkedin</a></li>
-            </ul>
-        </footer>
+      </div>
+    </nav>
+  </header>
+
+  <main class="flex-grow-1 py-5">
+    <div class="container">
+      <div class="text-center mb-5">
+        <span class="badge badge-soft-primary">Vie associative</span>
+        <h1 class="mt-3 fw-bold text-primary">Calendrier Polyjoule</h1>
+        <p class="text-secondary mb-0">Ateliers, compétitions et temps forts : suivez nos prochains rendez-vous et
+          redécouvrez ceux qui ont marqué la saison.</p>
+      </div>
+
+      <section class="mb-5">
+        <h2 class="h4 fw-bold text-primary mb-4">Événements à venir</h2>
+        <div class="row g-4">
+          <div class="col-sm-6 col-lg-4">
+            <div class="card event-card h-100">
+              <img src="calendrier_pages/calendrier_photos/event 1.jfif" class="card-img-top" alt="Afterwork au KOKO">
+              <div class="card-body d-flex flex-column">
+                <h3 class="h5 fw-bold">Afterwork au KOKO</h3>
+                <p class="text-secondary">Rendez-vous le lundi 30 septembre au KOKO pour un afterwork partagé avec nos
+                  partenaires.</p>
+                <a class="btn btn-primary mt-auto" href="./calendrier_pages/even_aven_page1.html">Plus de détails</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-lg-4">
+            <div class="card event-card h-100">
+              <img src="calendrier_pages/calendrier_photos/event 2.jfif" class="card-img-top" alt="Journée Portes Ouvertes">
+              <div class="card-body d-flex flex-column">
+                <h3 class="h5 fw-bold">Journée Portes Ouvertes</h3>
+                <p class="text-secondary">Première journée du Challenge EcoGreen Energy : découvrez nos démonstrations et
+                  rencontres.</p>
+                <a class="btn btn-primary mt-auto" href="./calendrier_pages/even_aven_page2.html">Plus de détails</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-lg-4">
+            <div class="card event-card h-100">
+              <img src="calendrier_pages/calendrier_photos/event 3.jfif" class="card-img-top" alt="Tournoi Mario Kart">
+              <div class="card-body d-flex flex-column">
+                <h3 class="h5 fw-bold">Tournoi Mario Kart</h3>
+                <p class="text-secondary">Jeudi à la Cahute : une soirée conviviale pour fédérer pilotes et supporters.</p>
+                <a class="btn btn-primary mt-auto" href="./calendrier_pages/even_aven_page3.html">Plus de détails</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="h4 fw-bold text-primary mb-4">Événements passés</h2>
+        <div class="row g-4">
+          <div class="col-sm-6 col-lg-4">
+            <div class="card event-card h-100">
+              <img src="calendrier_pages/calendrier_photos/event 4.png" class="card-img-top" alt="Hyvolution">
+              <div class="card-body d-flex flex-column">
+                <h3 class="h5 fw-bold">Hyvolution</h3>
+                <p class="text-secondary">Retour sur le salon de référence dédié à l'hydrogène, où Polyjoule a présenté
+                  ses innovations.</p>
+                <a class="btn btn-outline-primary mt-auto" href="./calendrier_pages/even_passe_page1.html">Voir le
+                  récapitulatif</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-lg-4">
+            <div class="card event-card h-100">
+              <img src="calendrier_pages/calendrier_photos/event 5.jfif" class="card-img-top" alt="Shell Eco Marathon 2024">
+              <div class="card-body d-flex flex-column">
+                <h3 class="h5 fw-bold">Shell Eco Marathon 2024</h3>
+                <p class="text-secondary">Contrôles techniques validés et une équipe prête à en découdre sur piste.</p>
+                <a class="btn btn-outline-primary mt-auto" href="./calendrier_pages/even_passe_page2.html">Voir le
+                  récapitulatif</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-lg-4">
+            <div class="card event-card h-100">
+              <img src="calendrier_pages/calendrier_photos/event 6.jfif" class="card-img-top" alt="Assemblée Générale">
+              <div class="card-body d-flex flex-column">
+                <h3 class="h5 fw-bold">Assemblée Générale</h3>
+                <p class="text-secondary">Le 16 octobre 2024, l'équipe se réunit pour partager le bilan et les ambitions
+                  de la nouvelle saison.</p>
+                <a class="btn btn-outline-primary mt-auto" href="./calendrier_pages/even_passe_page3.html">Voir le
+                  récapitulatif</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
-    
-    <script src="https://unpkg.com/scrollreveal"></script>
-    <script src="main.js"></script>
+  </main>
+
+  <footer class="site-footer py-4 mt-auto">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+      <p class="mb-0 small">&copy; 2025 Polyjoule. Tous droits réservés.</p>
+      <ul class="list-unstyled d-flex gap-3 mb-0">
+        <li><a href="https://www.facebook.com/polyjoule" target="_blank" rel="noopener">Facebook</a></li>
+        <li><a href="https://www.instagram.com/polyjoule?utm_source=ig_web_button_share_sheet&amp;igsh=ZDNlZDc0MzIxNw=="
+            target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="https://www.linkedin.com/company/polyjoule/" target="_blank" rel="noopener">LinkedIn</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
