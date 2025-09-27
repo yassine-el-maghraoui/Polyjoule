@@ -1,32 +1,88 @@
-Dans ce fichier vous trouverez comment deployer le site en local
+# Polyjoule – Back-office & site Next.js
 
-1/ Installez Visual Studio Code
-lien du telechargement :
-https://code.visualstudio.com/download
+Ce dépôt contient maintenant une application [Next.js 14](https://nextjs.org/) avec un back-office permettant à l’équipe Polyjoule de gérer le contenu (palmarès, calendrier, partenaires…) sans toucher au code.
 
-Installez Node.js (version LTS) depuis le site officiel : https://nodejs.org/
+## Pré-requis
 
-2/ouvrez le projet "polyjoule" sur Vscode en appuyant sur (File → Open Folder → le dossier du projet)
+- Node.js 20.x (LTS) recommandé
+- npm 10+
 
-3/ouvrez le terminal (View → Terminal) sur Vscode et 
+## Installation locale
 
-testez si nodejs est bien installé en tapant 
+1. **Cloner le projet** et se placer dans le dossier `Polyjoule`.
+2. Créer le fichier `.env` à partir de `.env.example` et ajuster si besoin :
+   ```bash
+   cp .env.example .env
+   ```
+3. **Installer les dépendances** :
+   ```bash
+   npm install
+   ```
+4. **Générer Prisma** (client SQLite par défaut) :
+   ```bash
+   npm run prisma:generate
+   ```
+5. **Initialiser la base** (crée `dev.db` + contenu de démonstration + compte admin) :
+   ```bash
+   node prisma/seed.js
+   ```
+   Identifiants par défaut : `admin@polyjoule.fr` / `ChangeMe123!` (à modifier côté back-office).
 
-node -v
-npm -v
+## Lancer en développement
 
-normalement une version sera affiché 
+```bash
+npm run dev
+```
 
-Ensuite tapez
+- Site public : [http://localhost:3000](http://localhost:3000)
+- Back-office : [http://localhost:3000/admin](http://localhost:3000/admin) (connexion requise)
+- Mode prévisualisation : [http://localhost:3000/api/preview?secret=...&redirect=/](http://localhost:3000/api/preview?secret=...&redirect=/) (utiliser la valeur `PREVIEW_SECRET` de `.env`)
 
-npm install
+## Générer un build de production
 
-et enfin tapez
+```bash
+npm run build
+```
+> ⚠️ La génération nécessite suffisamment d’espace disque pour que Next.js puisse écrire le dossier `.next`. Si le disque de la machine est presque plein, le build échouera avec `ENOSPC`.
 
-npm start
- 
-si tout se passe bien y aura écrit "Serveur démarré sur http://localhost:3000"
+## Structure principale
 
-4/ouvrez le navigateur et mettez ce lien http://localhost:3000 et normalement vous aurez acces au site 
+```
+app/                 # Pages publiques & back-office (App Router)
+components/          # Composants partagés (navigation, formulaires admin…)
+lib/                 # Prisma, contenu, configuration NextAuth
+prisma/schema.prisma # Modèle de données (SQLite par défaut)
+public/              # Assets statiques (images, uploads)
+```
 
-(pour arreter le deploiement faites CTRL + C dans le terminale)
+## Flux éditorial
+
+- Les contenus sont regroupés en « collections » (hero d’accueil, timeline, événements, etc.).
+- Chaque modification crée automatiquement une révision, restaurable depuis l’interface.
+- Les images peuvent être téléversées dans `public/uploads` via le formulaire admin.
+- Les statuts `brouillon` et `publié` contrôlent ce qui apparaît sur le site public.
+
+## Adapter à PostgreSQL
+
+Le projet est prêt pour PostgreSQL :
+- Remplacer `DATABASE_URL` dans `.env` par l’URL Postgres.
+- Mettre à jour `prisma/schema.prisma` (`provider = "postgresql"`).
+- Lancer `npx prisma generate` puis `npx prisma migrate dev`.
+
+## Scripts npm disponibles
+
+- `npm run dev` : démarrage Next.js en mode développement
+- `npm run build` : build production
+- `npm start` : serveur Next.js en mode production
+- `npm run prisma:generate` : génération du client Prisma
+- `npm run prisma:migrate` : migration (dev)
+- `npm run seed` : réexécuter le script d’initialisation
+
+## Sécurité & bonnes pratiques
+
+- Changer rapidement le mot de passe administrateur injecté par `seed.js`.
+- Mettre à jour `NEXTAUTH_SECRET` et `PREVIEW_SECRET` avec des valeurs fortes avant déploiement.
+- Sauvegarder régulièrement la base (`dev.db` en local ou votre instance PostgreSQL en production).
+- Les fichiers téléversés sont stockés dans `public/uploads` (versionnés via `.gitignore`).
+
+Bon développement !

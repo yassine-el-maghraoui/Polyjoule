@@ -1,0 +1,10 @@
+node_modules
+.next
+out
+public/uploads/*
+!public/uploads/.gitkeep
+*.log
+.env
+.env.local
+dev.db
+prisma/dev.db
