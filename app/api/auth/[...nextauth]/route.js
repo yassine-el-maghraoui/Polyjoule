@@ -1,6 +1,10 @@
-import NextAuth from 'next-auth/next';
+export const runtime = 'nodejs';
+
+import NextAuthImport from 'next-auth';
 
 import { authOptions } from '@/lib/auth';
+
+const NextAuth = NextAuthImport?.default ?? NextAuthImport;
 
 const handler = NextAuth(authOptions);
 

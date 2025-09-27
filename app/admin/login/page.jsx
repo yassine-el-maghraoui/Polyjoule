@@ -2,11 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { signIn, useSession } from 'next-auth/react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { status } = useSession();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -39,7 +38,14 @@ export default function AdminLoginPage() {
     router.push(result.url ?? '/admin');
   };
 
-  const callbackUrl = searchParams.get('callbackUrl');
+  const [callbackUrl, setCallbackUrl] = useState(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const url = params.get('callbackUrl');
+    setCallbackUrl(url);
+  }, []);
 
   if (status === 'authenticated') {
     return null;
