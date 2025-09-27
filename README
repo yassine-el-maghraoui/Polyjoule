@@ -1,0 +1,32 @@
+Dans ce fichier vous trouverez comment deployer le site en local
+
+1/ Installez Visual Studio Code
+lien du telechargement :
+https://code.visualstudio.com/download
+
+Installez Node.js (version LTS) depuis le site officiel : https://nodejs.org/
+
+2/ouvrez le projet "polyjoule" sur Vscode en appuyant sur (File → Open Folder → le dossier du projet)
+
+3/ouvrez le terminal (View → Terminal) sur Vscode et 
+
+testez si nodejs est bien installé en tapant 
+
+node -v
+npm -v
+
+normalement une version sera affiché 
+
+Ensuite tapez
+
+npm install
+
+et enfin tapez
+
+npm start
+ 
+si tout se passe bien y aura écrit "Serveur démarré sur http://localhost:3000"
+
+4/ouvrez le navigateur et mettez ce lien http://localhost:3000 et normalement vous aurez acces au site 
+
+(pour arreter le deploiement faites CTRL + C dans le terminale)

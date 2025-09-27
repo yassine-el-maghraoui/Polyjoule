@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <title>Informations sur le véhicule - Polyjoule</title>
+  <style>
+    :root {
+      --primary-color: #1B6FFF;
+      --secondary-color: #f5f7fa;
+      --text-dark: #0E377F;
+      --text-light: #555;
+      --white: #ffffff;
+    }
+
+    .vehicule-section {
+      max-width: 1200px;
+      margin: 60px auto;
+      background: linear-gradient(145deg, #ffffff, #f0f0f0);
+      padding: 50px;
+      border-radius: 20px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .vehicule-section h2 {
+      text-align: center;
+      color: var(--primary-color);
+      font-size: 36px;
+      margin-bottom: 40px;
+      font-weight: 800;
+    }
+
+    .vehicule-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .vehicule-text {
+      flex: 1 1 500px;
+      font-size: 18px;
+      line-height: 1.8;
+      color: var(--text-light);
+      text-align: justify;
+    }
+
+    .vehicule-image {
+      flex: 1 1 400px;
+      text-align: center;
+    }
+
+    .vehicule-image img {
+      width: 100%;
+      max-width: 450px;
+      border-radius: 16px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      transition: transform 0.4s ease;
+    }
+
+    .vehicule-image img:hover {
+      transform: scale(1.05);
+    }
+
+    .vehicule-gallery {
+      margin-top: 60px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+    }
+
+    .vehicule-gallery img {
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .vehicule-gallery img:hover {
+      transform: scale(1.04);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media screen and (max-width: 768px) {
+      .vehicule-section {
+        padding: 30px 20px;
+      }
+
+      .vehicule-content {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav>
+      <ul class="nav__links nav__left">
+        <li><a href="home.html" class="logo">Accueil</a></li>
+        <li><a href="historique.html">Historique</a></li>
+      </ul>
+      <ul class="nav__links nav__right">
+        <li><a href="calendrier-updated.html">Calendrier</a></li>
+        <li><a href="gallery.html">Gallerie</a></li>
+      </ul>
+    </nav>
+
+    <section class="vehicule-section">
+      <h2>Informations sur les véhicules</h2>
+
+      <div class="vehicule-content">
+        <div class="vehicule-text">
+          <h3>L'Urban-concept</h3>
+          <p>
+            L'Urban-concept (éco-citadine en français) est la catégorie supérieure à celle des prototypes car elle est soumise à des critères plus pointus. Contrairement aux prototypes, l'Urban possède 4 roues, le pilote est assis, le véhicule dispose de tous les éclairages réglementaires. Il est conçu pour transporter une personne de 70 kg à une vitesse moyenne de 30 km/h. Le but est de concevoir un véhicule le plus proche d'un véhicule de tous les jours.
+          </p>
+          <p>
+            Le véhicule Cityjoule a été inauguré le 20 mars 2013 à l'hôtel de région des Pays de la Loire. Son développement a duré 3 ans, de l'idée de départ jusqu'à la première course. Il a permis d'impliquer plus de 400 élèves jusqu'à aujourd'hui ainsi que de nombreux partenaires scientifiques et techniques régionaux.
+          </p>
+        </div>
+        <div class="vehicule-image">
+          <img src="assets/vehicule1.jpg" alt="Cityjoule sur piste">
+        </div>
+      </div>
+
+      <div class="vehicule-gallery">
+        <img src="assets/vehicule2.JPG" alt="Cityjoule vue latérale">
+        <img src="assets/vehicule3.JPG" alt="Cityjoule détails techniques">
+        <img src="assets/vehicule4.JPG" alt="Cityjoule en préparation">
+      </div>
+    </section>
+
+    <section class="vehicule-section">
+
+      <div class="vehicule-content">
+        <div class="vehicule-text">
+          <h3>véhicule Polyjoule</h3>
+          <p>
+          </p>
+          <p>
+            Le véhicule Polyjoule a vu le jour en 2005, en même temps que la création de l'association. Il concourt dans la catégorie des prototypes électriques, un type de véhicule axé sur la performance où la réglementation est plus souple et les contraintes techniques limitées. L'objectif principal est d’optimiser au maximum le véhicule afin de minimiser sa consommation d’énergie. Aujourd’hui, Polyjoule affiche un poids inférieur à 27 kg, résultat d’un travail poussé sur la légèreté et l’efficacité.
+          </p>
+        </div>
+        <div class="vehicule-image">
+          <img src="assets/Copie de IMG_2871.jpg" alt="Cityjoule sur piste">
+        </div>
+      </div>
+
+      <div class="vehicule-gallery">
+        <img src="assets/vehicule2.JPG" alt="Cityjoule vue latérale">
+        <img src="assets/vehicule3.JPG" alt="Cityjoule détails techniques">
+        <img src="assets/vehicule4.JPG" alt="Cityjoule en préparation">
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>Copyright © 2025 Polyjoule. All rights reserved.</p>
+      <ul class="footer__links">
+          <li><a href="https://www.facebook.com/polyjoule">Facebook</a></li>
+          <li><a href="https://www.instagram.com/polyjoule?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==">Instagram</a></li>
+          <li><a href="https://www.linkedin.com/company/polyjoule/">Linkedin</a></li>
+      </ul>
+  </footer>
+  </div>
+  <script src="https://unpkg.com/scrollreveal"></script>
+  <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "polyjoule-app",
+  "version": "1.0.0",
+  "description": "Application web Polyjoule",
+  "main": "server.js",  
+  "scripts": {
+    "start": "node server.js", 
+    "dev": "nodemon server.js",   
+    "update-calendar": "node update-calendar.js" 
+  },
+  "dependencies": {
+    "express": "^4.17.1",  
+    "nodemon": "^3.0.1",   
+    "child_process": "^1.0.2" 
+  }
+}

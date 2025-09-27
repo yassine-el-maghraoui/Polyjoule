@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <title>Historique - Polyjoule</title>
+    <style>
+        .titlehist {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            margin-top: 30px;
+        }
+        .titlehist img{
+            width: 150px;
+            height: 50px;
+            margin-left: 10px;
+            position: relative;
+            border-radius: 5px;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 50px auto;
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            background-color: #1B6FFF;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -2px;
+        }
+        .timeline-item {
+            position: relative;
+            background: white;
+            width: 45%;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            height: 300px;
+            border-radius: 10px;
+        }
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+        .timeline-item img {
+            width: 350px;
+            height: auto;
+            border-radius: 5px;
+        }
+         .timeline-img0 {
+            left: 125%;
+            position: relative;
+            top: -300px; /* Adjust this value to move the image upwards */
+        }
+        .timeline-img1 {
+            left: 125%;
+            position: relative;
+            top: -150px; /* Adjust this value to move the image upwards */
+        }
+        .timeline-img2 {
+            right: 125%;      
+            position: relative;
+            top: -120px; /* Adjust this value to move the image upwards */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <ul class="nav__links nav__left">
+                <li><a href="home.html" class="logo">Accueil</a></li>
+                <li><a href="historique.html">Historique</a></li>
+            </ul>
+            <ul class="nav__links nav__right">
+                <li><a href="calendrier-updated.html">Calendrier</a></li>
+                <li><a href="gallery.html">Gallerie</a></li>
+            </ul>
+        </nav>
+        
+        <div class="titlehist">
+            <h2 class="title" style="color: #0E377F;">l'Histoire</h2>
+            <h2 class="title" style="color: rgb(202, 201, 201); margin-left: 20px;" > de Polyjoule</h2>
+        </div>
+        
+        <div class="timeline">
+
+            <div class="timeline-item">
+                <h3>2022</h3>
+                <p>Participation à la 1ère édition de l’Eco Green Gas sur le circuit Fay de Bretagne en France et grand retour de Polyjoule avec une performance en électrique de 7051 km/LEE*. D’un autre côté, Cityjoule n’a pas pu rouler lors de l’Eco green gas et du SEM suite à la crise sanitaire et en raison de plusieurs difficultés rencontrées sur la partie électronique. </p>
+                <div class="timeline-img0">
+                    <img src="historique photos/2022.jpeg" alt="Début du projet">
+                </div>
+            </div>
+            <div class="timeline-item">
+                <h3>2020-2021</h3>
+                <p> Compétitions annulées à cause de l'épidémie de COVID-19 et ralentissement des activités au sein de l’association.</p>
+                <div class="timeline-img2">
+                    <img src="historique photos/2021.JPG" alt="Début du projet">
+                </div>
+            </div>
+            <div class="timeline-item">
+                <h3>2019</h3>
+                <p>Cityjoule établit un record en électrique à l’Educ Eco Onnaing, sur le site Toyota France avec une performance de 2853 km/LEE*. Bien que l'équipe réalise une prestation infructueuse lors du SEM, elle obtient des résultats remarquables pour la PAC.</p>
+                <div class="timeline-img1">
+                    <img src="historique photos/2019_2.JPG" alt="Début du projet">
+                </div>
+            </div>
+            <div class="timeline-item">
+                <h3>2018</h3>
+                <p>Cityjoule n’a pas validé de performances en hydrogène cette année-là. Malheureusement, bien que les résultats étaient prometteurs, la PAC a présenté des défauts trop importants. Cette difficulté a permis de nous rendre compte d’un axe majeur d’amélioration pour la pile. </p>
+                <div class="timeline-img2">
+                    <img src="historique photos/2018_2.JPG" alt="Début du projet">
+                </div>
+            </div>
+            <div class="timeline-item">
+                <h3>2017</h3>
+                <p> Début du développement de notre propre pile à combustible suite à la faillite du fournisseur de l’association. L’urban concept Cityjoule obtient des résultats moins impressionnants mais tout de même une 1ère place à l’Educ Eco à Valenciennes avec 950 km/LEE* et une 2ème place lors du Shell Eco Marathon (SEM) à Londres avec 715 km/LEE*.</p>
+                <div class="timeline-img1">
+                    <img src="historique photos/2019.JPG" alt="Début du projet">
+                </div>
+            </div>
+            <div class="timeline-item">
+                <h3>2016</h3>
+                <p> L’équipe expérimente pour la première fois des supercapacités avec Cityjoule. Celle-ci décroche une nouvelle fois la première place en hydrogène lors de l’Educ Eco à Valenciennes en France avec 1205 km/LEE* et au SEM à Londres en Angleterre avec 1154 km/LEE*.</p>
+                <div class="timeline-img2">
+                    <img src="historique photos/2016.JPG" alt="Début du projet">
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <h3>2015</h3>
+                <p> Record du monde de Cityjoule pour sa première participation dans la catégorie solaire lors de l’Educ Eco à Colomiers avec une performance de 12788 km/LEE*. Lors de ce même événement, le prototype Polyjoule se place en 1ère position dans la catégorie hydrogène. Cityjoule obtient la première place en hydrogène lors du SEM à Rotterdam avec 1114 km/LEE*</p>
+                <div class="timeline-img1">
+                    <img src="historique photos/11248805_848377648577584_5173332569536556933_o.jpg" alt="Début du projet">
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <h3>2014</h3>
+                <p>Le prototype Polyjoule dépasse la barre des 6000 km/LEE en hydrogène lors de l’Educ Eco et pulvérise le record du monde avec 6329 km/LEE*. De son côté, Cityjoule dépasse son propre record dans la catégorie urban concept hydrogène avec 1350 km/LEE*, lors du SEM à Rotterdam.</p>
+                <div class="timeline-img2">
+                    <img src="historique photos/IMG_0249.JPG" alt="Début du projet">
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <h3>2013</h3>
+                <p>Inauguration de Cityjoule le 20 mars 2013 au siège du Conseil Régional des Pays de la Loire. L’urban concept bat tous les records pour sa première année de compétition avec une performance de 1430 km/LEE* lors de l’Educ Eco à Colomiers en France et 1310 km/LEE* lors du Shell Eco Marathon (SEM) à Rotterdam aux Pays Bas.</p>
+                <div class="timeline-img1">
+                    <img src="historique photos/2013.jfif" alt="Début du projet">
+                </div>
+            </div>
+            <div class="timeline-item">
+                <h3>2012</h3>
+                <p>Exploit de Polyjoule lors de sa première participation à l’Educ Eco à Nogaro en France, dans la catégorie électrique. Le prototype établit un record mondial avec 10017 km/LEE*. La même année, Polyjoule obtient la 1ère place dans la catégorie hydrogène à Rotterdam aux Pays-Bas lors du SEM avec 4810 km/LEE*. Au même moment, la construction de l’urban Concept Cityjoule est en cours.</p>
+                <div class="timeline-img2">
+                    <img src="historique photos/2012.PNG" alt="Début du projet">
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <h3>2011</h3>
+                <p>Lancement du projet Cityjoule, l’urban concept bleu et passage de la maquette en soufflerie. Le record est une nouvelle fois dépassé par Polyjoule dans la catégorie hydrogène lors du SEM à Lausitz, avec 5130 km/LEE*.</p>
+                <div class="timeline-img1">
+                    <img src="historique photos/2011.PNG" alt="Début du projet">
+                </div>
+            </div>
+            <div class="timeline-item">
+                <h3>2010</h3>
+                <p>Polyjoule remporte la première place au Shell Eco Marathon (SEM) à Lausitz en Allemagne et établit son premier record du monde dans la catégorie hydrogène avec 4872 km/LEE*.</p>
+                <div class="timeline-img2">
+                    <img src="historique photos/2010.png" alt="Début du projet">
+                </div>
+            </div>
+            <div class="timeline-item">
+                <h3>2009</h3>
+                <p>Le prototype Polyjoule passe la barre des 3000 km/LEE et obtient la 2ème place dans la catégorie hydrogène au SEM à Lausitz en Allemagne, grâce à sa performance de 3451 km/LEE*.</p>
+                <div class="timeline-img1">
+                    <img src="historique photos/2009.jpg" alt="Début du projet">
+                </div>
+            </div>
+            <div class="timeline-item">
+                <h3>2008</h3>
+                <p>Polyjoule finit 2ème dans la catégorie hydrogène au SEM à Nogaro avec 2830 km/LEE*</p>
+                <div class="timeline-img2">
+                    <img src="historique photos/2008.PNG" alt="Début du projet">
+                </div>
+            </div>
+            <div class="timeline-item">
+                <h3>2007</h3>
+                <p>Première victoire de Polyjoule dans la catégorie Hydrogène lors du SEM à Nogaro, avec 2797 km/LEE*.</p>
+                <div class="timeline-img1">
+                    <img src="historique photos/2007.PNG" alt="Début du projet">
+                </div>
+            </div>
+            <div class="timeline-item">
+                <h3>2006</h3>
+                <p>Première participation au Shell Eco Marathon (SEM) à Nogaro en France avec le prototype Polyjoule, finissant à la 2ème place en hydrogène avec 2730 km/LEE*. (*LEE : Litre équivalent essence. Référence dans le domaine automobile.)</p>
+                <div class="timeline-img2">
+                    <img src="historique photos/2006.png" alt="Début du projet">
+                </div>
+            </div>
+            <div class="timeline-item">
+                <h3>2005</h3>
+                <p>Le 14 Septembre 2005, le partenariat entre Polytech Nantes et La Joliverie donne lieu à la création de l’association Polyjoule.</p>
+                <div class="timeline-img1">
+                    <img src="historique photos/2005.jfif" alt="Début du projet">
+                </div>
+            </div>
+        </div>
+
+
+        <footer class="footer">
+            <p>Copyright © 2025 Polyjoule. All rights reserved.</p>
+            <ul class="footer__links">
+                <li><a href="https://www.facebook.com/polyjoule">Facebook</a></li>
+                <li><a href="https://www.instagram.com/polyjoule?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==">Instagram</a></li>
+                <li><a href="https://www.linkedin.com/company/polyjoule/">Linkedin</a></li>
+            </ul>
+        </footer>
+    </div>
+    
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <script src="main.js"></script>
+</body>
+</html>

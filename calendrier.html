@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <title>Calendrier - Polyjoule</title>
+    <style>
+        .events-container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 40px;
+        }
+        .events-container h2 {
+            margin-bottom: 20px; /* Add margin to create space between the titles and the event cards */
+        }
+        .upcoming-events, .past-events {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 50px;
+            margin-bottom: 60px;
+        }
+        .event-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .event-card {
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 280px;
+            text-align: center;
+            border-radius: 10px;
+        }
+        .event-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .event-card h3 {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .event-card p {
+            font-size: 14px;
+            color: #555;
+        }
+        .event-card .details {
+            margin-top: 15px;
+            display: inline-block;
+            padding: 8px 12px;
+            background: #1B6FFF;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .event-card .details:hover {
+            background: #0E4DCC;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <ul class="nav__links nav__left">
+                <li><a href="home.html" class="logo">Accueil</a></li>
+                <li><a href="historique.html">Historique</a></li>
+            </ul>
+            <ul class="nav__links nav__right">
+                <li><a href="calendrier-updated.html">Calendrier</a></li>
+                <li><a href="gallery.html">Gallerie</a></li>
+            </ul>
+        </nav>
+        
+        <div class="events-container">
+            <h2>Événements à venir</h2>
+            <div class="upcoming-events">
+                <div class="event-wrapper">
+                    <div class="event-card">
+                        <img src="assets/histoire1.png" alt="Événement 1">
+                        <h3>Nom de l'événement</h3>
+                        <p>Petite description de l'événement.</p>
+                        <a href="#" class="details">Plus de détails</a>
+                    </div>
+                </div>
+                <div class="event-wrapper">
+                    <div class="event-card">
+                        <img src="assets/histoire1.png" alt="Événement 2">
+                        <h3>Nom de l'événement</h3>
+                        <p>Petite description de l'événement.</p>
+                        <a href="#" class="details">Plus de détails</a>
+                    </div>
+                </div>
+                <div class="event-wrapper">
+                    <div class="event-card">
+                        <img src="assets/histoire1.png" alt="Événement 2">
+                        <h3>Nom de l'événement</h3>
+                        <p>Petite description de l'événement.</p>
+                        <a href="#" class="details">Plus de détails</a>
+                    </div>
+                </div>
+            </div>
+            
+            <h2>Événements passés</h2>
+            <div class="past-events">
+                <div class="event-wrapper">
+                    <div class="event-card">
+                        <img src="assets/histoire1.png" alt="Événement 3">
+                        <h3>Nom de l'événement</h3>
+                        <p>Petite description de l'événement.</p>
+                        <a href="#" class="details">Plus de détails</a>
+                    </div>
+                </div>
+                <div class="event-wrapper">
+                    <div class="event-card">
+                        <img src="assets/histoire1.png" alt="Événement 4">
+                        <h3>Nom de l'événement</h3>
+                        <p>Petite description de l'événement.</p>
+                        <a href="#" class="details">Plus de détails</a>
+                    </div>
+                </div>
+                <div class="event-wrapper">
+                    <div class="event-card">
+                        <img src="assets/histoire1.png" alt="Événement 5">
+                        <h3>Nom de l'événement</h3>
+                        <p>Petite description de l'événement.</p>
+                        <a href="#" class="details">Plus de détails</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="footer">
+            <p>Copyright © 2025 Polyjoule. All rights reserved.</p>
+            <ul class="footer__links">
+                <li><a href="https://www.facebook.com/polyjoule">Facebook</a></li>
+                <li><a href="https://www.instagram.com/polyjoule?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==">Instagram</a></li>
+                <li><a href="https://www.linkedin.com/company/polyjoule/">Linkedin</a></li>
+            </ul>
+        </footer>
+    </div>
+    
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <script src="main.js"></script>
+</body>
+</html>

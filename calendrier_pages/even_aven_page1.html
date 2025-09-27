@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <title>Infos - Polyjoule</title>
+    <style>
+        :root {
+            --primary-color: #1B6FFF;
+            --secondary-color: #332780;
+            --background-color: #f4f4f4;
+            --text-color: #333;
+            --font-family: 'Arial', sans-serif;
+        }
+
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 10px;
+            text-align: center;
+        }
+
+
+        .about-section {
+            margin-top: 20px;
+            width: 100%;
+            position: relative;
+            padding: 30px 20px;
+            text-align: center;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 50px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .about-section h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .about-section p {
+            font-size: 16px;
+            max-width: 800px;
+            margin: auto;
+        }
+        .about-section img {
+            width: 100%; 
+            height: auto; 
+            position: relative;
+            border-radius: 10px;
+
+        }
+        
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <ul class="nav__links nav__left">
+                <li><a href="home.html" class="logo">Accueil</a></li>
+                <li><a href="../historique.html">Historique</a></li>
+            </ul>
+            <ul class="nav__links nav__right">
+                <li><a href="../calendrier-updated.html">Calendrier</a></li>
+                <li><a href="../gallery.html">Gallerie</a></li>
+            </ul>
+        </nav>
+        
+        
+
+
+
+
+        <section id="about" class="about-section">
+            <h2>Afterwork au KOKO</h2>
+            <p>Avec @nantesspacesystems nous vous attendrons avec impatience pour profiter de la soirée autour d'un verre (ou plusieurs 🍺🍹🥂).
+
+                Ce sera l'occasion de relâcher la pression des cours et de rencontrer les membres des associations ! 🤸‍♂️
+                
+                En comptant sur vous pour venir nombreux !</p>
+        </section>
+
+
+
+        <section id="about" class="about-section">
+            <img src="calendrier_photos/event 1.jfif" alt="Image">
+        </section>
+        <footer class="footer">
+            <p>Copyright © 2025 Polyjoule. All rights reserved.</p>
+            <ul class="footer__links">
+                <li><a href="https://www.facebook.com/polyjoule">Facebook</a></li>
+                <li><a href="https://www.instagram.com/polyjoule?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==">Instagram</a></li>
+                <li><a href="https://www.linkedin.com/company/polyjoule/">Linkedin</a></li>
+            </ul>
+        </footer>
+    </div>
+    
+    <script>
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <script src="main.js"></script>
+</body>
+</html>

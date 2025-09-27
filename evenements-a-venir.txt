@@ -1,0 +1,3 @@
+afterwork! TEST|Rejoignez-nous le lundi 30 septembre au KOKO pour un afterwork!|calendrier_pages/calendrier_photos/event 1.jfif|./calendrier_pages/even_aven_page1.html
+Journée Portes Ouvertes|Aujourd'hui, c'est le premier jour du @challenge_ecogreen_energy !|calendrier_pages/calendrier_photos/event 2.jfif|./calendrier_pages/even_aven_page2.html
+tournoi Mario kart.|Ce jeudi, rejoignez-nous à la cahute pour un tournoi Mario kart. 🏎|calendrier_pages/calendrier_photos/event 3.jfif|./calendrier_pages/even_aven_page3.html
