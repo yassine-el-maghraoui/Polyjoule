@@ -63,7 +63,9 @@ export default function ContentForm({ collection, definition, entry, revisions =
   const fields = definition.fields ?? [];
   const [title, setTitle] = useState(entry?.title ?? entry?.data?.title ?? '');
   const [slug, setSlug] = useState(entry?.slug ?? definition.defaultSlug ?? '');
-  const [position, setPosition] = useState(entry?.position ?? 0);
+  const [position, setPosition] = useState(
+    entry?.position !== undefined && entry?.position !== null ? entry.position : ''
+  );
   const [status, setStatus] = useState(entry?.status ?? 'draft');
   const [values, setValues] = useState(() => normaliseInitialData(fields, entry?.data));
   const [isSaving, setIsSaving] = useState(false);
@@ -88,6 +90,7 @@ export default function ContentForm({ collection, definition, entry, revisions =
 
     const response = await fetch('/api/admin/upload', {
       method: 'POST',
+      credentials: 'include',
       body: formData,
     });
 
@@ -111,14 +114,19 @@ export default function ContentForm({ collection, definition, entry, revisions =
         collection,
         slug: slug || slugify(title || '') || 'element',
         title: title || null,
-        position: Number(position) || 0,
         status,
         data: preparedValues,
       };
 
+      const numericPosition = position === '' ? null : Number(position);
+      if (numericPosition !== null && !Number.isNaN(numericPosition)) {
+        payload.position = numericPosition;
+      }
+
       const response = await fetch(entry ? `/api/admin/content/${entry.id}` : '/api/admin/content', {
         method: entry ? 'PATCH' : 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(payload),
       });
 
@@ -158,6 +166,7 @@ export default function ContentForm({ collection, definition, entry, revisions =
       const response = await fetch(`/api/admin/content/${entry.id}/restore`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ revisionId }),
       });
 
@@ -197,7 +206,13 @@ export default function ContentForm({ collection, definition, entry, revisions =
                 className="form-control"
                 value={position}
                 onChange={(event) => setPosition(event.target.value)}
+                placeholder="Auto"
               />
+              {!entry ? (
+                <small className="text-secondary d-block mt-1">
+                  Laissez vide pour placer automatiquement la nouvelle entrée en tête.
+                </small>
+              ) : null}
             </div>
             <div className="flex-grow-1">
               <label className="form-label fw-semibold">Slug</label>

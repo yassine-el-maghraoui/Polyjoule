@@ -7,7 +7,7 @@ export const metadata = {
 };
 
 export default async function PresentationPage() {
-  const preview = draftMode().isEnabled;
+  const { isEnabled: preview } = await draftMode();
   const section = await getEntry('page-presentation', 'association', { includeDrafts: preview });
   const data = section?.data ?? {};
 

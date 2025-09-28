@@ -235,7 +235,7 @@ async function main() {
       title: 'Retour sur la piste',
       description:
         'Participation à la 1ère édition de l’Eco Green Gas sur le circuit de Fay-de-Bretagne avec 7051 km/LEE* en électrique.',
-      imagePath: '/assets/historique photos/2022.jpeg',
+      imagePath: '/assets/historique-photos/2022.jpeg',
       imageAlt: 'Equipe Polyjoule 2022',
     },
     {
@@ -243,7 +243,7 @@ async function main() {
       title: 'Pause sanitaire',
       description:
         "Les compétitions sont suspendues en raison de la pandémie de COVID-19, ralentissant l’activité associative.",
-      imagePath: '/assets/historique photos/2021.JPG',
+      imagePath: '/assets/historique-photos/2021.JPG',
       imageAlt: 'Equipe Polyjoule 2021',
     },
     {
@@ -251,7 +251,7 @@ async function main() {
       title: 'Record à Onnaing',
       description:
         'Cityjoule établit un record Urban Concept électrique à l’EducEco Onnaing avec 2853 km/LEE*.',
-      imagePath: '/assets/historique photos/2019_2.JPG',
+      imagePath: '/assets/historique-photos/2019_2.JPG',
       imageAlt: 'Cityjoule 2019',
     },
     {
@@ -259,7 +259,7 @@ async function main() {
       title: 'Apprentissage sur la PAC',
       description:
         'Année d’apprentissage : la pile à combustible révèle des défauts majeurs, révélant un axe stratégique.',
-      imagePath: '/assets/historique photos/2018_2.JPG',
+      imagePath: '/assets/historique-photos/2018_2.JPG',
       imageAlt: 'Polyjoule 2018',
     },
     {
@@ -267,7 +267,7 @@ async function main() {
       title: 'Pile à combustible maison',
       description:
         'Début du développement interne de la PAC. Cityjoule signe une 1re place à l’EducEco et une 2e place au SEM à Londres.',
-      imagePath: '/assets/historique photos/2019.JPG',
+      imagePath: '/assets/historique-photos/2019.JPG',
       imageAlt: 'Equipe Polyjoule 2017',
     },
     {
@@ -275,7 +275,7 @@ async function main() {
       title: 'Supercapacités',
       description:
         'Premiers tests de supercapacités sur Cityjoule et doublé victorieux à Valenciennes et Londres en hydrogène.',
-      imagePath: '/assets/historique photos/2016.JPG',
+      imagePath: '/assets/historique-photos/2016.JPG',
       imageAlt: 'Cityjoule 2016',
     },
     {
@@ -283,7 +283,7 @@ async function main() {
       title: 'Record solaire',
       description:
         'Cityjoule bat le record du monde Urban Concept solaire (12 788 km/LEE*) et Polyjoule remporte la catégorie hydrogène.',
-      imagePath: '/assets/historique photos/11248805_848377648577584_5173332569536556933_o.jpg',
+      imagePath: '/assets/historique-photos/11248805_848377648577584_5173332569536556933_o.jpg',
       imageAlt: 'Equipe Polyjoule 2015',
     },
     {
@@ -291,7 +291,7 @@ async function main() {
       title: 'Record hydrogène',
       description:
         'Polyjoule franchit 6329 km/LEE* en hydrogène à l’EducEco et Cityjoule améliore son record à Rotterdam.',
-      imagePath: '/assets/historique photos/IMG_0249.JPG',
+      imagePath: '/assets/historique-photos/IMG_0249.JPG',
       imageAlt: 'Polyjoule 2014',
     },
     {
@@ -299,7 +299,7 @@ async function main() {
       title: 'Inauguration de Cityjoule',
       description:
         'Cityjoule est inauguré au Conseil Régional des Pays de la Loire et bat déjà des records.',
-      imagePath: '/assets/historique photos/2013.jfif',
+      imagePath: '/assets/historique-photos/2013.jfif',
       imageAlt: 'Cityjoule 2013',
     },
     {
@@ -307,7 +307,7 @@ async function main() {
       title: 'Exploit électrique',
       description:
         'Record mondial de 10 017 km/LEE* en prototype électrique et victoire hydrogène au SEM.',
-      imagePath: '/assets/historique photos/2012.PNG',
+      imagePath: '/assets/historique-photos/2012.PNG',
       imageAlt: 'Prototype Polyjoule 2012',
     },
     {
@@ -315,7 +315,7 @@ async function main() {
       title: 'Lancement Cityjoule',
       description:
         'Lancement du projet Cityjoule et nouveau record hydrogène au SEM de Lausitz (5130 km/LEE*).',
-      imagePath: '/assets/historique photos/2011.PNG',
+      imagePath: '/assets/historique-photos/2011.PNG',
       imageAlt: 'Polyjoule 2011',
     },
     {
@@ -323,7 +323,7 @@ async function main() {
       title: 'Victoire à Lausitz',
       description:
         'Première place au Shell Eco Marathon de Lausitz et record hydrogène avec 4872 km/LEE*.',
-      imagePath: '/assets/historique photos/2010.png',
+      imagePath: '/assets/historique-photos/2010.png',
       imageAlt: 'Polyjoule 2010',
     },
     {
@@ -331,35 +331,35 @@ async function main() {
       title: 'Seconde place au SEM',
       description:
         'Polyjoule dépasse les 3000 km/LEE* et monte sur le podium hydrogène à Lausitz.',
-      imagePath: '/assets/historique photos/2009.jpg',
+      imagePath: '/assets/historique-photos/2009.jpg',
       imageAlt: 'Prototype 2009',
     },
     {
       year: '2008',
       title: 'Nogaro',
       description: 'Deuxième place hydrogène au SEM de Nogaro avec 2830 km/LEE*.',
-      imagePath: '/assets/historique photos/2008.PNG',
+      imagePath: '/assets/historique-photos/2008.PNG',
       imageAlt: 'Prototype 2008',
     },
     {
       year: '2007',
       title: 'Première victoire',
       description: 'Première victoire hydrogène au Shell Eco Marathon de Nogaro (2797 km/LEE*).',
-      imagePath: '/assets/historique photos/2007.PNG',
+      imagePath: '/assets/historique-photos/2007.PNG',
       imageAlt: 'Equipe 2007',
     },
     {
       year: '2006',
       title: 'Premiers pas',
       description: 'Première participation au Shell Eco Marathon de Nogaro : 2e place en hydrogène.',
-      imagePath: '/assets/historique photos/2006.png',
+      imagePath: '/assets/historique-photos/2006.png',
       imageAlt: 'Prototype 2006',
     },
     {
       year: '2005',
       title: 'Naissance de Polyjoule',
       description: "Création de l’association Polyjoule entre Polytech Nantes et La Joliverie.",
-      imagePath: '/assets/historique photos/2005.jfif',
+      imagePath: '/assets/historique-photos/2005.jfif',
       imageAlt: 'Création Polyjoule',
     },
   ].map((item, index) => entry('timeline', item.year, item, { position: index + 1, title: item.title }));

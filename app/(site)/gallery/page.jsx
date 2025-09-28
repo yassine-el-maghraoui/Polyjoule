@@ -8,7 +8,7 @@ export const metadata = {
 };
 
 export default async function GalleryPage() {
-  const preview = draftMode().isEnabled;
+  const { isEnabled: preview } = await draftMode();
   const slides = await getCollectionEntries('gallery-slides', { includeDrafts: preview });
 
   return (

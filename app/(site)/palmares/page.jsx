@@ -7,7 +7,7 @@ export const metadata = {
 };
 
 export default async function PalmaresPage() {
-  const preview = draftMode().isEnabled;
+  const { isEnabled: preview } = await draftMode();
   const records = await getCollectionEntries('palmares', { includeDrafts: preview });
 
   return (

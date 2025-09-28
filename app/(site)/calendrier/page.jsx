@@ -40,7 +40,7 @@ function EventCard({ event, variant = 'primary' }) {
 }
 
 export default async function CalendrierPage() {
-  const preview = draftMode().isEnabled;
+  const { isEnabled: preview } = await draftMode();
   const upcoming = await getCollectionEntries('events-upcoming', { includeDrafts: preview });
   const past = await getCollectionEntries('events-past', { includeDrafts: preview });
 

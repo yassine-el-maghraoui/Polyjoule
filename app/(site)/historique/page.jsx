@@ -8,7 +8,7 @@ export const metadata = {
 };
 
 export default async function HistoriquePage() {
-  const preview = draftMode().isEnabled;
+  const { isEnabled: preview } = await draftMode();
   const timeline = await getCollectionEntries('timeline', { includeDrafts: preview });
 
   return (

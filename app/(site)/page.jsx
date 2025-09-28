@@ -5,7 +5,7 @@ import { draftMode } from 'next/headers';
 import { getCollectionEntries, getEntry } from '@/lib/content';
 
 export default async function HomePage() {
-  const preview = draftMode().isEnabled;
+  const { isEnabled: preview } = await draftMode();
   const hero = await getEntry('home-hero', 'principal', { includeDrafts: preview });
   const quickLinks = await getCollectionEntries('quick-links', { includeDrafts: preview });
   const partners = await getCollectionEntries('partners', { includeDrafts: preview });

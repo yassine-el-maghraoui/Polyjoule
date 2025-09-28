@@ -19,7 +19,7 @@ function normaliseGallery(value) {
 }
 
 export default async function InfosVehiculePage() {
-  const preview = draftMode().isEnabled;
+  const { isEnabled: preview } = await draftMode();
   const vehicles = await getCollectionEntries('vehicles', { includeDrafts: preview });
 
   return (

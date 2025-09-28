@@ -18,7 +18,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function EventDetailPage({ params }) {
-  const preview = draftMode().isEnabled;
+  const { isEnabled: preview } = await draftMode();
   const entry = await getEntry('event-detail', params.slug, { includeDrafts: preview });
 
   if (!entry) {

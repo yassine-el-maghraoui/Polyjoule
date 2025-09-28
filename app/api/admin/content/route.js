@@ -29,15 +29,27 @@ export async function POST(request) {
     return NextResponse.json({ error: 'Données invalides', details: parsed.error.format() }, { status: 400 });
   }
 
-  const { collection, slug, title, position = 0, status, data = {} } = parsed.data;
+  const { collection, slug, title, position, status, data = {} } = parsed.data;
 
   try {
+    let finalPosition = position;
+
+    if (finalPosition === undefined || finalPosition === null || Number.isNaN(finalPosition)) {
+      const minPosition = await prisma.contentEntry.aggregate({
+        _min: { position: true },
+        where: { collection },
+      });
+
+      const fallback = minPosition._min.position ?? 1;
+      finalPosition = fallback - 1;
+    }
+
     const entry = await prisma.contentEntry.create({
       data: {
         collection,
         slug,
         title: title ?? null,
-        position,
+        position: finalPosition,
         status,
         data: JSON.stringify(data),
         publishedAt: status === 'published' ? new Date() : null,
@@ -56,6 +68,13 @@ export async function POST(request) {
     return NextResponse.json({ entry }, { status: 201 });
   } catch (error) {
     console.error(error);
+    if (error.code === 'P2002') {
+      return NextResponse.json(
+        { error: 'Un élément avec ce slug existe déjà pour cette collection.' },
+        { status: 409 }
+      );
+    }
+
     return NextResponse.json({ error: 'Impossible de créer le contenu.' }, { status: 500 });
   }
 }
