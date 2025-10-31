@@ -1,88 +1,100 @@
-# Polyjoule – Back-office & site Next.js
+# Polyjoule — Guide technique
 
-Ce dépôt contient maintenant une application [Next.js 14](https://nextjs.org/) avec un back-office permettant à l’équipe Polyjoule de gérer le contenu (palmarès, calendrier, partenaires…) sans toucher au code.
+Documentation destinée au pôle informatique de l’association Polyjoule. Le dépôt héberge le site public et son back-office sur Next.js, adossés à une base Prisma/SQLite et à une authentification NextAuth.
 
-## Pré-requis
+## Aperçu rapide
+- Frontend en [Next.js 15](https://nextjs.org/) (App Router) avec React 19 et Bootstrap 5 pour la couche UI.
+- Back-office sécurisé pour gérer les contenus éditoriaux (palmarès, événements, galerie, pages thématiques).
+- API internes côté serveur (`app/api`) pour la gestion du contenu, des médias et de l’authentification.
+- Modèle de données piloté par Prisma, mutable entre SQLite (local) et PostgreSQL (production).
 
-- Node.js 20.x (LTS) recommandé
-- npm 10+
+## Architecture applicative
 
-## Installation locale
+### Frontend (site public)
+- Pages dans `app/(site)` organisées par section : accueil, calendrier, palmarès, historique, galerie, véhicules…
+- `app/layout.jsx` charge les styles globaux (`app/globals.css`) et Bootstrap, et encapsule l’arbre React dans les providers globaux (sessions, scripts Bootstrap).
+- Composants de structure dans `components/` (`SiteNav.jsx`, `SiteFooter.jsx`, etc.) pour partager navigation et éléments communs.
+- Les contenus affichés sont injectés depuis la base via `lib/content.js`, permettant de pré-rendre les pages avec les dernières données publiées.
 
-1. **Cloner le projet** et se placer dans le dossier `Polyjoule`.
-2. Créer le fichier `.env` à partir de `.env.example` et ajuster si besoin :
-   ```bash
-   cp .env.example .env
-   ```
-3. **Installer les dépendances** :
-   ```bash
-   npm install
-   ```
-4. **Générer Prisma** (client SQLite par défaut) :
-   ```bash
-   npm run prisma:generate
-   ```
-5. **Initialiser la base** (crée `dev.db` + contenu de démonstration + compte admin) :
-   ```bash
-   node prisma/seed.js
-   ```
-   Identifiants par défaut : `admin@polyjoule.fr` / `ChangeMe123!` (à modifier côté back-office).
+### Back-end & API
+- Handlers Next.js dans `app/api/**/route.js` exécutés côté serveur (`runtime = 'nodejs'`) :
+  - `/api/admin/content` et `/api/admin/content/[id]` gèrent la création, la mise à jour et la suppression des entrées Prisma.
+  - `/api/admin/upload` persiste les fichiers dans `public/uploads` et trace les assets en base (`MediaAsset`).
+  - `/api/auth/[...nextauth]` expose l’API NextAuth.
+  - `/api/preview` active le mode brouillon du site via un `PREVIEW_SECRET`.
+- Les schémas de validation Zod sécurisent les payloads entrants avant écriture base.
 
-## Lancer en développement
+### Authentification & administration
+- Espace admin dans `app/admin` :
+  - `/login` : page de connexion credentials.
+  - `(dashboard)` : navigation, listing des collections et formulaires dynamiques.
+- `lib/auth.js` configure NextAuth avec un provider Credentials (hash BCrypt) et sérialise les sessions en JWT.
+- `components/admin/ContentForm.jsx` construit dynamiquement les formulaires à partir des définitions présentes dans `lib/collections.js`, gère le téléversement, les statuts (`draft`/`published`) et l’historique.
+- `lib/content.js` expose des helpers pour : récupérer les collections, choisir les brouillons quand on prévisualise, historiser chaque modification dans `ContentRevision`.
 
-```bash
-npm run dev
-```
+Accès back-office : une fois le serveur lancé (`npm run dev` ou `npm start`), ouvrez `http://votreadresselocale/admin` (ou l’URL déployée suffixée par `/admin`). L’adresse e-mail et le mot de passe initiaux vous ont été fournis séparément : utilisez-les pour la première connexion. La modification des mots de passe n’est pas encore disponible dans l’interface ; mettez-les à jour via Prisma (requête SQL/script) en attendant une page dédiée.
 
-- Site public : [http://localhost:3000](http://localhost:3000)
-- Back-office : [http://localhost:3000/admin](http://localhost:3000/admin) (connexion requise)
-- Mode prévisualisation : [http://localhost:3000/api/preview?secret=...&redirect=/](http://localhost:3000/api/preview?secret=...&redirect=/) (utiliser la valeur `PREVIEW_SECRET` de `.env`)
+### Données & persistance
+- `prisma/schema.prisma` définit quatre modèles :
+  - `User` (gestion des comptes back-office, rôles, hash de mot de passe).
+  - `MediaAsset` (métadonnées des fichiers téléversés).
+  - `ContentEntry` (contenu structuré par collection + slug + JSON `data`).
+  - `ContentRevision` (journalisation des modifications).
+- `prisma/seed.js` initialise la base `dev.db` avec des collections de démonstration et un compte administrateur (`admin@polyjoule.fr` / `ChangeMe123!` à changer après installation).
+- `lib/prisma.js` expose un client Prisma singleton, gérant également la résolution du chemin SQLite selon l’environnement.
 
-## Générer un build de production
+### Assets & contenus statiques
+- Les images partagées résident dans `public/` et dans `assets/` pour les fichiers source.
+- Les téléversements du back-office sont stockés par défaut dans `public/uploads` (modifiable via `UPLOAD_DIR`).
+- Les dossiers `gallerie photos` et `historique photos` contiennent les médias de référence utilisés dans les sections du site.
 
-```bash
-npm run build
-```
-> ⚠️ La génération nécessite suffisamment d’espace disque pour que Next.js puisse écrire le dossier `.next`. Si le disque de la machine est presque plein, le build échouera avec `ENOSPC`.
+## Processus de conception
+1. **Cadrage UX** : définition des sections clefs (associations, véhicules, calendrier, palmarès) pour aligner l’arborescence côté `app/(site)`.
+2. **Modélisation éditoriale** : création des collections dans `lib/collections.js`, pilotées par des formulaires dynamiques afin d’éviter le code statique pour chaque champ.
+3. **Mise en place des données** : schémas Prisma + migrations (`prisma/schema.prisma`) puis script `prisma/seed.js` pour précharger un contenu éditorial cohérent.
+4. **Construction du back-office** : interface React/Bootstrap dans `app/admin`, formulaires centralisés, historique des révisions et téléversement média.
+5. **Intégration frontend** : pages Next.js qui consomment les helpers `lib/content.js` afin de rendre le site public en SSR/SSG, avec fallback en mode preview pour les brouillons.
+6. **Sécurisation & preview** : NextAuth pour restreindre l’accès admin, secret de prévisualisation pour valider les brouillons avant publication.
 
-## Structure principale
+## Organisation du dépôt
+- `app/` — Arborescence App Router (frontend public + routes admin + API).
+- `components/` — Composants UI partagés et widgets dédiés au back-office.
+- `lib/` — Services côté serveur : Prisma, NextAuth, gestion des collections/contenus.
+- `prisma/` — Schéma, DB locale (`dev.db`), script de seed et migrations.
+- `public/` — Fichiers statiques servis par Next.js (`uploads/`, logos, médias).
+- `assets/` — Sources média/matériels non exposés directement.
+- `middleware.js` — Protection des routes admin (redirect si non authentifié).
+- `jsconfig.json` — Résolution des alias (`@/` pointe vers la racine du projet).
 
-```
-app/                 # Pages publiques & back-office (App Router)
-components/          # Composants partagés (navigation, formulaires admin…)
-lib/                 # Prisma, contenu, configuration NextAuth
-prisma/schema.prisma # Modèle de données (SQLite par défaut)
-public/              # Assets statiques (images, uploads)
-```
+## Mise en place locale
+1. **Cloner** le dépôt et se placer dans `Polyjoule`.
+2. Copier la configuration : `cp .env.example .env` puis ajuster si besoin.
+3. **Installer les dépendances** : `npm install`.
+4. **Générer le client Prisma** : `npm run prisma:generate`.
+5. **Initialiser la base & les contenus** : `node prisma/seed.js`.
+6. **Démarrer** le serveur : `npm run dev`.
 
-## Flux éditorial
+## Scripts npm utiles
+- `npm run dev` — serveur Next.js en mode développement (hot reload).
+- `npm run build` — compilation production (`.next/`).
+- `npm start` — serveur Next.js en mode production.
+- `npm run lint` — lint Next.js (ESLint intégré).
+- `npm run prisma:generate` — génération du client Prisma.
+- `npm run prisma:migrate` — exécuter ou créer une migration de schéma.
+- `npm run seed` — relancer le script d’initialisation Prisma.
 
-- Les contenus sont regroupés en « collections » (hero d’accueil, timeline, événements, etc.).
-- Chaque modification crée automatiquement une révision, restaurable depuis l’interface.
-- Les images peuvent être téléversées dans `public/uploads` via le formulaire admin.
-- Les statuts `brouillon` et `publié` contrôlent ce qui apparaît sur le site public.
+## Variables d’environnement
+- `DATABASE_URL` — `file:./dev.db` par défaut (SQLite). Remplacer par une URL PostgreSQL en production.
+- `NEXTAUTH_SECRET` — clé aléatoire forte pour signer les sessions NextAuth.
+- `NEXTAUTH_URL` — URL publique de l’application (utile en production).
+- `PREVIEW_SECRET` — secret pour l’API `/api/preview`.
+- `UPLOAD_DIR` — chemin de destination des fichiers uploadés (relatif ou absolu).
 
-## Adapter à PostgreSQL
+## Bonnes pratiques & exploitation
+- Planifier la rotation du mot de passe du compte seedé (`admin@polyjoule.fr`) via Prisma tant que l’interface de changement n’est pas disponible.
+- Régénérer `NEXTAUTH_SECRET` et `PREVIEW_SECRET` avant tout déploiement externe.
+- Sauvegarder régulièrement la base (`dev.db` en local ou instance PostgreSQL en production) et le dossier `public/uploads`.
+- Surveillez l’espace disque avant `npm run build` : Next.js génère `.next/` et échoue si le volume est presque plein.
+- Pour migrer vers PostgreSQL : mettre `provider = "postgresql"` dans `prisma/schema.prisma`, ajuster `DATABASE_URL`, puis `npx prisma migrate dev`.
 
-Le projet est prêt pour PostgreSQL :
-- Remplacer `DATABASE_URL` dans `.env` par l’URL Postgres.
-- Mettre à jour `prisma/schema.prisma` (`provider = "postgresql"`).
-- Lancer `npx prisma generate` puis `npx prisma migrate dev`.
-
-## Scripts npm disponibles
-
-- `npm run dev` : démarrage Next.js en mode développement
-- `npm run build` : build production
-- `npm start` : serveur Next.js en mode production
-- `npm run prisma:generate` : génération du client Prisma
-- `npm run prisma:migrate` : migration (dev)
-- `npm run seed` : réexécuter le script d’initialisation
-
-## Sécurité & bonnes pratiques
-
-- Changer rapidement le mot de passe administrateur injecté par `seed.js`.
-- Mettre à jour `NEXTAUTH_SECRET` et `PREVIEW_SECRET` avec des valeurs fortes avant déploiement.
-- Sauvegarder régulièrement la base (`dev.db` en local ou votre instance PostgreSQL en production).
-- Les fichiers téléversés sont stockés dans `public/uploads` (versionnés via `.gitignore`).
-
-Bon développement !
+Bienvenue dans l’équipe et bon développement !
