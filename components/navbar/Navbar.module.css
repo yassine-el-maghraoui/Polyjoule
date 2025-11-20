@@ -1,0 +1,229 @@
+/* --- CONFIGURATION --- */
+.header, .spacer {
+  --nav-height-large: 100px; 
+  --nav-height-small: 80px;
+  
+  /* Couleurs */
+  --bg-color-top: #ffffff;
+  --bg-color-scrolled: #f4f4f5; /* Gris très léger (Zinc-100) */
+  
+  --anim-duration: 0.5s;
+  --anim-curve: ease-in-out;
+}
+
+/* --- HEADER PRINCIPAL --- */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  
+  height: var(--nav-height-large);
+  background-color: var(--bg-color-top);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  
+  transition: 
+    height var(--anim-duration) var(--anim-curve),
+    background-color var(--anim-duration) var(--anim-curve),
+    box-shadow var(--anim-duration) var(--anim-curve);
+    
+  display: flex;
+  align-items: center;
+}
+
+/* --- LE SPACER --- */
+.spacer {
+  display: block;
+  width: 100%;
+  height: var(--nav-height-large);
+  transition: height var(--anim-duration) var(--anim-curve);
+}
+
+/* --- ÉTAT SCROLLÉ --- */
+.scrolled {
+  height: var(--nav-height-small);
+}
+
+.header.scrolled {
+  /* Devient légèrement plus sombre (gris clair) */
+  background-color: var(--bg-color-scrolled);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+/* --- CONTENEUR --- */
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  position: relative;
+}
+
+/* --- LOGO --- */
+.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  /* Largeur initiale */
+  width: 160px;
+  transition: width var(--anim-duration) var(--anim-curve), opacity 0.5s;
+  cursor: pointer;
+
+}
+
+/* Le logo diminue TRÈS LÉGÈREMENT au scroll (160px -> 150px) */
+.header.scrolled .logo { 
+  width: 150px; 
+}
+
+/* --- DESKTOP NAV --- */
+.desktopNav { display: none; }
+
+@media (min-width: 1024px) {
+  .desktopNav {
+    display: flex;
+    gap: 2.5rem;
+    align-items: center;
+  }
+}
+
+.linkItem {
+  position: relative;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #4b5563;
+  text-decoration: none;
+  padding: 0.5rem 0;
+  transition: color 0.2s, font-size var(--anim-duration) var(--anim-curve);
+}
+
+/* Le texte diminue légèrement au scroll */
+.header.scrolled .linkItem { font-size: 1rem; }
+
+.linkItem:hover { color: #000; }
+.activeLink { color: #2563eb !important; font-weight: 600; }
+
+.linkItem::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background: #2563eb;
+  transition: width 0.3s ease;
+}
+.linkItem:hover::after, .activeLink::after { width: 100%; }
+
+/* --- BURGER BUTTON --- */
+.burger {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1003;
+}
+
+@media (min-width: 1024px) { .burger { display: none; } }
+
+.burger span {
+  width: 100%;
+  height: 2px;
+  background: #111;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.burgerOpen span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+.burgerOpen span:nth-child(2) { opacity: 0; transform: translateX(10px); }
+.burgerOpen span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+
+/* --- MOBILE MENU --- */
+.mobileMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  
+  /* COULEUR DE FOND SYNC AVEC LE HEADER */
+  background-color: var(--bg-color-top);
+  
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  
+  /* On ajoute background-color à la transition */
+  transition: 
+    max-height 0.4s ease, 
+    opacity 0.3s ease,
+    background-color var(--anim-duration) var(--anim-curve);
+  
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Changement de couleur du menu mobile quand le header est scrollé */
+.header.scrolled .mobileMenu {
+  background-color: var(--bg-color-scrolled);
+}
+
+.mobileMenuOpen {
+  max-height: 450px;
+  opacity: 1;
+}
+
+/* Liens Mobiles */
+.mobileLink {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #374151;
+  text-decoration: none;
+  /* Padding initial confortable */
+  padding: 1rem 1rem; 
+  width: 100%;
+  text-align: center;
+  
+  /* Transition fluide pour le changement de taille */
+  transition: 
+    background-color 0.2s, 
+    color 0.2s,
+    padding var(--anim-duration) var(--anim-curve),
+    font-size var(--anim-duration) var(--anim-curve);
+}
+
+/* RÉTRÉCISSEMENT MOBILE AU SCROLL */
+/* Quand on scroll, les liens deviennent un peu plus compacts */
+.header.scrolled .mobileLink {
+  padding: 0.75rem 1rem;
+  font-size: 1.05rem;
+}
+
+.mobileLink:hover {
+  /* Fond légèrement plus sombre au survol */
+  background-color: rgba(0,0,0,0.05);
+  color: #2563eb;
+}
+
+.activeLinkMobile {
+  color: #2563eb;
+  background-color: rgba(37, 99, 235, 0.08);
+  font-weight: 600;
+}

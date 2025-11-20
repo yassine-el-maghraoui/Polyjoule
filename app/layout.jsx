@@ -7,6 +7,11 @@ import BootstrapClient from '@/components/BootstrapClient';
 export const metadata = {
   title: 'Polyjoule',
   description: "Polyjoule - Association étudiante dédiée à l'innovation énergétique.",
+  icons: {
+    // On utilise ton logo existant comme icône pour l'onglet du navigateur
+    icon: '/images/icons.png', 
+    // Tu pourras ajouter 'apple' pour les iPhones plus tard si besoin
+  },
 };
 
 export default function RootLayout({ children }) {

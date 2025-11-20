@@ -1,12 +1,12 @@
-import SiteNav from '@/components/SiteNav';
-import SiteFooter from '@/components/SiteFooter';
+import Navbar from '@/components/navbar/Navbar';
+import Footer from '@/components/footer/Footer';
 
 export default function SiteLayout({ children }) {
   return (
     <>
-      <SiteNav />
+      <Navbar />
       <main className="flex-grow-1">{children}</main>
-      <SiteFooter />
+      <Footer />
     </>
   );
 }
