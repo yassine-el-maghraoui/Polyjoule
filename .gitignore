@@ -8,3 +8,5 @@ public/uploads/*
 .env.local
 dev.db
 prisma/dev.db
+.vercel
+.env*.local
