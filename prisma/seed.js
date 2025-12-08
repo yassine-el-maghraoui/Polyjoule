@@ -299,7 +299,7 @@ async function main() {
       title: 'Inauguration de Cityjoule',
       description:
         'Cityjoule est inauguré au Conseil Régional des Pays de la Loire et bat déjà des records.',
-      imagePath: '/assets/historique-photos/2013.jfif',
+      imagePath: '/assets/historique-photos/2013.jpg',
       imageAlt: 'Cityjoule 2013',
     },
     {
@@ -359,7 +359,7 @@ async function main() {
       year: '2005',
       title: 'Naissance de Polyjoule',
       description: "Création de l’association Polyjoule entre Polytech Nantes et La Joliverie.",
-      imagePath: '/assets/historique-photos/2005.jfif',
+      imagePath: '/assets/historique-photos/2005.jpg',
       imageAlt: 'Création Polyjoule',
     },
   ].map((item, index) => entry('timeline', item.year, item, { position: index + 1, title: item.title }));
@@ -375,7 +375,7 @@ async function main() {
         date: '30 septembre',
         ctaLabel: 'Plus de détails',
         ctaHref: '/calendrier/afterwork-koko',
-        imagePath: '/calendrier/event 1.jfif',
+        imagePath: '/calendrier/event-1.jpg',
       },
       { position: 1 }
     ),
@@ -389,7 +389,7 @@ async function main() {
         date: 'Prochainement',
         ctaLabel: 'Plus de détails',
         ctaHref: '/calendrier/challenge-ecogreen-energy',
-        imagePath: '/calendrier/event 2.jfif',
+        imagePath: '/calendrier/event-2.jpg',
       },
       { position: 2 }
     ),
@@ -403,7 +403,7 @@ async function main() {
         date: 'Jeudi',
         ctaLabel: 'Plus de détails',
         ctaHref: '/calendrier/tournoi-mario-kart',
-        imagePath: '/calendrier/event 3.jfif',
+        imagePath: '/calendrier/event-3.jpg',
       },
       { position: 3 }
     ),
@@ -420,7 +420,7 @@ async function main() {
         date: 'Février 2024',
         ctaLabel: 'Voir le récapitulatif',
         ctaHref: '/calendrier/hyvolution',
-        imagePath: '/calendrier/event 4.png',
+        imagePath: '/calendrier/event-4.png',
       },
       { position: 1 }
     ),
@@ -433,7 +433,7 @@ async function main() {
         date: 'Mai 2024',
         ctaLabel: 'Voir le récapitulatif',
         ctaHref: '/calendrier/shell-eco-marathon-2024',
-        imagePath: '/calendrier/event 5.jfif',
+        imagePath: '/calendrier/event-5.jpg',
       },
       { position: 2 }
     ),
@@ -447,7 +447,7 @@ async function main() {
         date: '16 octobre 2024',
         ctaLabel: 'Voir le récapitulatif',
         ctaHref: '/calendrier/assemblee-generale-2024',
-        imagePath: '/calendrier/event 6.jfif',
+        imagePath: '/calendrier/event-6.jpg',
       },
       { position: 3 }
     ),
@@ -461,7 +461,7 @@ async function main() {
         "Partagez un moment convivial avec Polyjoule et Nantes Space Systems autour d'un verre le lundi 30 septembre au KOKO.",
       bodyHtml:
         '<p>Ce sera l’occasion idéale de relâcher la pression des cours, d’échanger avec les membres des associations et de rencontrer de nouveaux talents. Venez nombreux !</p>',
-      imagePath: '/calendrier/event 1.jfif',
+      imagePath: '/calendrier/event-1.jpg',
     },
     {
       slug: 'challenge-ecogreen-energy',
@@ -470,7 +470,7 @@ async function main() {
         'Première course de la saison pour lancer les derniers réglages avant le Shell Eco-marathon.',
       bodyHtml:
         '<p>Suivez les coulisses de l’équipe sur nos réseaux et découvrez l’affiche réalisée par notre partenaire @k0ureur. Une entrée en matière idéale pour tester nos évolutions techniques.</p>',
-      imagePath: '/calendrier/event 2.jfif',
+      imagePath: '/calendrier/event-2.jpg',
     },
     {
       slug: 'tournoi-mario-kart',
@@ -478,7 +478,7 @@ async function main() {
       intro: 'La Cahute ouvre ses portes pour un après-midi de défis sur Mario Kart.',
       bodyHtml:
         "<p>Venez vous défier et tentez de décrocher la première place sur la piste virtuelle ! Ambiance garantie pour les membres et les supporters.</p>",
-      imagePath: '/calendrier/event 3.jfif',
+      imagePath: '/calendrier/event-3.jpg',
     },
     {
       slug: 'hyvolution',
@@ -486,7 +486,7 @@ async function main() {
       intro: "Hyvolution, c’est l’événement de référence pour l’hydrogène.",
       bodyHtml:
         '<p>Nous avons échangé avec des experts, assisté à des conférences, découvert les dernières innovations et exploré de nouvelles opportunités de partenariat. Un moment clé pour nos ambitions en matière de mobilité durable.</p>',
-      imagePath: '/calendrier/event 4.png',
+      imagePath: '/calendrier/event-4.png',
     },
     {
       slug: 'shell-eco-marathon-2024',
@@ -494,7 +494,7 @@ async function main() {
       intro: 'Objectif atteint : contrôles techniques validés pour nos deux véhicules.',
       bodyHtml:
         '<p>Le travail conjoint de Polyjoule et de La Joliverie porte ses fruits : les voitures sont prêtes à rouler au Shell Eco Marathon 2024. Les essais peuvent commencer !</p>',
-      imagePath: '/calendrier/event 5_2.jpeg',
+      imagePath: '/calendrier/event-5_2.jpeg',
     },
     {
       slug: 'assemblee-generale-2024',
@@ -502,7 +502,7 @@ async function main() {
       intro: 'Un moment important pour faire le bilan de l’année écoulée et lancer la nouvelle saison.',
       bodyHtml:
         '<p>Merci à Polytech Nantes, La Joliverie ainsi qu’à nos partenaires Abalone, RS, T.EN, BETA Vêtements et Siemens pour leur soutien indispensable. Ensemble vers de nouveaux défis !</p>',
-      imagePath: '/calendrier/event 6.jfif',
+      imagePath: '/calendrier/event-6.jpg',
     },
   ].map((item, index) =>
     entry(
