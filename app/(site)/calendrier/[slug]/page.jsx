@@ -5,7 +5,8 @@ import { draftMode } from 'next/headers';
 import { getEntry } from '@/lib/content';
 
 export async function generateMetadata({ params }) {
-  const entry = await getEntry('event-detail', params.slug);
+  const { slug } = await params;
+  const entry = await getEntry('event-detail', slug);
 
   if (!entry) {
     return { title: 'Événement - Polyjoule' };
@@ -18,8 +19,9 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function EventDetailPage({ params }) {
+  const { slug } = await params;
   const { isEnabled: preview } = await draftMode();
-  const entry = await getEntry('event-detail', params.slug, { includeDrafts: preview });
+  const entry = await getEntry('event-detail', slug, { includeDrafts: preview });
 
   if (!entry) {
     notFound();
