@@ -6,7 +6,7 @@ import { getCollectionDefinition } from '@/lib/collections';
 import { getRevisions } from '@/lib/content';
 
 export default async function EditCollectionEntryPage({ params }) {
-  const { collection, id } = params;
+  const { collection, id } = await params;
   const definition = getCollectionDefinition(collection);
 
   if (!definition) {
@@ -41,7 +41,7 @@ export default async function EditCollectionEntryPage({ params }) {
       <div className="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
         <div>
           <h1 className="h4 fw-bold text-primary mb-1">{definition.label}</h1>
-          <p className="text-secondary mb-0">Modification du contenu #{entry.id}</p>
+          <p className="text-secondary mb-0">Modifiez ce contenu puis cliquez sur Enregistrer.</p>
         </div>
       </div>
 

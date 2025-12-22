@@ -3,6 +3,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+import ImageCropper from '@/components/admin/ImageCropper';
+import RichTextEditor from '@/components/admin/RichTextEditor';
+
 function slugify(value) {
   return value
     .toString()
@@ -12,6 +15,65 @@ function slugify(value) {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
     .slice(0, 120);
+}
+
+function escapeHtml(value) {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function looksLikeHtml(value) {
+  return /<[^>]+>/.test(value);
+}
+
+function toParagraphs(value) {
+  if (!value) return '';
+  const paragraphs = value
+    .split(/\n{2,}/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+  return paragraphs
+    .map((paragraph) => `<p>${escapeHtml(paragraph).replace(/\n/g, '<br />')}</p>`)
+    .join('');
+}
+
+function getPreviewHtmlValue(value, autoParagraphs = false) {
+  if (!value) return '';
+  const trimmed = value.trim();
+  if (!trimmed) return '';
+  if (autoParagraphs && !looksLikeHtml(trimmed)) {
+    return toParagraphs(trimmed);
+  }
+  return trimmed;
+}
+
+function normaliseGalleryInput(value) {
+  if (Array.isArray(value)) return value;
+  if (typeof value !== 'string') return [];
+  const byLine = value
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+  if (byLine.length > 1) return byLine;
+  return value
+    .split(',')
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
+function fileTypeFromPath(path) {
+  const lower = (path || '').toLowerCase();
+  if (lower.endsWith('.png')) return 'image/png';
+  if (lower.endsWith('.webp')) return 'image/webp';
+  return 'image/jpeg';
+}
+
+function fileNameFromPath(path) {
+  if (!path) return '';
+  const parts = path.split('/');
+  return parts[parts.length - 1] || '';
 }
 
 function normaliseInitialData(fields, data) {
@@ -51,6 +113,13 @@ function prepareValues(fields, values) {
       } else {
         prepared[field.name] = [];
       }
+    } else if (field.autoParagraphs && typeof value === 'string') {
+      const trimmed = value.trim();
+      if (trimmed && !looksLikeHtml(trimmed)) {
+        prepared[field.name] = toParagraphs(trimmed);
+      } else {
+        prepared[field.name] = value;
+      }
     } else {
       prepared[field.name] = value;
     }
@@ -60,15 +129,21 @@ function prepareValues(fields, values) {
 
 export default function ContentForm({ collection, definition, entry, revisions = [] }) {
   const router = useRouter();
+  const entryTitleField = definition.entryTitleField ?? null;
   const fields = definition.fields ?? [];
+  const fieldByName = Object.fromEntries(fields.map((field) => [field.name, field]));
   const [title, setTitle] = useState(entry?.title ?? entry?.data?.title ?? '');
   const [slug, setSlug] = useState(entry?.slug ?? definition.defaultSlug ?? '');
   const [position, setPosition] = useState(
     entry?.position !== undefined && entry?.position !== null ? entry.position : ''
   );
-  const [status, setStatus] = useState(entry?.status ?? 'draft');
+  const [status, setStatus] = useState(entry?.status ?? 'published');
   const [values, setValues] = useState(() => normaliseInitialData(fields, entry?.data));
   const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [showPreview, setShowPreview] = useState(true);
+  const [imageEditors, setImageEditors] = useState({});
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
@@ -76,9 +151,9 @@ export default function ContentForm({ collection, definition, entry, revisions =
     setValues((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleAutoSlug = () => {
-    if (title && !entry) {
-      setSlug(slugify(title));
+  const handleAutoSlug = (value) => {
+    if (!entry && !slug) {
+      setSlug(slugify(value || ''));
     }
   };
 
@@ -102,6 +177,38 @@ export default function ContentForm({ collection, definition, entry, revisions =
     handleFieldChange(name, result.path);
   };
 
+  const openImageEditor = ({ name, sourceUrl, fileName, fileType, rawFile, revokeUrl, aspect }) => {
+    setImageEditors((prev) => {
+      const current = prev[name];
+      if (current?.revokeUrl && current.sourceUrl) {
+        URL.revokeObjectURL(current.sourceUrl);
+      }
+      return {
+        ...prev,
+        [name]: {
+          sourceUrl,
+          fileName,
+          fileType,
+          rawFile,
+          revokeUrl,
+          aspect,
+        },
+      };
+    });
+  };
+
+  const closeImageEditor = (name) => {
+    setImageEditors((prev) => {
+      const next = { ...prev };
+      const current = next[name];
+      if (current?.revokeUrl && current.sourceUrl) {
+        URL.revokeObjectURL(current.sourceUrl);
+      }
+      delete next[name];
+      return next;
+    });
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsSaving(true);
@@ -109,14 +216,22 @@ export default function ContentForm({ collection, definition, entry, revisions =
     setError('');
 
     try {
+      const primaryText = entryTitleField ? values[entryTitleField] : title;
+      const slugSource =
+        primaryText || title || values.title || values.name || values.imagePath || collection;
+      const autoSlug = slugify(slugSource || '') || `${collection}-${Date.now()}`;
+      const resolvedTitle = entryTitleField ? primaryText : title;
       const preparedValues = prepareValues(fields, values);
       const payload = {
         collection,
-        slug: slug || slugify(title || '') || 'element',
-        title: title || null,
+        slug: slug || autoSlug,
         status,
         data: preparedValues,
       };
+
+      if (resolvedTitle && resolvedTitle.toString().trim()) {
+        payload.title = resolvedTitle.toString().trim();
+      }
 
       const numericPosition = position === '' ? null : Number(position);
       if (numericPosition !== null && !Number.isNaN(numericPosition)) {
@@ -157,6 +272,36 @@ export default function ContentForm({ collection, definition, entry, revisions =
     setStatus(newStatus);
   };
 
+  const handleDelete = async () => {
+    if (!entry) return;
+    if (!window.confirm('Supprimer définitivement ce contenu ?')) {
+      return;
+    }
+
+    setIsDeleting(true);
+    setMessage('');
+    setError('');
+
+    try {
+      const response = await fetch(`/api/admin/content/${entry.id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        const details = await response.json().catch(() => ({}));
+        throw new Error(details.error || 'Suppression impossible');
+      }
+
+      router.replace(`/admin/collections/${collection}`);
+      router.refresh();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   const handleRestore = async (revisionId) => {
     setIsSaving(true);
     setMessage('');
@@ -184,61 +329,353 @@ export default function ContentForm({ collection, definition, entry, revisions =
     }
   };
 
+  const previewTitle =
+    (entryTitleField ? values[entryTitleField] : title) ||
+    values.title ||
+    values.name ||
+    definition.label;
+  const previewImage =
+    values.imagePath || values.illustrationPath || values.logoPath || '';
+  const previewAltText = values.imageAlt || values.altText || previewTitle || 'Aperçu';
+  const previewSummary = values.summary || values.intro || values.description || values.lead || '';
+  const previewDate = values.date || values.year || values.category || '';
+  const previewCtaLabel = values.ctaLabel || 'En savoir plus';
+  const previewBodyHtml = getPreviewHtmlValue(
+    values.bodyHtml || '',
+    fieldByName.bodyHtml?.autoParagraphs
+  );
+  const previewGallery = normaliseGalleryInput(values.galleryPaths || '');
+
+  const renderPreview = () => {
+    if (collection === 'events-upcoming' || collection === 'events-past') {
+      return (
+        <div className="col-md-8 col-lg-6">
+          <div className="card event-card h-100">
+            {values.imagePath ? (
+              <img
+                src={values.imagePath}
+                alt={previewAltText}
+                className="card-img-top"
+                loading="lazy"
+              />
+            ) : (
+              <div className="bg-light text-secondary text-center py-5">Aucune image</div>
+            )}
+            <div className="card-body d-flex flex-column">
+              {previewDate ? (
+                <span className="text-uppercase text-secondary fw-semibold small mb-2">
+                  {previewDate}
+                </span>
+              ) : null}
+              <h3 className="h5 fw-bold">{previewTitle}</h3>
+              {previewSummary ? <p className="text-secondary">{previewSummary}</p> : null}
+              <button type="button" className="btn btn-primary mt-auto" disabled>
+                {previewCtaLabel}
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (collection === 'event-detail') {
+      return (
+        <div className="section-card mx-auto" style={{ maxWidth: '960px' }}>
+          <div className="row g-4 align-items-center">
+            <div className="col-lg-6 order-lg-2 text-center">
+              {values.imagePath ? (
+                <img
+                  src={values.imagePath}
+                  alt={previewAltText}
+                  className="img-fluid rounded-4 shadow"
+                  loading="lazy"
+                />
+              ) : (
+                <div className="bg-light text-secondary text-center py-5 rounded-4">
+                  Aucune image
+                </div>
+              )}
+            </div>
+            <div className="col-lg-6 order-lg-1">
+              <span className="badge badge-soft-primary">Calendrier</span>
+              <h2 className="h3 fw-bold text-primary mt-3">{previewTitle}</h2>
+              {values.intro ? <p className="text-secondary fs-5">{values.intro}</p> : null}
+              {previewBodyHtml ? (
+                <div
+                  className="text-secondary fs-5"
+                  dangerouslySetInnerHTML={{ __html: previewBodyHtml }}
+                />
+              ) : null}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (collection === 'timeline' || collection === 'palmares') {
+      return (
+        <article className="timeline-card">
+          {previewDate ? <span className="timeline-year">{previewDate}</span> : null}
+          <h3 className="h5 fw-bold">{previewTitle}</h3>
+          {previewSummary ? <p className="text-secondary mb-0">{previewSummary}</p> : null}
+          {values.imagePath ? (
+            <img
+              src={values.imagePath}
+              alt={previewAltText}
+              className="img-fluid rounded-4 shadow mt-3"
+              loading="lazy"
+            />
+          ) : null}
+        </article>
+      );
+    }
+
+    if (collection === 'gallery-slides') {
+      return values.imagePath ? (
+        <img src={values.imagePath} alt={previewAltText} className="img-fluid rounded-4 shadow" loading="lazy" />
+      ) : (
+        <div className="bg-light text-secondary text-center py-5 rounded-4">Aucune image</div>
+      );
+    }
+
+    if (collection === 'vehicles') {
+      return (
+        <div>
+          <div className="row g-5 align-items-center">
+            <div className="col-lg-6">
+              {values.category ? <span className="timeline-year">{values.category}</span> : null}
+              <h2 className="h3 fw-bold text-primary mt-3">{previewTitle}</h2>
+              {values.intro ? <p className="text-secondary fs-5">{values.intro}</p> : null}
+              {previewBodyHtml ? (
+                <div
+                  className="text-secondary fs-5"
+                  dangerouslySetInnerHTML={{ __html: previewBodyHtml }}
+                />
+              ) : null}
+            </div>
+            <div className="col-lg-6 text-center">
+              {values.imagePath ? (
+                <img
+                  src={values.imagePath}
+                  alt={previewAltText}
+                  className="img-fluid rounded-4 shadow"
+                  loading="lazy"
+                />
+              ) : (
+                <div className="bg-light text-secondary text-center py-5 rounded-4">
+                  Aucune image
+                </div>
+              )}
+            </div>
+          </div>
+          {previewGallery.length ? (
+            <div className="row g-4 mt-4">
+              {previewGallery.slice(0, 3).map((path) => (
+                <div className="col-sm-6 col-lg-4" key={path}>
+                  <img src={path} alt={`${previewTitle} - galerie`} className="img-fluid rounded-4 shadow" loading="lazy" />
+                </div>
+              ))}
+            </div>
+          ) : null}
+        </div>
+      );
+    }
+
+    if (collection === 'home-hero') {
+      return (
+        <div className="row align-items-center g-4">
+          <div className="col-lg-6 text-center text-lg-start">
+            {values.badge ? <span className="badge badge-soft-primary small-caps mb-3">{values.badge}</span> : null}
+            <h2 className="h3 fw-bold text-primary mb-3">{previewTitle}</h2>
+            {values.lead ? <p className="lead text-secondary mb-4">{values.lead}</p> : null}
+            <div className="d-flex flex-wrap justify-content-center justify-content-lg-start gap-3">
+              {values.primaryCtaLabel ? (
+                <button type="button" className="btn btn-primary btn-lg px-4" disabled>
+                  {values.primaryCtaLabel}
+                </button>
+              ) : null}
+              {values.secondaryCtaLabel ? (
+                <button type="button" className="btn btn-outline-primary btn-lg px-4" disabled>
+                  {values.secondaryCtaLabel}
+                </button>
+              ) : null}
+            </div>
+          </div>
+          <div className="col-lg-6 text-center">
+            {values.illustrationPath ? (
+              <img
+                src={values.illustrationPath}
+                alt={previewAltText}
+                className="img-fluid hero-illustration"
+                loading="lazy"
+              />
+            ) : (
+              <div className="bg-light text-secondary text-center py-5 rounded-4">Aucune image</div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    if (collection === 'quick-links') {
+      return (
+        <div className="col-sm-8 col-lg-6">
+          <div className="card quick-link-card h-100 text-center text-decoration-none">
+            <div className="card-body py-4">
+              {values.icon ? <i className={`${values.icon} display-5 text-primary mb-3`}></i> : null}
+              <h5 className="card-title">{previewTitle}</h5>
+              {values.description ? <p className="card-text text-secondary">{values.description}</p> : null}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (collection === 'partners') {
+      return (
+        <div className="text-center">
+          {values.logoPath ? (
+            <img src={values.logoPath} alt={previewTitle} className="partner-logo" loading="lazy" />
+          ) : (
+            <div className="bg-light text-secondary text-center py-5 rounded-4">Aucun logo</div>
+          )}
+          <p className="mt-3 mb-0 text-secondary">{previewTitle}</p>
+        </div>
+      );
+    }
+
+    if (collection === 'page-presentation') {
+      return (
+        <div className="section-card mx-auto" style={{ maxWidth: '900px' }}>
+          <div className="text-center mb-4">
+            <span className="badge badge-soft-primary">Polyjoule depuis 2005</span>
+            <h2 className="mt-3 fw-bold text-primary">{previewTitle}</h2>
+          </div>
+          <div className="fs-5 text-secondary">
+            {previewBodyHtml ? (
+              <div dangerouslySetInnerHTML={{ __html: previewBodyHtml }} />
+            ) : (
+              <p>Aucun contenu saisi.</p>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="border rounded-3 p-3 bg-white">
+        <h3 className="h5 fw-bold text-primary">{previewTitle}</h3>
+        {previewSummary ? <p className="text-secondary">{previewSummary}</p> : null}
+        {previewBodyHtml ? (
+          <div className="text-secondary" dangerouslySetInnerHTML={{ __html: previewBodyHtml }} />
+        ) : null}
+        {previewImage ? (
+          <img src={previewImage} alt={previewAltText} className="img-fluid rounded-4 shadow mt-3" loading="lazy" />
+        ) : null}
+      </div>
+    );
+  };
+
   return (
     <div className="card shadow-sm border-0">
       <div className="card-body">
         <form onSubmit={handleSubmit} className="d-flex flex-column gap-4">
-          <div className="d-flex flex-column flex-md-row gap-3">
-            <div className="flex-grow-1">
-              <label className="form-label fw-semibold">Titre</label>
-              <input
-                type="text"
-                className="form-control"
-                value={title}
-                onChange={(event) => setTitle(event.target.value)}
-                onBlur={handleAutoSlug}
-              />
-            </div>
-            <div>
-              <label className="form-label fw-semibold">Position</label>
-              <input
-                type="number"
-                className="form-control"
-                value={position}
-                onChange={(event) => setPosition(event.target.value)}
-                placeholder="Auto"
-              />
-              {!entry ? (
-                <small className="text-secondary d-block mt-1">
-                  Laissez vide pour placer automatiquement la nouvelle entrée en tête.
-                </small>
+          <div className="d-flex flex-column gap-2">
+            <p className="text-secondary mb-0">
+              Remplissez les champs essentiels, les options techniques sont automatiques.
+            </p>
+            <div className="row g-3 align-items-end">
+              {!entryTitleField ? (
+                <div className="col-md-6">
+                  <label className="form-label fw-semibold">Titre</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={title}
+                    onChange={(event) => setTitle(event.target.value)}
+                    onBlur={(event) => handleAutoSlug(event.target.value)}
+                  />
+                </div>
               ) : null}
+              <div className="col-md-6">
+                <label className="form-label fw-semibold">Visibilité</label>
+                <div className="form-check form-switch">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    id="content-status"
+                    checked={status === 'published'}
+                    onChange={(event) => handlePublish(event.target.checked ? 'published' : 'draft')}
+                  />
+                  <label className="form-check-label" htmlFor="content-status">
+                    En ligne
+                  </label>
+                </div>
+                <small className="text-secondary d-block">
+                  Désactivez pour garder ce contenu en brouillon.
+                </small>
+              </div>
             </div>
-            <div className="flex-grow-1">
-              <label className="form-label fw-semibold">Slug</label>
-              <input
-                type="text"
-                className="form-control"
-                value={slug}
-                onChange={(event) => setSlug(event.target.value)}
-              />
-            </div>
-            <div>
-              <label className="form-label fw-semibold">Statut</label>
-              <select
-                className="form-select"
-                value={status}
-                onChange={(event) => handlePublish(event.target.value)}
-              >
-                <option value="draft">Brouillon</option>
-                <option value="published">Publié</option>
-              </select>
-            </div>
+            <button
+              type="button"
+              className="btn btn-link text-start px-0"
+              onClick={() => setShowAdvanced((prev) => !prev)}
+            >
+              {showAdvanced ? 'Masquer les options avancées' : 'Afficher les options avancées'}
+            </button>
+            {showAdvanced ? (
+              <div className="border rounded-3 p-3 bg-light">
+                <div className="row g-3">
+                  <div className="col-md-6">
+                    <label className="form-label fw-semibold">Adresse courte (slug)</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={slug}
+                      onChange={(event) => setSlug(event.target.value)}
+                      placeholder="auto"
+                    />
+                    <small className="text-secondary d-block mt-1">
+                      Laissez vide pour générer automatiquement depuis le titre.
+                    </small>
+                  </div>
+                  <div className="col-md-6">
+                    <label className="form-label fw-semibold">Ordre d&apos;affichage</label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      value={position}
+                      onChange={(event) => setPosition(event.target.value)}
+                      placeholder="Auto"
+                    />
+                    <small className="text-secondary d-block mt-1">
+                      Laissez vide pour placer automatiquement la nouvelle entrée en tête.
+                    </small>
+                  </div>
+                </div>
+              </div>
+            ) : null}
           </div>
 
           <div className="row g-4">
             {fields.map((field) => {
               const value = values[field.name] ?? '';
+
+              if (field.type === 'textarea' && field.richText) {
+                return (
+                  <div className="col-12" key={field.name}>
+                    <label className="form-label fw-semibold">{field.label}</label>
+                    <RichTextEditor
+                      value={value}
+                      onChange={(nextValue) => handleFieldChange(field.name, nextValue)}
+                      placeholder={field.placeholder}
+                    />
+                    {field.helpText ? (
+                      <small className="text-secondary d-block mt-1">{field.helpText}</small>
+                    ) : null}
+                  </div>
+                );
+              }
 
               if (field.type === 'textarea') {
                 return (
@@ -250,6 +687,11 @@ export default function ContentForm({ collection, definition, entry, revisions =
                       value={value}
                       onChange={(event) => handleFieldChange(field.name, event.target.value)}
                       placeholder={field.placeholder}
+                      onBlur={
+                        field.name === entryTitleField
+                          ? (event) => handleAutoSlug(event.target.value)
+                          : undefined
+                      }
                     />
                     {field.helpText ? (
                       <small className="text-secondary d-block mt-1">{field.helpText}</small>
@@ -259,6 +701,7 @@ export default function ContentForm({ collection, definition, entry, revisions =
               }
 
               if (field.type === 'image') {
+                const editor = imageEditors[field.name];
                 return (
                   <div className="col-md-6" key={field.name}>
                     <label className="form-label fw-semibold">{field.label}</label>
@@ -270,26 +713,87 @@ export default function ContentForm({ collection, definition, entry, revisions =
                         onChange={(event) => handleFieldChange(field.name, event.target.value)}
                         placeholder={field.placeholder}
                       />
-                      <input
-                        type="file"
-                        className="form-control"
-                        accept="image/*"
-                        onChange={async (event) => {
-                          const file = event.target.files?.[0];
-                          if (!file) return;
-                          try {
-                            setIsSaving(true);
-                            await handleUpload(field.name, file);
-                            setMessage('Image envoyée.');
-                          } catch (uploadError) {
-                            setError(uploadError.message);
-                          } finally {
-                            setIsSaving(false);
+                      <div className="d-flex flex-column gap-2">
+                        <input
+                          type="file"
+                          className="form-control"
+                          accept="image/*"
+                          onChange={(event) => {
+                            const file = event.target.files?.[0];
+                            if (!file) return;
+                            const objectUrl = URL.createObjectURL(file);
+                            openImageEditor({
+                              name: field.name,
+                              sourceUrl: objectUrl,
+                              fileName: file.name,
+                              fileType: file.type,
+                              rawFile: file,
+                              revokeUrl: true,
+                              aspect: field.cropAspect,
+                            });
                             event.target.value = '';
-                          }
-                        }}
-                      />
+                          }}
+                        />
+                        {value ? (
+                          <button
+                            type="button"
+                            className="btn btn-outline-secondary btn-sm"
+                            onClick={() =>
+                              openImageEditor({
+                                name: field.name,
+                                sourceUrl: value,
+                                fileName: fileNameFromPath(value),
+                                fileType: fileTypeFromPath(value),
+                                rawFile: null,
+                                revokeUrl: false,
+                                aspect: field.cropAspect,
+                              })
+                            }
+                          >
+                            Ajuster l&apos;image
+                          </button>
+                        ) : null}
+                      </div>
                     </div>
+                    {value ? (
+                      <div className="mt-2">
+                        <img
+                          src={value}
+                          alt="Aperçu"
+                          className="img-fluid rounded border"
+                          style={{ maxHeight: '180px', objectFit: 'cover' }}
+                        />
+                      </div>
+                    ) : null}
+                    {editor ? (
+                      <div className="mt-3">
+                        <ImageCropper
+                          sourceUrl={editor.sourceUrl}
+                          initialAspect={editor.aspect}
+                          fileName={editor.fileName}
+                          fileType={editor.fileType}
+                          rawFile={editor.rawFile}
+                          onCancel={() => closeImageEditor(field.name)}
+                          onSave={async ({ blob, fileName, fileType, useOriginal }) => {
+                            try {
+                              setIsSaving(true);
+                              if (useOriginal && editor.rawFile) {
+                                await handleUpload(field.name, editor.rawFile);
+                              } else if (blob) {
+                                const file = new File([blob], fileName, { type: fileType });
+                                await handleUpload(field.name, file);
+                              }
+                              setMessage('Image envoyée.');
+                              closeImageEditor(field.name);
+                            } catch (uploadError) {
+                              setError(uploadError.message);
+                            } finally {
+                              setIsSaving(false);
+                            }
+                          }}
+                        />
+                      </div>
+                    ) : null}
                     {field.helpText ? (
                       <small className="text-secondary d-block mt-1">{field.helpText}</small>
                     ) : null}
@@ -306,6 +810,11 @@ export default function ContentForm({ collection, definition, entry, revisions =
                     value={value}
                     onChange={(event) => handleFieldChange(field.name, event.target.value)}
                     placeholder={field.placeholder}
+                    onBlur={
+                      field.name === entryTitleField
+                        ? (event) => handleAutoSlug(event.target.value)
+                        : undefined
+                    }
                   />
                   {field.helpText ? (
                     <small className="text-secondary d-block mt-1">{field.helpText}</small>
@@ -331,10 +840,38 @@ export default function ContentForm({ collection, definition, entry, revisions =
               {isSaving ? 'Enregistrement…' : 'Enregistrer'}
             </button>
             {entry ? (
+              <button
+                type="button"
+                className="btn btn-outline-danger"
+                onClick={handleDelete}
+                disabled={isDeleting || isSaving}
+              >
+                {isDeleting ? 'Suppression…' : 'Supprimer'}
+              </button>
+            ) : null}
+            {entry ? (
               <span className="text-secondary small">
                 Dernière mise à jour : {new Date(entry.updatedAt).toLocaleString('fr-FR')}
               </span>
             ) : null}
+          </div>
+
+          <div className="border-top pt-4">
+            <div className="d-flex align-items-center justify-content-between">
+              <h2 className="h6 fw-bold text-primary mb-0">Aperçu en direct</h2>
+              <button
+                type="button"
+                className="btn btn-link"
+                onClick={() => setShowPreview((prev) => !prev)}
+              >
+                {showPreview ? 'Masquer' : 'Afficher'}
+              </button>
+            </div>
+            {showPreview ? (
+              <div className="mt-3">{renderPreview()}</div>
+            ) : (
+              <p className="text-secondary mt-3 mb-0">Aperçu masqué.</p>
+            )}
           </div>
         </form>
 

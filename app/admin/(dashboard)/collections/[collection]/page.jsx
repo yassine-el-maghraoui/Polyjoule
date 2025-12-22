@@ -10,8 +10,19 @@ function formatDate(value) {
   return new Date(value).toLocaleString('fr-FR');
 }
 
+function getDisplayTitle(entry) {
+  return (
+    entry.title ||
+    entry.data?.title ||
+    entry.data?.name ||
+    entry.data?.altText ||
+    entry.data?.imagePath ||
+    'Sans titre'
+  );
+}
+
 export default async function CollectionPage({ params }) {
-  const { collection } = params;
+  const { collection } = await params;
   const definition = COLLECTION_DEFINITIONS[collection];
 
   if (!definition) {
@@ -48,11 +59,11 @@ export default async function CollectionPage({ params }) {
           <div>
             <h1 className="h4 fw-bold text-primary mb-1">{definition.label}</h1>
             <p className="text-secondary mb-0">
-              Gérez les contenus de la collection « {definition.label} ».
+              Ajoutez, modifiez ou supprimez les éléments de cette section.
             </p>
           </div>
           <Link href={`/admin/collections/${collection}/new`} className="btn btn-primary">
-            Ajouter un contenu
+            Nouveau contenu
           </Link>
         </div>
 
@@ -61,9 +72,7 @@ export default async function CollectionPage({ params }) {
             <thead>
               <tr>
                 <th scope="col">Titre</th>
-                <th scope="col">Slug</th>
                 <th scope="col">Statut</th>
-                <th scope="col">Position</th>
                 <th scope="col">Mis à jour</th>
                 <th scope="col" className="text-end">
                   Actions
@@ -73,14 +82,15 @@ export default async function CollectionPage({ params }) {
             <tbody>
               {entries.map((entry) => (
                 <tr key={entry.id}>
-                  <td>{entry.title ?? entry.data?.title ?? 'Sans titre'}</td>
-                  <td><code>{entry.slug}</code></td>
+                  <td>
+                    <div className="fw-semibold">{getDisplayTitle(entry)}</div>
+                    <div className="text-secondary small">{entry.slug}</div>
+                  </td>
                   <td>
                     <span className={`badge ${entry.status === 'published' ? 'text-bg-success' : 'text-bg-secondary'}`}>
                       {entry.status === 'published' ? 'Publié' : 'Brouillon'}
                     </span>
                   </td>
-                  <td>{entry.position}</td>
                   <td>{formatDate(entry.updatedAt)}</td>
                   <td className="text-end">
                     <Link href={`/admin/collections/${collection}/${entry.id}`} className="btn btn-sm btn-outline-primary">
@@ -91,7 +101,7 @@ export default async function CollectionPage({ params }) {
               ))}
               {!entries.length ? (
                 <tr>
-                  <td colSpan={6} className="text-center text-secondary py-4">
+                  <td colSpan={4} className="text-center text-secondary py-4">
                     Aucun contenu pour le moment.
                   </td>
                 </tr>

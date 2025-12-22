@@ -17,7 +17,8 @@ export async function POST(request, { params }) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
   }
 
-  const id = Number(params.id);
+  const { id: rawId } = await params;
+  const id = Number(rawId);
   if (Number.isNaN(id)) {
     return NextResponse.json({ error: 'Identifiant invalide' }, { status: 400 });
   }
