@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import fs from 'fs/promises';
 import path from 'path';
+import { put } from '@vercel/blob';
 
 import prisma from '@/lib/prisma';
 import { authOptions } from '@/lib/auth';
@@ -30,21 +31,28 @@ export async function POST(request) {
     return NextResponse.json({ error: 'Fichier manquant' }, { status: 400 });
   }
 
-  const uploadDir = process.env.UPLOAD_DIR ?? 'public/uploads';
-  const absoluteDir = path.isAbsolute(uploadDir)
-    ? uploadDir
-    : path.join(process.cwd(), uploadDir);
-
-  await fs.mkdir(absoluteDir, { recursive: true });
-
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
   const filename = sanitizeFilename(file.name ?? 'upload');
-  const filePath = path.join(absoluteDir, filename);
+  const useBlob = Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+  let publicPath = '';
 
-  await fs.writeFile(filePath, buffer);
-
-  const publicPath = `/${path.relative(path.join(process.cwd(), 'public'), filePath).replace(/\\/g, '/')}`;
+  if (useBlob) {
+    const blob = await put(filename, buffer, {
+      access: 'public',
+      contentType: file.type ?? 'application/octet-stream',
+    });
+    publicPath = blob.url;
+  } else {
+    const uploadDir = process.env.UPLOAD_DIR ?? 'public/uploads';
+    const absoluteDir = path.isAbsolute(uploadDir)
+      ? uploadDir
+      : path.join(process.cwd(), uploadDir);
+    await fs.mkdir(absoluteDir, { recursive: true });
+    const filePath = path.join(absoluteDir, filename);
+    await fs.writeFile(filePath, buffer);
+    publicPath = `/${path.relative(path.join(process.cwd(), 'public'), filePath).replace(/\\/g, '/')}`;
+  }
 
   const media = await prisma.mediaAsset.create({
     data: {
