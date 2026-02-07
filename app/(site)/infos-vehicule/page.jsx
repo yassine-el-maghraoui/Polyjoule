@@ -38,6 +38,7 @@ export default async function InfosVehiculePage() {
           const data = vehicle.data ?? {};
           const gallery = normaliseGallery(data.galleryPaths);
           const isAlternate = index % 2 === 1;
+          const isLast = index === vehicles.length - 1;
 
           return (
             <article className="mb-5" key={vehicle.id}>
@@ -63,21 +64,68 @@ export default async function InfosVehiculePage() {
                 </div>
               </div>
 
-              {gallery.length ? (
-                <div className="row g-4 mt-4">
-                  {gallery.map((imagePath) => (
-                    <div className="col-sm-6 col-lg-4" key={`${vehicle.id}-${imagePath}`}>
-                      <Image
-                        src={imagePath}
-                        alt={`${data.title ?? vehicle.title} - galerie`}
-                        width={420}
-                        height={280}
-                        className="img-fluid rounded-4 shadow"
-                      />
+              {gallery.length > 0 ? (
+                <div className="my-5">
+                  <h3 className="h5 fw-bold text-primary mb-4 text-center">Galerie photos</h3>
+                  <div className="mx-auto" style={{ maxWidth: '800px' }}>
+                    <div className="gallery-slideshow shadow rounded-4 overflow-hidden">
+                      <div id={`carousel-${vehicle.slug}`} className="carousel slide" data-bs-ride="carousel">
+                        <div className="carousel-indicators">
+                          {gallery.map((_, idx) => (
+                            <button
+                              type="button"
+                              data-bs-target={`#carousel-${vehicle.slug}`}
+                              data-bs-slide-to={idx}
+                              className={idx === 0 ? 'active' : ''}
+                              aria-label={`Slide ${idx + 1}`}
+                              aria-current={idx === 0 ? 'true' : undefined}
+                              key={idx}
+                            ></button>
+                          ))}
+                        </div>
+                        <div className="carousel-inner">
+                          {gallery.map((imagePath, idx) => (
+                            <div
+                              className={`carousel-item ${idx === 0 ? 'active' : ''}`}
+                              key={`${vehicle.id}-slide-${idx}`}
+                              data-bs-interval="4000"
+                            >
+                              <div className="ratio ratio-16x9">
+                                <Image
+                                  src={imagePath}
+                                  alt={`${data.title ?? vehicle.title} - photo ${idx + 1}`}
+                                  fill
+                                  className="d-block w-100 object-fit-cover"
+                                />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        <button
+                          className="carousel-control-prev"
+                          type="button"
+                          data-bs-target={`#carousel-${vehicle.slug}`}
+                          data-bs-slide="prev"
+                        >
+                          <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span className="visually-hidden">Précédent</span>
+                        </button>
+                        <button
+                          className="carousel-control-next"
+                          type="button"
+                          data-bs-target={`#carousel-${vehicle.slug}`}
+                          data-bs-slide="next"
+                        >
+                          <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span className="visually-hidden">Suivant</span>
+                        </button>
+                      </div>
                     </div>
-                  ))}
+                  </div>
                 </div>
               ) : null}
+
+              {!isLast && <hr className="my-5 border-secondary opacity-25" />}
             </article>
           );
         })}

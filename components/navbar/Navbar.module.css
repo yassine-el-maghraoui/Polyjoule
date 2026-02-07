@@ -180,6 +180,12 @@
   align-items: center;
 }
 
+@media (min-width: 1024px) {
+  .mobileMenu {
+    display: none !important;
+  }
+}
+
 /* Changement de couleur du menu mobile quand le header est scrollé */
 .header.scrolled .mobileMenu {
   background-color: var(--bg-color-scrolled);

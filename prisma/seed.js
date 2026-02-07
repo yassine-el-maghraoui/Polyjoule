@@ -572,7 +572,7 @@ async function main() {
         bodyHtml:
           "<p>Né en 2005, chaque composant est optimisé pour gagner en légèreté et en sobriété énergétique. L’optimisation poussée permet aujourd’hui d’atteindre un poids inférieur à 27 kg et d’enchaîner les records d’autonomie.</p>",
         imagePath: '/assets/Copie de IMG_2871.jpg',
-        galleryPaths: ['/assets/vehicule2.JPG', '/assets/vehicule3.JPG', '/assets/vehicule4.JPG'],
+        galleryPaths: [],
       },
       { position: 2, title: 'Polyjoule' }
     ),
@@ -584,14 +584,36 @@ async function main() {
       'association',
       {
         title: "Présentation de l’association",
-        bodyHtml: [
-          "<p>L’association Polyjoule a été créée en 2005 par l’étudiant Jean-Charles Boulerie. Cet étudiant, avant son arrivée à Polytech, a suivi un cursus BTS MCI à La Joliverie. Durant les deux années de son BTS, il a intégré le projet pédagogique Microjoule.</p>",
-          '<p>Ce projet, créé par M. Philippe Maindru en 1985, participe depuis plus de 35 ans à des compétitions d’efficacité énergétique avec les prototypes Petitjoule puis Microjoule 1, 2, 3, 4 et 5. Ils détiennent aujourd’hui les records du monde dans les catégories prototype diesel, essence, gaz et biogaz.</p>',
-          '<p>Fort de cette expérience, Jean-Charles Boulerie propose alors, en arrivant à Polytech Nantes, un partenariat inédit entre l’université de Nantes et le lycée La Joliverie, donnant ainsi naissance à l’association Polyjoule.</p>',
-          '<p>Le premier véhicule de l’association est un prototype très similaire à Microjoule, à la différence près qu’il est propulsé par un moteur électrique au lieu d’un moteur thermique. Il prend alors naturellement le nom de Polyjoule.</p>',
-          '<p>Ce véhicule participe aux compétitions dans les catégories prototype électrique puis prototype hydrogène jusqu’en 2012. En 2013, l’association commence à utiliser Cityjoule, un véhicule appartenant à la catégorie des Urban Concepts.</p>',
-          '<p>Grâce à Cityjoule, l’association Polyjoule remporte de nombreuses victoires et établit plusieurs records du monde dans les catégories Urban Concept électrique et hydrogène.</p>',
-        ].join(''),
+        intro: "Polyjoule réunit des étudiants passionnés de Polytech Nantes et de La Joliverie autour d'un objectif commun : concevoir les véhicules de demain.",
+        bodyHtml: `
+        <p>L'association Polyjoule est née en 2005 de la volonté de faire collaborer des étudiants d'horizons différents autour d'un projet technologique d'envergure. Depuis, chaque année, une quarantaine d'élèves ingénieurs et de lycéens unissent leurs compétences pour concevoir, fabriquer et optimiser des véhicules à très haute efficacité énergétique.</p>
+        <p>Notre philosophie repose sur le partage de connaissances : les étudiants de Polytech apportent leur expertise en gestion de projet, électronique et simulation, tandis que les élèves de La Joliverie excellent dans la conception mécanique et la fabrication. Ensemble, ils relèvent le défi du Shell Eco-marathon, compétition internationale où le but est de parcourir la plus grande distance possible avec l'équivalent d'un litre de carburant.</p>
+        <p>Au-delà de la performance technique, Polyjoule est une aventure humaine formatrice, où l'esprit d'équipe, la rigueur et l'innovation sont les clés du succès.</p>
+        `,
+        values: [
+          {
+            icon: 'ri-lightbulb-flash-line',
+            title: 'Innovation',
+            description:
+              "Nous explorons de nouvelles technologies, de l'hydrogène aux supercondensateurs, pour repousser les limites de l'efficacité.",
+          },
+          {
+            icon: 'ri-graduation-cap-line',
+            title: 'Pédagogie',
+            description:
+              "Un projet étudiant avant tout, permettant d'appliquer concrètement les connaissances théoriques dans un cadre professionnel.",
+          },
+          {
+            icon: 'ri-team-line',
+            title: 'Partenariat',
+            description:
+              "Une collaboration unique et historique entre une école d'ingénieurs (Polytech) et un lycée technique (La Joliverie).",
+          },
+        ],
+        stats: {
+          years: '20+',
+          students: '400+',
+        },
       },
       { title: "Présentation de l’association" }
     ),

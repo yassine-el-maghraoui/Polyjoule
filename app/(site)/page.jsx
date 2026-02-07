@@ -102,9 +102,9 @@ export default async function HomePage() {
               );
 
               return (
-                <div className="col-6 col-md-3 col-lg-2 text-center" key={partner.id}>
+                <div className="col-6 col-md-4 col-lg-3 partner-col" key={partner.id}>
                   {data.url ? (
-                    <a href={data.url} className="d-inline-block" target="_blank" rel="noopener noreferrer">
+                    <a href={data.url} className="d-flex justify-content-center align-items-center w-100 h-100" target="_blank" rel="noopener noreferrer">
                       {content}
                     </a>
                   ) : (

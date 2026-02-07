@@ -41,7 +41,7 @@ export default async function GalleryPage() {
               {slides.map((slide, index) => {
                 const data = slide.data ?? {};
                 return (
-                  <div className={`carousel-item ${index === 0 ? 'active' : ''}`} key={slide.id}>
+                  <div className={`carousel-item ${index === 0 ? 'active' : ''}`} key={slide.id} data-bs-interval="4000">
                     {data.imagePath ? (
                       <Image
                         src={data.imagePath}

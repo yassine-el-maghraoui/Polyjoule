@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
+import { siteConfig } from '@/lib/site.config';
 import styles from './Navbar.module.css';
 
 const LINKS = [
@@ -30,14 +31,25 @@ export default function SiteNav() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close mobile menu on resize to desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const closeMenu = () => setIsOpen(false);
 
   return (
     <>
       {/* SPACER */}
-      <div 
-        className={clsx(styles.spacer, { [styles.scrolled]: isScrolled })} 
-        aria-hidden="true" 
+      <div
+        className={clsx(styles.spacer, { [styles.scrolled]: isScrolled })}
+        aria-hidden="true"
       />
 
       {/* HEADER */}
@@ -49,13 +61,13 @@ export default function SiteNav() {
         <div className={styles.container}>
           {/* LOGO */}
           <Link href="/" className={styles.logo} onClick={closeMenu}>
-            <Image 
-              src="/images/logo.png" 
-              alt="Polyjoule Logo" 
-              width={160} 
-              height={55} 
+            <Image
+              src={siteConfig.assets.logo}
+              alt={`${siteConfig.name} Logo`}
+              width={160}
+              height={55}
               priority
-              style={{ width: '100%', height: 'auto', objectFit: 'contain' }} 
+              style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
             />
           </Link>
 
@@ -88,9 +100,9 @@ export default function SiteNav() {
         </div>
 
         {/* MOBILE MENU (Enfant du header pour synchroniser couleurs et position) */}
-        <nav 
-          className={clsx(styles.mobileMenu, { 
-            [styles.mobileMenuOpen]: isOpen 
+        <nav
+          className={clsx(styles.mobileMenu, {
+            [styles.mobileMenuOpen]: isOpen
           })}
         >
           {LINKS.map((link) => {
