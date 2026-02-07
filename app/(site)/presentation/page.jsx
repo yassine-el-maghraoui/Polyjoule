@@ -67,9 +67,9 @@ export default async function PresentationPage() {
 
         {/* Main Content & History - Swapped Columns */}
         <section className="py-5">
-          <div className="row g-5 align-items-center">
+          <div className="row g-5 align-items-center justify-content-center">
             {/* History Column - Now Second (Right) */}
-            <div className="col-lg-7">
+            <div className="col-12 col-lg-7">
               <div className="bg-white p-5 rounded-5 shadow-sm border">
                 <span className="text-primary fw-bold small-caps mb-2 d-block text-center">Notre Histoire</span>
                 <h2 className="h1 fw-bold mb-4 text-dark text-center">Une aventure humaine</h2>
@@ -79,33 +79,37 @@ export default async function PresentationPage() {
           </div>
 
         </section>
-        {/* Stats Column - Now First (Left) */}
-        <div className="col-lg-5">
-          <div className="row g-4">
-            <div className="col-6">
-              <div className="stat-card">
-                <div className="stat-number text-primary">{data.stats?.students ?? '400+'}</div>
-                <div className="text-muted small fw-bold text-uppercase">Étudiants formés</div>
-              </div>
-            </div>
-            <div className="col-6">
-              <div className="stat-card text-end">
-                <div className="stat-number text-primary">{data.stats?.years ?? '20+'}</div>
-                <div className="text-muted small fw-bold text-uppercase">Années d'existence</div>
-              </div>
-            </div>
-            <div className="col-12">
-              <div className="bg-light rounded-4 overflow-hidden position-relative mt-3" style={{ minHeight: '300px' }}>
-                <div className="d-flex align-items-center justify-content-center h-100 p-5 text-center">
-                  <div>
-                    <i className="ri-trophy-line display-1 text-primary opacity-25 mb-3"></i>
-                    <h4 className="fw-bold text-dark opacity-50">Palmarès International</h4>
+        {/* Stats Column - Centered */}
+        <section className="pb-5">
+          <div className="row justify-content-center">
+            <div className="col-12 col-lg-5">
+              <div className="row g-4 justify-content-center">
+                <div className="col-6">
+                  <div className="stat-card text-center">
+                    <div className="stat-number text-primary">{data.stats?.students ?? '400+'}</div>
+                    <div className="text-muted small fw-bold text-uppercase">Étudiants formés</div>
+                  </div>
+                </div>
+                <div className="col-6">
+                  <div className="stat-card text-center">
+                    <div className="stat-number text-primary">{data.stats?.years ?? '20+'}</div>
+                    <div className="text-muted small fw-bold text-uppercase">Années d'existence</div>
+                  </div>
+                </div>
+                <div className="col-12">
+                  <div className="bg-light rounded-4 overflow-hidden position-relative mt-3" style={{ minHeight: '300px' }}>
+                    <div className="d-flex align-items-center justify-content-center h-100 p-5 text-center">
+                      <div>
+                        <i className="ri-trophy-line display-1 text-primary opacity-25 mb-3"></i>
+                        <h4 className="fw-bold text-dark opacity-50">Palmarès International</h4>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Call to Action */}
         <section className="cta-section p-5 mt-5 text-center text-lg-start">
