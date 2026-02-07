@@ -71,8 +71,8 @@ export default async function PresentationPage() {
             {/* History Column - Now Second (Right) */}
             <div className="col-lg-7">
               <div className="bg-white p-5 rounded-5 shadow-sm border">
-                <span className="text-primary fw-bold small-caps mb-2 d-block">Notre Histoire</span>
-                <h2 className="h1 fw-bold mb-4 text-dark">Une aventure humaine</h2>
+                <span className="text-primary fw-bold small-caps mb-2 d-block text-center">Notre Histoire</span>
+                <h2 className="h1 fw-bold mb-4 text-dark text-center">Une aventure humaine</h2>
                 <div className="text-secondary fs-5" dangerouslySetInnerHTML={{ __html: data.bodyHtml ?? '' }} />
               </div>
             </div>
