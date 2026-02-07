@@ -131,7 +131,7 @@ async function main() {
       'polytech-nantes',
       {
         name: 'Polytech Nantes',
-        url: 'https://www.polytech-nantes.fr/',
+        url: 'https://polytech.univ-nantes.fr',
         logoPath: '/assets/POLYTECH-NANTES.png',
       },
       { position: 1 }
