@@ -11,3 +11,13 @@ Site partie Client :
 Site partie Admin :
 - export const dynamic = 'force-dynamic'; pour prend en compte les modification rapidement mais combien de temps ?
 - deconnection automatique 1 heure (a mettre fait)
+- Les modifications du back-office ne se reflètent pas sur le site (pages statiques).
+  - Ajouter `export const dynamic = 'force-dynamic';` OU `export const revalidate = 30;`
+  - À faire sur les pages qui lisent la DB :
+    - app/(site)/page.jsx
+    - app/(site)/presentation/page.jsx
+    - app/(site)/historique/page.jsx
+    - app/(site)/calendrier/page.jsx
+    - app/(site)/palmares/page.jsx
+    - app/(site)/gallery/page.jsx
+    - app/(site)/infos-vehicule/page.jsx
