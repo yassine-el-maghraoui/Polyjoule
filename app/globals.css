@@ -11,6 +11,7 @@ body {
   font-family: "Noto Sans JP", sans-serif;
   background: var(--pj-surface-alt);
   color: #1f2d3d;
+  overflow-x: hidden;
 }
 
 .navbar {
@@ -163,7 +164,8 @@ body {
   content: "";
   position: absolute;
   top: 1.5rem;
-  left: -2.15rem;
+  left: -1.86rem;
+  /* Adjusted (again) to center on the line */
   width: 0.9rem;
   height: 0.9rem;
   border-radius: 50%;
@@ -212,7 +214,7 @@ body {
   }
 
   .timeline-item::before {
-    left: -1.5rem;
+    left: -2.1rem;
   }
 
   .timeline-centered::before {

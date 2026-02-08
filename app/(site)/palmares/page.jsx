@@ -7,6 +7,8 @@ export const metadata = {
   title: 'Palmarès - Polyjoule',
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function PalmaresPage() {
   const { isEnabled: preview } = await draftMode();
   let records = await getCollectionEntries('palmares', { includeDrafts: preview });

@@ -42,7 +42,7 @@ export default async function InfosVehiculePage() {
 
           return (
             <article className="mb-5" key={vehicle.id}>
-              <div className="row g-5 align-items-center">
+              <div className="row g-4 g-lg-5 align-items-center">
                 <div className={`col-lg-6 ${isAlternate ? 'order-lg-2' : ''}`}>
                   {data.category ? <span className="timeline-year">{data.category}</span> : null}
                   <h2 className="h3 fw-bold text-primary mt-3">{data.title ?? vehicle.title}</h2>

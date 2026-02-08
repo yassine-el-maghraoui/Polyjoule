@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 import AdminNav from '@/components/admin/AdminNav';
+import Footer from '@/components/footer/Footer';
+
 import { getSession } from '@/lib/auth';
 import { COLLECTION_DEFINITIONS } from '@/lib/collections';
 
@@ -73,6 +75,7 @@ export default async function AdminLayout({ children }) {
           <section className="col-12 col-lg-9 col-xl-10 mb-5">{children}</section>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

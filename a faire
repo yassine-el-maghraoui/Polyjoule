@@ -3,6 +3,11 @@ Site partie Client :
 - page Vehicule (redondance D'image ) // Fait
 - page galerie (a garder ?)  // A voir
 - page Presentation améliorée style // Fait
+- maj font //  Fait
+- seo meta
+- google analytics
+- google search console
 
 Site partie Admin :
-- ??
+- export const dynamic = 'force-dynamic'; pour prend en compte les modification rapidement mais combien de temps ?
+- deconnection automatique 1 heure (a mettre fait)
