@@ -1,10 +1,12 @@
 import Image from 'next/image';
 import { draftMode } from 'next/headers';
-
 import { getCollectionEntries } from '@/lib/content';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
-  title: 'Galerie de photos - Polyjoule',
+  title: 'Galerie Photos',
+  description: "Retour en images sur la vie de l'association Polyjoule : compétitions, ateliers, événements et moments de partage.",
 };
 
 export default async function GalleryPage() {

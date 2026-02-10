@@ -1,10 +1,17 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { draftMode } from 'next/headers';
-
 import { getCollectionEntries, getEntry } from '@/lib/content';
 
+export const dynamic = 'force-dynamic';
+
+export const metadata = {
+  title: 'Accueil',
+  description: "Découvrez Polyjoule Nantes, l'association étudiante de Polytech Nantes qui conçoit des véhicules à haute efficacité énergétique (Urban Concept & City Joule).",
+};
+
 export default async function HomePage() {
+
   const { isEnabled: preview } = await draftMode();
   const hero = await getEntry('home-hero', 'principal', { includeDrafts: preview });
   const quickLinks = await getCollectionEntries('quick-links', { includeDrafts: preview });
@@ -48,6 +55,7 @@ export default async function HomePage() {
                   height={420}
                   className="img-fluid hero-illustration"
                   priority
+                  sizes="(max-width: 768px) 100vw, 50vw"
                 />
               ) : null}
             </div>
@@ -71,7 +79,7 @@ export default async function HomePage() {
                   <Link className="card quick-link-card h-100 text-center text-decoration-none" href={data.href ?? '#'}>
                     <div className="card-body py-4">
                       {data.icon ? <i className={`${data.icon} display-5 text-primary mb-3`}></i> : null}
-                      <h5 className="card-title">{data.title ?? item.title}</h5>
+                      <h3 className="card-title h5">{data.title ?? item.title}</h3>
                       <p className="card-text text-secondary">{data.description}</p>
                     </div>
                   </Link>

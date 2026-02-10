@@ -1,8 +1,9 @@
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { draftMode } from 'next/headers';
-
 import { getEntry } from '@/lib/content';
+
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;

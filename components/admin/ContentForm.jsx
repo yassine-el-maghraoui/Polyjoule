@@ -80,6 +80,17 @@ function normaliseInitialData(fields, data) {
   const initial = {};
   for (const field of fields) {
     let value = data?.[field.name];
+    if (field.type === 'gallery') {
+      if (Array.isArray(value)) {
+        initial[field.name] = value;
+      } else if (typeof value === 'string') {
+        initial[field.name] = value.split(/\r?\n/).filter(Boolean);
+      } else {
+        initial[field.name] = [];
+      }
+      continue;
+    }
+
     if (field.list) {
       if (Array.isArray(value)) {
         value = value.join('\n');
@@ -102,6 +113,11 @@ function prepareValues(fields, values) {
   const prepared = {};
   for (const field of fields) {
     let value = values[field.name];
+    if (field.type === 'gallery') {
+      prepared[field.name] = Array.isArray(value) ? value : [];
+      continue;
+    }
+
     if (field.list) {
       if (Array.isArray(value)) {
         prepared[field.name] = value.filter(Boolean);
@@ -801,6 +817,85 @@ export default function ContentForm({ collection, definition, entry, revisions =
                 );
               }
 
+              if (field.type === 'gallery') {
+                const images = Array.isArray(value) ? value : [];
+                return (
+                  <div className="col-12" key={field.name}>
+                    <label className="form-label fw-semibold">{field.label}</label>
+
+                    {/* List of existing images */}
+                    {images.length > 0 && (
+                      <div className="row g-3 mb-3">
+                        {images.map((img, idx) => (
+                          <div className="col-6 col-md-3 col-lg-2 position-relative" key={idx}>
+                            <div className="ratio ratio-1x1 rounded border overflow-hidden">
+                              <img src={img} alt={`Galerie ${idx}`} className="object-fit-cover w-100 h-100" />
+                            </div>
+                            <button
+                              type="button"
+                              className="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 p-0 d-flex align-items-center justify-content-center"
+                              style={{ width: '24px', height: '24px', borderRadius: '50%' }}
+                              onClick={() => {
+                                const newImages = images.filter((_, i) => i !== idx);
+                                handleFieldChange(field.name, newImages);
+                              }}
+                            >
+                              <span style={{ fontSize: '14px', lineHeight: 1 }}>×</span>
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Upload Input */}
+                    <div className="d-flex flex-column gap-2">
+                      <input
+                        type="file"
+                        className="form-control"
+                        accept="image/*"
+                        multiple
+                        onChange={async (event) => {
+                          const files = Array.from(event.target.files || []);
+                          if (files.length === 0) return;
+
+                          setIsSaving(true);
+                          const newPaths = [];
+
+                          try {
+                            for (const file of files) {
+                              const formData = new FormData();
+                              formData.append('file', file);
+                              const res = await fetch('/api/admin/upload', {
+                                method: 'POST',
+                                body: formData,
+                              });
+                              if (res.ok) {
+                                const data = await res.json();
+                                newPaths.push(data.path);
+                              }
+                            }
+                            handleFieldChange(field.name, [...images, ...newPaths]);
+                            setMessage(`${newPaths.length} image(s) ajoutée(s).`);
+                          } catch (e) {
+                            setError("Erreur lors de l'upload");
+                          } finally {
+                            setIsSaving(false);
+                            event.target.value = ''; // Reset input
+                          }
+                        }}
+                      />
+                      <small className="text-secondary">
+                        Sélectionnez plusieurs images pour les ajouter à la galerie.
+                      </small>
+                    </div>
+
+                    {field.helpText ? (
+                      <small className="text-secondary d-block mt-1">{field.helpText}</small>
+                    ) : null}
+                  </div>
+                );
+              }
+
               return (
                 <div className="col-md-6" key={field.name}>
                   <label className="form-label fw-semibold">{field.label}</label>
@@ -894,9 +989,8 @@ export default function ContentForm({ collection, definition, entry, revisions =
                       <td>{new Date(revision.createdAt).toLocaleString('fr-FR')}</td>
                       <td>
                         <span
-                          className={`badge ${
-                            revision.status === 'published' ? 'text-bg-success' : 'text-bg-secondary'
-                          }`}
+                          className={`badge ${revision.status === 'published' ? 'text-bg-success' : 'text-bg-secondary'
+                            }`}
                         >
                           {revision.status === 'published' ? 'Publié' : 'Brouillon'}
                         </span>

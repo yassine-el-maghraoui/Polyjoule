@@ -1,10 +1,12 @@
 import Image from 'next/image';
 import { draftMode } from 'next/headers';
-
 import { getCollectionEntries } from '@/lib/content';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
-  title: 'Informations sur les véhicules - Polyjoule',
+  title: 'Nos Véhicules',
+  description: "Détails techniques et photos de nos véhicules : Urban Concept (City Joule) et Prototype. Découvrez l'ingénierie derrière la performance énergétique.",
 };
 
 function normaliseGallery(value) {

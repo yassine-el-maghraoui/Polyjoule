@@ -38,7 +38,7 @@ export default function SiteFooter() {
               <li><Link href="/historique" className={styles.footerLink}>Notre Histoire</Link></li>
               <li><Link href="/palmares" className={styles.footerLink}>Palmarès</Link></li>
               <li><Link href="/infos-vehicule" className={styles.footerLink}>Les Prototypes</Link></li>
-              <li><Link href="/gallery" className={styles.footerLink}>Médiathèque</Link></li>
+              <li><Link href="/gallery" className={styles.footerLink}>Galerie</Link></li>
             </ul>
           </div>
 

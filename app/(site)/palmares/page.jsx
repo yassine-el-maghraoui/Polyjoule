@@ -1,13 +1,13 @@
 import Image from 'next/image';
 import { draftMode } from 'next/headers';
-
 import { getCollectionEntries } from '@/lib/content';
 
-export const metadata = {
-  title: 'Palmarès - Polyjoule',
-};
-
 export const dynamic = 'force-dynamic';
+
+export const metadata = {
+  title: 'Palmarès et Records',
+  description: "Le palmarès de Polyjoule Nantes : records du monde, titres européens et résultats aux compétitions Shell Eco-marathon et EducEco.",
+};
 
 export default async function PalmaresPage() {
   const { isEnabled: preview } = await draftMode();

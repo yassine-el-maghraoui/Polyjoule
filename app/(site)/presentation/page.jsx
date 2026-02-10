@@ -1,10 +1,12 @@
 import Link from 'next/link';
 import { draftMode } from 'next/headers';
-
 import { getEntry } from '@/lib/content';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
-  title: "Présentation de l'association - Polyjoule",
+  title: "Présentation de l'association",
+  description: "Qui sommes-nous ? Tout savoir sur l'association Polyjoule Nantes, nos membres, notre mission et nos partenaires académiques et industriels.",
 };
 
 export default async function PresentationPage() {
@@ -33,7 +35,7 @@ export default async function PresentationPage() {
               <div className="feature-icon">
                 <i className="ri-lightbulb-flash-line"></i>
               </div>
-              <h3 className="h4 fw-bold mb-3">Innovation</h3>
+              <h2 className="h4 fw-bold mb-3">Innovation</h2>
               <p className="text-secondary mb-0">
                 Nous explorons de nouvelles technologies, de l'hydrogène aux supercondensateurs, pour repousser les limites de l'efficacité.
               </p>
@@ -44,7 +46,7 @@ export default async function PresentationPage() {
               <div className="feature-icon">
                 <i className="ri-graduation-cap-line"></i>
               </div>
-              <h3 className="h4 fw-bold mb-3">Pédagogie</h3>
+              <h2 className="h4 fw-bold mb-3">Pédagogie</h2>
               <p className="text-secondary mb-0">
                 Un projet étudiant avant tout, permettant d'appliquer concrètement les connaissances théoriques dans un cadre professionnel.
               </p>
@@ -55,7 +57,7 @@ export default async function PresentationPage() {
               <div className="feature-icon">
                 <i className="ri-team-line"></i>
               </div>
-              <h3 className="h4 fw-bold mb-3">Partenariat</h3>
+              <h2 className="h4 fw-bold mb-3">Partenariat</h2>
               <p className="text-secondary mb-0">
                 Une collaboration unique et historique entre une école d'ingénieurs (Polytech) et un lycée technique (La Joliverie).
               </p>
@@ -85,13 +87,13 @@ export default async function PresentationPage() {
               <div className="row g-4">
                 <div className="col-md-6 col-6">
                   <div className="stat-card bg-white shadow-sm border rounded-4 text-start p-4 h-100">
-                    <div className="stat-number text-primary">{data.stats?.students ?? '400+'}</div>
+                    <div className="stat-number text-primary">{data.stats_students ?? data.stats?.students ?? '400+'}</div>
                     <div className="text-secondary small fw-bold text-uppercase mt-2">Étudiants<br />formés</div>
                   </div>
                 </div>
                 <div className="col-md-6 col-6">
                   <div className="stat-card bg-white shadow-sm border rounded-4 text-end p-4 h-100">
-                    <div className="stat-number text-primary">{data.stats?.years ?? '20+'}</div>
+                    <div className="stat-number text-primary">{data.stats_years ?? data.stats?.years ?? '20+'}</div>
                     <div className="text-secondary small fw-bold text-uppercase mt-2">Années<br />d'existence</div>
                   </div>
                 </div>

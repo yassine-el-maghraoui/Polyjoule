@@ -9,8 +9,8 @@ Site partie Client :
 - google search console
 
 Site partie Admin :
-- export const dynamic = 'force-dynamic'; pour prend en compte les modification rapidement mais combien de temps ?
 - deconnexion automatique 1 heure // Fait
+- Upload image galerie 
 - Les modifications du back-office ne se reflètent pas sur le site (pages statiques).
   - Ajouter `export const dynamic = 'force-dynamic';` OU `export const revalidate = 30;`
   - À faire sur les pages qui lisent la DB :
@@ -21,3 +21,102 @@ Site partie Admin :
     - app/(site)/palmares/page.jsx
     - app/(site)/gallery/page.jsx
     - app/(site)/infos-vehicule/page.jsx
+
+
+
+    Requêtes de blocage de l'affichage Économies estimées : 900 ms
+Les requêtes bloquent le rendu initial de la page, ce qui peut causer un retard LCP. Le report ou l'intégration de ces requêtes réseau peut les écarter du chemin critique.LCPFCPNon noté
+URL
+Taille de transfert
+Durée
+Google Fonts Cdn 
+89,6 KiB	1 830 ms
+/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap(fonts.googleapis.com)
+89,6 KiB
+1 830 ms
+Détection de la requête LCP
+Optimisez le LCP en rendant l'image LCP visible immédiatement à partir du code HTML et en évitant le chargement différéLCPNon noté
+chargement différé non appliqué
+fetchpriority=high doit être appliqué
+La demande est visible dans le document initial
+Prototype Polyjoule
+<img alt="Prototype Polyjoule" width="560" height="420" decoding="async" data-nimg="1" class="img-fluid hero-illustration" style="color:transparent" srcset="/_next/image?url=https%3A%2F%2Fhhlzytvifno81u7s.public.blob.vercel-storage…" src="/_next/image?url=https%3A%2F%2Fhhlzytvifno81u7s.public.blob.vercel-storage…">
+Améliorer l'affichage des images Économies estimées : 39 Kio
+Réduire le temps de téléchargement des images peut améliorer le temps de chargement perçu de la page et le LCP. En savoir plus sur l'optimisation de la taille des imagesLCPFCPNon noté
+URL
+Taille de la ressource
+Économies estimées
+polyjoule.fr Propriétaire
+56,8 KiB	38,6 KiB
+Prototype Polyjoule
+<img alt="Prototype Polyjoule" width="560" height="420" decoding="async" data-nimg="1" class="img-fluid hero-illustration" style="color:transparent" srcset="/_next/image?url=https%3A%2F%2Fhhlzytvifno81u7s.public.blob.vercel-storage…" src="/_next/image?url=https%3A%2F%2Fhhlzytvifno81u7s.public.blob.vercel-storage…">
+/_next/image?url=…(polyjoule.fr)
+56,8 KiB
+38,6 KiB
+Compte tenu de ses dimensions affichées (679x509), ce fichier image est plus volumineux que nécessaire (1200x900). Utilisez des images responsives pour réduire la taille de téléchargement de l'image.
+38,6 KiB
+Ancien JavaScript Économies estimées : 14 Kio
+Les polyfills et les transformations permettent aux navigateurs plus anciens d'utiliser les nouvelles fonctionnalités JavaScript. Dans la majorité des cas cependant, ils ne sont pas nécessaires aux navigateurs récents. Envisagez de modifier votre processus de compilation JavaScript pour ne pas transpiler les fonctionnalités Baseline, sauf si vous savez que vous devez prendre en charge les navigateurs plus anciens. Découvrez pourquoi la plupart des sites peuvent déployer du code ES6+ sans transpiler.LCPFCPNon noté
+URL
+Octets perdus
+polyjoule.fr Propriétaire
+13,8 KiB
+…chunks/62e4cadca017bad5.js(polyjoule.fr)
+13,8 KiB
+…chunks/62e4cadca017bad5.js:1:6066(polyjoule.fr)
+Array.prototype.at
+…chunks/62e4cadca017bad5.js:1:5454(polyjoule.fr)
+Array.prototype.flat
+…chunks/62e4cadca017bad5.js:1:5567(polyjoule.fr)
+Array.prototype.flatMap
+…chunks/62e4cadca017bad5.js:1:5943(polyjoule.fr)
+Object.fromEntries
+…chunks/62e4cadca017bad5.js:1:6201(polyjoule.fr)
+Object.hasOwn
+…chunks/62e4cadca017bad5.js:1:5196(polyjoule.fr)
+String.prototype.trimEnd
+…chunks/62e4cadca017bad5.js:1:5111(polyjoule.fr) Réduisez les ressources CSS inutilisées Économies estimées : 138 Kio
+Réduisez les règles inutilisées des feuilles de style et différez les ressources CSS non utilisées pour le contenu au-dessus de la ligne de flottaison afin de réduire la quantité d'octets consommés par l'activité réseau. Découvrez comment réduire les ressources CSS non utilisées.LCPFCPNon noté
+  Afficher les ressources tierces (2)
+URL
+Taille de transfert
+Économies estimées
+Google Fonts Cdn 
+88,8 KiB	88,8 KiB
+/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap(fonts.googleapis.com)
+88,8 KiB
+88,8 KiB
+polyjoule.fr Propriétaire
+33,6 KiB	31,9 KiB
+…chunks/d43ab978ac5b76ce.css(polyjoule.fr)
+33,6 KiB
+31,9 KiB
+JSDelivr CDN Cdn 
+17,4 KiB	17,3 KiB
+…fonts/remixicon.css(cdn.jsdelivr.net)
+17,4 KiB
+17,3 KiB
+Réduisez la taille des ressources CSS Économies estimées : 9 Kio
+La minimisation des fichiers CSS peut réduire la taille des charges utiles de réseau. Découvrez comment minimiser des fichiers CSS.LCPFCPNon noté
+URL
+Taille de transfert
+Économies estimées
+Google Fonts Cdn 
+89,6 KiB	9,3 KiB
+/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap(fonts.googleapis.com)
+89,6 KiB
+9,3 KiB
+Réduisez les ressources JavaScript inutilisées Économies estimées : 49 Kio
+Réduisez les ressources JavaScript inutilisées et différez le chargement des scripts tant qu'ils ne sont pas requis afin de réduire la quantité d'octets consommés par l'activité réseau. Découvrez comment réduire les ressources JavaScript inutilisées.LCPFCPNon noté
+URL
+Taille de transfert
+Économies estimées
+polyjoule.fr Propriétaire
+91,1 KiB	49,2 KiB
+…chunks/62e4cadca017bad5.js(polyjoule.fr)
+67,0 KiB
+29,1 KiB
+…chunks/691d6df737513c6c.js(polyjoule.fr)
+24,1 KiB
+20,1 KiB
+

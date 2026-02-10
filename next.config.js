@@ -11,6 +11,7 @@ const nextConfig = {
         hostname: '*.public.blob.vercel-storage.com',
       },
     ],
+    unoptimized: process.env.NODE_ENV === 'development',
   },
 };
 

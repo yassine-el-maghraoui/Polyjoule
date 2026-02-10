@@ -1,11 +1,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { draftMode } from 'next/headers';
-
 import { getCollectionEntries } from '@/lib/content';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
-  title: 'Calendrier - Polyjoule',
+  title: 'Calendrier des Événements',
+  description: "Suivez l'agenda de Polyjoule Nantes : prochaines courses, dates des compétitions et événements associatifs à venir.",
 };
 
 function EventCard({ event, variant = 'primary' }) {

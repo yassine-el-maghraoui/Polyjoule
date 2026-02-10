@@ -1,10 +1,12 @@
 import Image from 'next/image';
 import { draftMode } from 'next/headers';
-
 import { getCollectionEntries } from '@/lib/content';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
-  title: 'Historique - Polyjoule',
+  title: 'Notre Histoire',
+  description: "Retrouvez l'historique de Polyjoule Nantes depuis 2006 : évolution des prototypes, anciennes équipes et jalons marquants de l'association.",
 };
 
 export default async function HistoriquePage() {
