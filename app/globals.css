@@ -39,14 +39,12 @@ body {
 
 .hero-illustration {
   max-width: 420px;
-  filter: drop-shadow(0 24px 40px rgba(15, 35, 95, 0.2));
   transition: transform 0.4s ease-in-out, filter 0.3s ease;
   border-radius: 12px;
 }
 
 .hero-illustration:hover {
   transform: scale(1.05) translateY(-8px) !important;
-  filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.2)) !important;
   cursor: pointer;
 }
 
@@ -108,6 +106,43 @@ body {
     width: 100% !important;
   }
 }
+
+/* Partners Slider / Marquee */
+.partners-slider-container {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.partners-slider-track {
+  display: flex;
+  width: max-content;
+  animation: scroll 40s linear infinite;
+}
+
+.partners-slider-track:hover {
+  animation-play-state: paused;
+}
+
+.partner-slide-item {
+  width: 200px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 2rem;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-25%);
+  }
+}
+
 
 .section-card {
   background: var(--pj-surface);
@@ -591,4 +626,23 @@ body {
 
 .card-text:last-child {
   margin-bottom: 0;
+}
+
+.hover-card-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-card-lift:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(15, 35, 95, 0.18) !important;
+}
+
+.hover-card-lift .rounded-circle {
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.hover-card-lift:hover .rounded-circle {
+  transform: scale(1.15);
+  box-shadow: 0 15px 35px rgba(27, 111, 255, 0.25) !important;
+  border-color: rgba(27, 111, 255, 0.4) !important;
 }

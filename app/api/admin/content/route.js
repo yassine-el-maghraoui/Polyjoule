@@ -16,6 +16,40 @@ const payloadSchema = z.object({
   data: z.record(z.any()).optional(),
 });
 
+export async function GET(request) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+  }
+
+  const { searchParams } = new URL(request.url);
+  const collection = searchParams.get('collection');
+  const slug = searchParams.get('slug');
+
+  if (!collection) {
+    return NextResponse.json({ error: 'Collection requise' }, { status: 400 });
+  }
+
+  try {
+    if (slug) {
+      const entry = await prisma.contentEntry.findUnique({
+        where: { collection_slug: { collection, slug } },
+      });
+      return NextResponse.json(entry || null);
+    }
+
+    const entries = await prisma.contentEntry.findMany({
+      where: { collection },
+      orderBy: { position: 'asc' },
+    });
+
+    return NextResponse.json(entries);
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
+  }
+}
+
 export async function POST(request) {
   const session = await getServerSession(authOptions);
   if (!session) {

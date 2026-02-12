@@ -1,6 +1,7 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { draftMode } from 'next/headers';
-import { getEntry } from '@/lib/content';
+import { getEntry, getCollectionEntries } from '@/lib/content';
 
 export const dynamic = 'force-dynamic';
 
@@ -69,9 +70,6 @@ export default async function PresentationPage() {
 
       <div className="container">
         {/* Values Grid */}
-
-
-        {/* Main Content & History */}
         {/* Main Content & History */}
         <section className="py-5">
           {/* History Section - Full Width */}
@@ -102,6 +100,11 @@ export default async function PresentationPage() {
           </div>
         </section>
 
+        {/* TeamSection */}
+        {data.showTeamSection && data.teamMembers?.length > 0 ? (
+          <TeamSection members={data.teamMembers} />
+        ) : null}
+
         {/* Call to Action */}
         <section className="cta-section p-5 mt-4 mb-5 text-center">
           <h2 className="fw-bold mb-3">Envie de découvrir nos prototypes ?</h2>
@@ -114,5 +117,87 @@ export default async function PresentationPage() {
         </section>
       </div>
     </div>
+  );
+}
+
+function TeamSection({ members }) {
+  if (!members || !members.length) return null;
+
+  // Grouping Logic
+  const groups = [];
+  let currentGroup = { title: null, members: [] };
+
+  members.forEach((item) => {
+    if (item.type === 'break') {
+      if (currentGroup.members.length > 0) groups.push(currentGroup);
+      currentGroup = { title: item.title, members: [] };
+    } else {
+      currentGroup.members.push(item);
+    }
+  });
+  if (currentGroup.members.length > 0) groups.push(currentGroup);
+
+  const Card = ({ member, className = '' }) => (
+    <div className={`card h-100 border-0 shadow-sm text-center p-4 hover-card-lift bg-white ${className}`}>
+      <div className="mx-auto mb-4 position-relative" style={{ width: '160px', height: '160px' }}>
+        {member.imagePath ? (
+          <div className="rounded-circle overflow-hidden w-100 h-100 border border-4 border-white shadow bg-white position-relative">
+            <Image
+              src={member.imagePath}
+              alt={member.name}
+              fill
+              className="object-fit-cover"
+              sizes="(max-width: 768px) 160px, 160px"
+            />
+          </div>
+        ) : (
+          <div className="rounded-circle bg-white w-100 h-100 d-flex align-items-center justify-content-center text-secondary fs-2 fw-bold border border-4 border-light shadow-sm">
+            {member.name?.charAt(0) ?? '?'}
+          </div>
+        )}
+      </div>
+      <h3 className="h5 fw-bold mb-2 text-dark">{member.name}</h3>
+      <p className="text-primary fw-bold mb-0 text-uppercase small">{member.role}</p>
+    </div>
+  );
+
+  return (
+    <section className="py-5">
+      <div className="text-center mb-5">
+        <span className="text-primary fw-bold small-caps mb-2 d-block">L'Équipe</span>
+        <h2 className="h2 fw-bold mb-3">Ceux qui font Polyjoule</h2>
+        <p className="text-secondary">Les étudiants et encadrants derrière chaque innovation.</p>
+      </div>
+
+      <div className="d-flex flex-column gap-5">
+        {groups.map((group, groupIndex) => (
+          <div key={groupIndex} className="position-relative">
+            {group.title && (
+              <div className="text-center mb-4">
+                <h3 className="h4 fw-bold text-primary border-bottom border-primary border-opacity-25 d-inline-block pb-2 px-4">
+                  {group.title}
+                </h3>
+              </div>
+            )}
+
+            <div className="row g-4 justify-content-center">
+              {group.members.map((member, memberIndex) => {
+                const isFullWidth = member.layout === 'full';
+                return (
+                  <div
+                    key={memberIndex}
+                    className={isFullWidth ? "col-12 d-flex justify-content-center" : "col-12 col-sm-6 col-md-4 col-lg-3"}
+                  >
+                    <div style={isFullWidth ? { width: '100%', maxWidth: '300px' } : { width: '100%' }}>
+                      <Card member={member} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }

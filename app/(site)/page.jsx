@@ -16,8 +16,10 @@ export default async function HomePage() {
   const hero = await getEntry('home-hero', 'principal', { includeDrafts: preview });
   const quickLinks = await getCollectionEntries('quick-links', { includeDrafts: preview });
   const partners = await getCollectionEntries('partners', { includeDrafts: preview });
+  const partnersConfigEntry = await getEntry('partners-config', 'config', { includeDrafts: preview });
 
   const heroData = hero?.data ?? {};
+  const enablePartnersSlider = partnersConfigEntry?.data?.enablePartnersSlider ?? false;
 
   return (
     <>
@@ -96,32 +98,63 @@ export default async function HomePage() {
           <p className="text-secondary text-center mb-5">
             Polyjoule bénéficie du soutien précieux d’acteurs académiques et industriels engagés pour l’innovation.
           </p>
-          <div className="row justify-content-center align-items-center g-4">
-            {partners.map((partner) => {
-              const data = partner.data ?? {};
-              const content = (
-                <Image
-                  src={data.logoPath ?? '/assets/placeholder.png'}
-                  alt={data.name ?? 'Partenaire Polyjoule'}
-                  width={180}
-                  height={80}
-                  className="partner-logo"
-                />
-              );
+          {enablePartnersSlider ? (
+            <div className="partners-slider-container">
+              <div className="partners-slider-track">
+                {[...partners, ...partners, ...partners, ...partners].map((partner, index) => {
+                  const data = partner.data ?? {};
+                  const content = (
+                    <Image
+                      src={data.logoPath ?? '/assets/placeholder.png'}
+                      alt={data.name ?? 'Partenaire Polyjoule'}
+                      width={180}
+                      height={80}
+                      className="partner-logo"
+                    />
+                  );
 
-              return (
-                <div className="col-6 col-md-4 col-lg-3 partner-col" key={partner.id}>
-                  {data.url ? (
-                    <a href={data.url} className="d-flex justify-content-center align-items-center w-100 h-100" target="_blank" rel="noopener noreferrer">
-                      {content}
-                    </a>
-                  ) : (
-                    content
-                  )}
-                </div>
-              );
-            })}
-          </div>
+                  return (
+                    <div className="partner-slide-item" key={`${partner.id}-${index}`}>
+                      {data.url ? (
+                        <a href={data.url} target="_blank" rel="noopener noreferrer">
+                          {content}
+                        </a>
+                      ) : (
+                        content
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            <div className="row justify-content-center align-items-center g-4">
+              {partners.map((partner) => {
+                const data = partner.data ?? {};
+                const content = (
+                  <Image
+                    src={data.logoPath ?? '/assets/placeholder.png'}
+                    alt={data.name ?? 'Partenaire Polyjoule'}
+                    width={180}
+                    height={80}
+                    className="partner-logo"
+                  />
+                );
+
+                return (
+                  <div className="col-6 col-md-4 col-lg-3 partner-col" key={partner.id}>
+                    {data.url ? (
+                      <a href={data.url} className="d-flex justify-content-center align-items-center w-100 h-100" target="_blank" rel="noopener noreferrer">
+                        {content}
+                      </a>
+                    ) : (
+                      content
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
     </>

@@ -6,6 +6,18 @@ import { useRouter } from 'next/navigation';
 import ImageCropper from '@/components/admin/ImageCropper';
 import RichTextEditor from '@/components/admin/RichTextEditor';
 
+function normaliseTeamList(value) {
+  if (Array.isArray(value)) return value;
+  if (typeof value === 'string') {
+    try {
+      return JSON.parse(value);
+    } catch (e) {
+      return [];
+    }
+  }
+  return [];
+}
+
 function slugify(value) {
   return value
     .toString()
@@ -80,6 +92,12 @@ function normaliseInitialData(fields, data) {
   const initial = {};
   for (const field of fields) {
     let value = data?.[field.name];
+
+    if (field.type === 'team-list') {
+      initial[field.name] = normaliseTeamList(value);
+      continue;
+    }
+
     if (field.type === 'gallery') {
       if (Array.isArray(value)) {
         initial[field.name] = value;
@@ -113,6 +131,12 @@ function prepareValues(fields, values) {
   const prepared = {};
   for (const field of fields) {
     let value = values[field.name];
+
+    if (field.type === 'team-list') {
+      prepared[field.name] = Array.isArray(value) ? value : [];
+      continue;
+    }
+
     if (field.type === 'gallery') {
       prepared[field.name] = Array.isArray(value) ? value : [];
       continue;
@@ -162,9 +186,43 @@ export default function ContentForm({ collection, definition, entry, revisions =
   const [imageEditors, setImageEditors] = useState({});
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [newListItems, setNewListItems] = useState({});
+  const [editingItems, setEditingItems] = useState({});
 
   const handleFieldChange = (name, value) => {
     setValues((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleNewListItemChange = (fieldName, attribute, value) => {
+    setNewListItems((prev) => ({
+      ...prev,
+      [fieldName]: {
+        ...(prev[fieldName] || { name: '', role: '', imagePath: '' }),
+        [attribute]: value,
+      },
+    }));
+  };
+
+  const handleLocalUpload = async (fieldName, file) => {
+    if (!file) return;
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('altText', '');
+
+    try {
+      const response = await fetch('/api/admin/upload', {
+        method: 'POST',
+        credentials: 'include',
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error('Erreur upload');
+      const result = await response.json();
+      handleNewListItemChange(fieldName, 'imagePath', result.path);
+    } catch (e) {
+      console.error(e);
+      alert('Erreur lors de l\'upload de la photo');
+    }
   };
 
   const handleAutoSlug = (value) => {
@@ -192,6 +250,9 @@ export default function ContentForm({ collection, definition, entry, revisions =
     const result = await response.json();
     handleFieldChange(name, result.path);
   };
+
+  // ... (rest of component) ...
+
 
   const openImageEditor = ({ name, sourceUrl, fileName, fileType, rawFile, revokeUrl, aspect }) => {
     setImageEditors((prev) => {
@@ -677,6 +738,328 @@ export default function ContentForm({ collection, definition, entry, revisions =
             {fields.map((field) => {
               const value = values[field.name] ?? '';
 
+              if (field.type === 'team-list') {
+                const items = Array.isArray(value) ? value : [];
+                const newItem = newListItems[field.name] || { name: '', role: '', imagePath: '' };
+
+                return (
+                  <div className="col-12" key={field.name}>
+                    <label className="form-label fw-semibold">{field.label}</label>
+                    <div className="border rounded-3 p-3 bg-light">
+                      <div className="d-flex flex-column gap-3">
+                        {items.length > 0 ? (
+                          <div className="row g-3">
+                            {items.map((item, index) => {
+                              if (item.type === 'break') {
+                                return (
+                                  <div className="col-12" key={index}>
+                                    <div className="d-flex align-items-center gap-3 my-2">
+                                      <div className="flex-grow-1 border-top border-secondary opacity-25"></div>
+                                      <span className="badge bg-light text-dark border px-3 py-2 rounded-pill fw-bold">
+                                        {item.title ? item.title : 'Saut de ligne'}
+                                      </span>
+                                      <div className="flex-grow-1 border-top border-secondary opacity-25"></div>
+                                      <button
+                                        type="button"
+                                        className="btn btn-outline-primary btn-sm rounded-circle me-1"
+                                        style={{ width: '32px', height: '32px', padding: 0 }}
+                                        onClick={() => {
+                                          setEditingItems((prev) => ({ ...prev, [field.name]: index }));
+                                          setNewListItems((prev) => ({ ...prev, [field.name]: { ...item } }));
+                                        }}
+                                        title="Modifier"
+                                      >
+                                        <i className="ri-pencil-line"></i>
+                                      </button>
+                                      <button
+                                        type="button"
+                                        className="btn btn-outline-danger btn-sm rounded-circle"
+                                        style={{ width: '32px', height: '32px', padding: 0 }}
+                                        onClick={() => {
+                                          const newItems = [...items];
+                                          newItems.splice(index, 1);
+                                          handleFieldChange(field.name, newItems);
+                                        }}
+                                        title="Supprimer"
+                                      >
+                                        <i className="ri-delete-bin-line"></i>
+                                      </button>
+                                    </div>
+                                  </div>
+                                );
+                              }
+
+                              return (
+                                <div className="col-md-6" key={index}>
+                                  <div className="card h-100 p-2 border shadow-sm">
+                                    <div className="d-flex gap-3 align-items-center">
+                                      {item.imagePath ? (
+                                        <img
+                                          src={item.imagePath}
+                                          alt={item.name}
+                                          className="rounded-circle border"
+                                          style={{ width: '80px', height: '80px', objectFit: 'cover' }}
+                                        />
+                                      ) : (
+                                        <div
+                                          className="bg-secondary rounded-circle d-flex align-items-center justify-content-center text-white"
+                                          style={{ width: '80px', height: '80px' }}
+                                        >
+                                          {item.name?.charAt(0) || '?'}
+                                        </div>
+                                      )}
+                                      <div className="flex-grow-1 min-w-0">
+                                        <div className="fw-bold text-truncate">{item.name}</div>
+                                        <div className="text-secondary small text-truncate">{item.role}</div>
+                                      </div>
+                                      <div className="d-flex gap-1">
+                                        <button
+                                          type="button"
+                                          className="btn btn-outline-primary btn-sm rounded-circle"
+                                          style={{ width: '32px', height: '32px', padding: 0 }}
+                                          onClick={() => {
+                                            setEditingItems((prev) => ({ ...prev, [field.name]: index }));
+                                            setNewListItems((prev) => ({ ...prev, [field.name]: { ...item } }));
+                                          }}
+                                          title="Modifier"
+                                        >
+                                          <i className="ri-pencil-line"></i>
+                                        </button>
+                                        <button
+                                          type="button"
+                                          className="btn btn-outline-danger btn-sm rounded-circle"
+                                          style={{ width: '32px', height: '32px', padding: 0 }}
+                                          onClick={() => {
+                                            const newItems = [...items];
+                                            newItems.splice(index, 1);
+                                            handleFieldChange(field.name, newItems);
+                                          }}
+                                          title="Supprimer"
+                                        >
+                                          <i className="ri-delete-bin-line"></i>
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        ) : (
+                          <div className="text-center text-muted py-3">Aucun membre pour le moment.</div>
+                        )}
+
+                        <div className="card border-primary border-dashed bg-white mt-2">
+                          <div className="card-header bg-transparent border-0 fw-bold text-primary d-flex justify-content-between align-items-center">
+                            <span>
+                              <i className={editingItems[field.name] !== undefined ? "ri-pencil-line me-2" : "ri-add-circle-line me-2"}></i>
+                              {editingItems[field.name] !== undefined ? "Modifier l'élément" : "Ajouter un élément"}
+                            </span>
+                            <div className="btn-group btn-group-sm">
+                              <input
+                                type="radio"
+                                className="btn-check"
+                                name={`type-${field.name}`}
+                                id={`type-member-${field.name}`}
+                                autoComplete="off"
+                                checked={newItem.type !== 'break'}
+                                onChange={() => handleNewListItemChange(field.name, 'type', 'member')}
+                              />
+                              <label className="btn btn-outline-primary" htmlFor={`type-member-${field.name}`}>Membre</label>
+
+                              <input
+                                type="radio"
+                                className="btn-check"
+                                name={`type-${field.name}`}
+                                id={`type-break-${field.name}`}
+                                autoComplete="off"
+                                checked={newItem.type === 'break'}
+                                onChange={() => handleNewListItemChange(field.name, 'type', 'break')}
+                              />
+                              <label className="btn btn-outline-primary" htmlFor={`type-break-${field.name}`}>Saut / Titre</label>
+                            </div>
+                          </div>
+
+                          <div className="card-body">
+                            {newItem.type === 'break' ? (
+                              <div className="row g-3 align-items-end">
+                                <div className="col-md-10">
+                                  <label className="form-label small text-secondary">Titre de la section (Optionnel)</label>
+                                  <input
+                                    type="text"
+                                    className="form-control form-control-sm"
+                                    placeholder="Ex: Pôle Communication (laisser vide pour juste un saut de ligne)"
+                                    value={newItem.title || ''}
+                                    onChange={(e) => handleNewListItemChange(field.name, 'title', e.target.value)}
+                                  />
+                                </div>
+                                <div className="col-md-2">
+                                  <div className="d-flex gap-2">
+                                    {editingItems[field.name] !== undefined && (
+                                      <button
+                                        type="button"
+                                        className="btn btn-outline-secondary btn-sm w-100"
+                                        onClick={() => {
+                                          setEditingItems((prev) => {
+                                            const copy = { ...prev };
+                                            delete copy[field.name];
+                                            return copy;
+                                          });
+                                          setNewListItems((prev) => ({
+                                            ...prev,
+                                            [field.name]: { type: 'member', name: '', role: '', imagePath: '' },
+                                          }));
+                                        }}
+                                      >
+                                        Annuler
+                                      </button>
+                                    )}
+                                    <button
+                                      type="button"
+                                      className="btn btn-primary btn-sm w-100"
+                                      onClick={() => {
+                                        const newItems = [...items];
+                                        const itemData = { type: 'break', title: newItem.title };
+
+                                        if (editingItems[field.name] !== undefined) {
+                                          newItems[editingItems[field.name]] = itemData;
+                                          setEditingItems((prev) => {
+                                            const copy = { ...prev };
+                                            delete copy[field.name];
+                                            return copy;
+                                          });
+                                        } else {
+                                          newItems.push(itemData);
+                                        }
+
+                                        handleFieldChange(field.name, newItems);
+                                        setNewListItems((prev) => ({
+                                          ...prev,
+                                          [field.name]: { type: 'member', name: '', role: '', imagePath: '' },
+                                        }));
+                                      }}
+                                    >
+                                      {editingItems[field.name] !== undefined ? "Modifier" : "Ajouter"}
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="row g-3 align-items-start">
+                                <div className="col-md-2 text-center">
+                                  <div className="mb-2">
+                                    {newItem.imagePath ? (
+                                      <img
+                                        src={newItem.imagePath}
+                                        alt="Aperçu"
+                                        className="rounded-circle border"
+                                        style={{ width: '80px', height: '80px', objectFit: 'cover' }}
+                                      />
+                                    ) : (
+                                      <div
+                                        className="bg-light rounded-circle border d-flex align-items-center justify-content-center mx-auto text-secondary"
+                                        style={{ width: '80px', height: '80px' }}
+                                      >
+                                        <i className="ri-image-add-line fs-4"></i>
+                                      </div>
+                                    )}
+                                  </div>
+                                  <label className="btn btn-outline-primary btn-sm btn-sm-file w-100">
+                                    Photo
+                                    <input
+                                      type="file"
+                                      style={{ display: 'none' }}
+                                      accept="image/*"
+                                      onChange={(e) => handleLocalUpload(field.name, e.target.files?.[0])}
+                                    />
+                                  </label>
+                                </div>
+                                <div className="col-md-10">
+                                  <div className="row g-2">
+                                    <div className="col-md-6">
+                                      <label className="form-label small text-secondary">Nom complet <span className="text-danger">*</span></label>
+                                      <input
+                                        type="text"
+                                        className="form-control form-control-sm"
+                                        placeholder="Ex: Jean Dupont"
+                                        value={newItem.name}
+                                        onChange={(e) => handleNewListItemChange(field.name, 'name', e.target.value)}
+                                      />
+                                    </div>
+                                    <div className="col-md-6">
+                                      <label className="form-label small text-secondary">Rôle / Poste <span className="text-danger">*</span></label>
+                                      <input
+                                        type="text"
+                                        className="form-control form-control-sm"
+                                        placeholder="Ex: Président"
+                                        value={newItem.role}
+                                        onChange={(e) => handleNewListItemChange(field.name, 'role', e.target.value)}
+                                      />
+                                    </div>
+
+                                    <div className="col-md-12 d-flex justify-content-end gap-2 mt-3">
+                                      {editingItems[field.name] !== undefined && (
+                                        <button
+                                          type="button"
+                                          className="btn btn-outline-secondary btn-sm px-3"
+                                          onClick={() => {
+                                            setEditingItems((prev) => {
+                                              const copy = { ...prev };
+                                              delete copy[field.name];
+                                              return copy;
+                                            });
+                                            setNewListItems((prev) => ({
+                                              ...prev,
+                                              [field.name]: { type: 'member', name: '', role: '', imagePath: '' },
+                                            }));
+                                          }}
+                                        >
+                                          Annuler
+                                        </button>
+                                      )}
+                                      <button
+                                        type="button"
+                                        className="btn btn-primary btn-sm px-4"
+                                        disabled={!newItem.name || !newItem.role}
+                                        onClick={() => {
+                                          if (!newItem.name || !newItem.role) return;
+
+                                          const newItems = [...items];
+                                          const itemData = { ...newItem, type: 'member' };
+
+                                          if (editingItems[field.name] !== undefined) {
+                                            newItems[editingItems[field.name]] = itemData;
+                                            setEditingItems((prev) => {
+                                              const copy = { ...prev };
+                                              delete copy[field.name];
+                                              return copy;
+                                            });
+                                          } else {
+                                            newItems.push(itemData);
+                                          }
+
+                                          handleFieldChange(field.name, newItems);
+                                          setNewListItems((prev) => ({
+                                            ...prev,
+                                            [field.name]: { type: 'member', name: '', role: '', imagePath: '' },
+                                          }));
+                                        }}
+                                      >
+                                        {editingItems[field.name] !== undefined ? "Modifier l'élément" : "Ajouter à la liste"}
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+
               if (field.type === 'textarea' && field.richText) {
                 return (
                   <div className="col-12" key={field.name}>
@@ -896,6 +1279,28 @@ export default function ContentForm({ collection, definition, entry, revisions =
                 );
               }
 
+              if (field.type === 'boolean') {
+                return (
+                  <div className="col-12" key={field.name}>
+                    <div className="form-check form-switch">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id={`field-${field.name}`}
+                        checked={!!value}
+                        onChange={(event) => handleFieldChange(field.name, event.target.checked)}
+                      />
+                      <label className="form-check-label fw-semibold" htmlFor={`field-${field.name}`}>
+                        {field.label}
+                      </label>
+                    </div>
+                    {field.helpText ? (
+                      <small className="text-secondary d-block mt-1">{field.helpText}</small>
+                    ) : null}
+                  </div>
+                );
+              }
+
               return (
                 <div className="col-md-6" key={field.name}>
                   <label className="form-label fw-semibold">{field.label}</label>
@@ -917,18 +1322,22 @@ export default function ContentForm({ collection, definition, entry, revisions =
                 </div>
               );
             })}
-          </div>
+          </div >
 
-          {error ? (
-            <div className="alert alert-danger" role="alert">
-              {error}
-            </div>
-          ) : null}
-          {message ? (
-            <div className="alert alert-success" role="alert">
-              {message}
-            </div>
-          ) : null}
+          {
+            error ? (
+              <div className="alert alert-danger" role="alert" >
+                {error}
+              </div>
+            ) : null
+          }
+          {
+            message ? (
+              <div className="alert alert-success" role="alert">
+                {message}
+              </div>
+            ) : null
+          }
 
           <div className="d-flex align-items-center gap-3">
             <button type="submit" className="btn btn-primary" disabled={isSaving}>
@@ -968,52 +1377,54 @@ export default function ContentForm({ collection, definition, entry, revisions =
               <p className="text-secondary mt-3 mb-0">Aperçu masqué.</p>
             )}
           </div>
-        </form>
+        </form >
 
-        {entry && revisions.length ? (
-          <div className="mt-5">
-            <h2 className="h5 fw-bold text-primary">Historique</h2>
-            <div className="table-responsive">
-              <table className="table table-sm align-middle">
-                <thead>
-                  <tr>
-                    <th scope="col">Date</th>
-                    <th scope="col">Statut</th>
-                    <th scope="col">Auteur</th>
-                    <th scope="col" className="text-end"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {revisions.map((revision) => (
-                    <tr key={revision.id}>
-                      <td>{new Date(revision.createdAt).toLocaleString('fr-FR')}</td>
-                      <td>
-                        <span
-                          className={`badge ${revision.status === 'published' ? 'text-bg-success' : 'text-bg-secondary'
-                            }`}
-                        >
-                          {revision.status === 'published' ? 'Publié' : 'Brouillon'}
-                        </span>
-                      </td>
-                      <td>{revision.author?.name ?? revision.author?.email ?? '—'}</td>
-                      <td className="text-end">
-                        <button
-                          type="button"
-                          className="btn btn-sm btn-outline-primary"
-                          onClick={() => handleRestore(revision.id)}
-                          disabled={isSaving}
-                        >
-                          Restaurer
-                        </button>
-                      </td>
+        {
+          entry && revisions.length ? (
+            <div className="mt-5">
+              <h2 className="h5 fw-bold text-primary">Historique</h2>
+              <div className="table-responsive">
+                <table className="table table-sm align-middle">
+                  <thead>
+                    <tr>
+                      <th scope="col">Date</th>
+                      <th scope="col">Statut</th>
+                      <th scope="col">Auteur</th>
+                      <th scope="col" className="text-end"></th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {revisions.map((revision) => (
+                      <tr key={revision.id}>
+                        <td>{new Date(revision.createdAt).toLocaleString('fr-FR')}</td>
+                        <td>
+                          <span
+                            className={`badge ${revision.status === 'published' ? 'text-bg-success' : 'text-bg-secondary'
+                              }`}
+                          >
+                            {revision.status === 'published' ? 'Publié' : 'Brouillon'}
+                          </span>
+                        </td>
+                        <td>{revision.author?.name ?? revision.author?.email ?? '—'}</td>
+                        <td className="text-end">
+                          <button
+                            type="button"
+                            className="btn btn-sm btn-outline-primary"
+                            onClick={() => handleRestore(revision.id)}
+                            disabled={isSaving}
+                          >
+                            Restaurer
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
-        ) : null}
-      </div>
-    </div>
+          ) : null
+        }
+      </div >
+    </div >
   );
 }

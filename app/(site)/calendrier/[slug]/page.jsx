@@ -13,9 +13,17 @@ export async function generateMetadata({ params }) {
     return { title: 'Événement - Polyjoule' };
   }
 
+
+  const ogImage = entry.data?.imagePath
+    ? [{ url: entry.data.imagePath, width: 1200, height: 630, alt: entry.title }]
+    : [];
+
   return {
     title: `${entry.data?.title ?? 'Événement'} - Polyjoule`,
     description: entry.data?.intro,
+    openGraph: {
+      images: ogImage,
+    },
   };
 }
 
@@ -30,8 +38,39 @@ export default async function EventDetailPage({ params }) {
 
   const data = entry.data ?? {};
 
+  // Schema.org Event
+  const eventJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: data.title ?? entry.title,
+    startDate: data.date, // Assumes 'date' field exists in ISO format or similar
+    endDate: data.dateEnd ?? data.date, // Optional end date
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    location: {
+      '@type': 'Place',
+      name: data.location ?? 'Nantes',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Nantes', // Default or dynamic if available
+        addressCountry: 'FR',
+      },
+    },
+    image: data.imagePath ? [data.imagePath] : undefined,
+    description: data.intro,
+    organizer: {
+      '@type': 'Organization',
+      name: 'Polyjoule',
+      url: 'https://polyjoule.fr',
+    },
+  };
+
   return (
     <section className="py-5">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(eventJsonLd) }}
+      />
       <div className="container">
         <div className="section-card mx-auto" style={{ maxWidth: '960px' }}>
           <div className="row g-4 align-items-center">

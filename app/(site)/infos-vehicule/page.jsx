@@ -4,10 +4,18 @@ import { getCollectionEntries } from '@/lib/content';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = {
-  title: 'Nos Véhicules',
-  description: "Détails techniques et photos de nos véhicules : Urban Concept (City Joule) et Prototype. Découvrez l'ingénierie derrière la performance énergétique.",
-};
+export async function generateMetadata() {
+  const vehicles = await getCollectionEntries('vehicles');
+  const firstVehicle = vehicles[0]?.data;
+
+  return {
+    title: 'Nos Véhicules',
+    description: "Détails techniques et photos de nos véhicules : Urban Concept (City Joule) et Prototype. Découvrez l'ingénierie derrière la performance énergétique.",
+    openGraph: {
+      images: firstVehicle?.imagePath ? [{ url: firstVehicle.imagePath }] : [],
+    },
+  };
+}
 
 function normaliseGallery(value) {
   if (Array.isArray(value)) return value;

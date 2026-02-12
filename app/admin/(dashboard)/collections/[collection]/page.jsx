@@ -4,6 +4,7 @@ import { notFound, redirect } from 'next/navigation';
 import prisma from '@/lib/prisma';
 import { getCollectionEntries } from '@/lib/content';
 import { COLLECTION_DEFINITIONS } from '@/lib/collections';
+import PartnerConfigToggle from '@/components/admin/PartnerConfigToggle';
 
 function formatDate(value) {
   if (!value) return '-';
@@ -29,7 +30,7 @@ export default async function CollectionPage({ params }) {
     notFound();
   }
 
-  if (definition.type === 'singleton') {
+  if (definition.type === 'singleton' && collection !== 'partners-config') {
     const slug = definition.defaultSlug ?? 'unique';
     let entry = await prisma.contentEntry.findUnique({
       where: { collection_slug: { collection, slug } },
@@ -55,6 +56,7 @@ export default async function CollectionPage({ params }) {
   return (
     <div className="card shadow-sm border-0">
       <div className="card-body">
+        {collection === 'partners' && <PartnerConfigToggle />}
         <div className="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
           <div>
             <h1 className="h4 fw-bold text-primary mb-1">{definition.label}</h1>
