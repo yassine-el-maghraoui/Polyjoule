@@ -5,6 +5,8 @@ import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 
 const COLLECTION_ICONS = {
+  announcements: 'ri-megaphone-line',
+  'page-cagnotte': 'ri-hand-coin-line',
   'home-hero': 'ri-image-line',
   'quick-links': 'ri-links-line',
   partners: 'ri-handshake-line',

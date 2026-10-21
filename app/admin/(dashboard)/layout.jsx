@@ -10,6 +10,8 @@ const navigationGroups = [
   {
     label: 'Accueil',
     items: [
+      { collection: 'announcements' },
+      { collection: 'page-cagnotte' },
       { collection: 'home-hero' },
       { collection: 'quick-links' },
       { collection: 'partners' },

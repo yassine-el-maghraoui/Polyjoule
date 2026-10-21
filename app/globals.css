@@ -971,6 +971,71 @@ body {
   /* Hover zoom effect and we can add a tiny glow if we want, but basically just scale */
 }
 
+/* Announcement Bar */
+.announcement-bar {
+  background: var(--pj-primary, #1b6fff);
+  color: #fff;
+  overflow: hidden;
+  position: relative;
+  white-space: nowrap;
+}
+
+.announcement-bar-track {
+  display: inline-flex;
+  width: max-content;
+  padding: 0.55rem 0;
+  animation: announcementScroll 28s linear infinite;
+}
+
+.announcement-bar-track:hover {
+  animation-play-state: paused;
+}
+
+.announcement-bar-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0 3rem;
+  position: relative;
+}
+
+.announcement-bar-item + .announcement-bar-item::before {
+  content: '';
+}
+
+.announcement-bar-item:not(:last-child)::after {
+  content: '•';
+  position: absolute;
+  right: -1.6rem;
+  opacity: 0.6;
+}
+
+.announcement-bar-link {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 700;
+}
+
+.announcement-bar-link:hover {
+  color: #fff;
+  opacity: 0.85;
+}
+
+@keyframes announcementScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .announcement-bar-track {
+    animation: none;
+    overflow-x: auto;
+  }
+}
+
 /* Partners Slider / Marquee */
 .partners-slider-container {
   overflow: hidden;

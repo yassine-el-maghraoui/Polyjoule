@@ -4,6 +4,7 @@ import { draftMode } from 'next/headers';
 import { getCollectionEntries, getEntry } from '@/lib/content';
 import ScrollReveal from '@/components/ScrollReveal';
 import AnimatedCounter from '@/components/AnimatedCounter';
+import AnnouncementBar from '@/components/AnnouncementBar';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,12 +20,15 @@ export default async function HomePage() {
   const quickLinks = await getCollectionEntries('quick-links', { includeDrafts: preview });
   const partners = await getCollectionEntries('partners', { includeDrafts: preview });
   const partnersConfigEntry = await getEntry('partners-config', 'config', { includeDrafts: preview });
+  const announcements = await getCollectionEntries('announcements', { includeDrafts: preview });
 
   const heroData = hero?.data ?? {};
   const enablePartnersSlider = partnersConfigEntry?.data?.enablePartnersSlider ?? false;
 
   return (
     <>
+      <AnnouncementBar announcements={announcements} />
+
       {/* ===== HERO ===== */}
       <section className="hero-section" id="hero">
         {/* Full-width Background Photo */}
