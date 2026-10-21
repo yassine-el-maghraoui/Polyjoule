@@ -1,10 +1,9 @@
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 import AdminNav from '@/components/admin/AdminNav';
-import Footer from '@/components/footer/Footer';
+import AdminSidebar from '@/components/admin/AdminSidebar';
 
-import { getSession } from '@/lib/auth';
+import { getCurrentUser } from '@/lib/auth';
 import { COLLECTION_DEFINITIONS } from '@/lib/collections';
 
 const navigationGroups = [
@@ -37,45 +36,37 @@ const navigationGroups = [
 ];
 
 export default async function AdminLayout({ children }) {
-  const session = await getSession();
+  // Relit le rôle en base : le JWT peut rester valide jusqu'à 4h après
+  // qu'un compte soit supprimé ou rétrogradé.
+  const user = await getCurrentUser();
 
-  if (!session) {
-    redirect('/admin/login');
+  if (!user) {
+    // ?expired=1 : distingue "jamais connecté" de "compte supprimé/rétrogradé
+    // mais jeton de session encore valide" pour que la page de connexion ne
+    // tente pas de renvoyer vers /admin en boucle avec ce jeton.
+    redirect('/admin/login?expired=1');
   }
 
   return (
-    <div className="bg-light min-vh-100">
-      <AdminNav user={session.user} />
-      <div className="container-fluid">
+    <div className="bg-light min-vh-100 d-flex flex-column">
+      <AdminNav user={user} />
+      <div className="container-fluid flex-grow-1">
         <div className="row">
           <aside className="col-12 col-lg-3 col-xl-2 mb-4">
-            <div className="card shadow-sm">
-              <div className="card-body">
-                {navigationGroups.map((group) => (
-                  <div key={group.label} className="mb-4">
-                    <p className="text-uppercase text-secondary small fw-semibold mb-2">{group.label}</p>
-                    <ul className="list-unstyled d-grid gap-2">
-                      {group.items.map((item) => {
-                        const definition = COLLECTION_DEFINITIONS[item.collection];
-                        if (!definition) return null;
-                        return (
-                          <li key={item.collection}>
-                            <Link href={`/admin/collections/${item.collection}`} className="btn btn-outline-primary w-100">
-                              {definition.label}
-                            </Link>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <AdminSidebar
+              navigationGroups={navigationGroups}
+              collectionDefinitions={COLLECTION_DEFINITIONS}
+              user={user}
+            />
           </aside>
           <section className="col-12 col-lg-9 col-xl-10 mb-5">{children}</section>
         </div>
       </div>
-      <Footer />
+      <footer className="border-top bg-white py-3">
+        <div className="container-fluid text-center text-secondary small">
+          Back-office Polyjoule — réservé à l&apos;équipe
+        </div>
+      </footer>
     </div>
   );
 }
