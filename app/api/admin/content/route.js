@@ -1,11 +1,10 @@
 export const runtime = 'nodejs';
 
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import { z } from 'zod';
 
 import prisma from '@/lib/prisma';
-import { authOptions } from '@/lib/auth';
+import { getCurrentUser } from '@/lib/auth';
 
 const payloadSchema = z.object({
   collection: z.string().min(1),
@@ -17,8 +16,8 @@ const payloadSchema = z.object({
 });
 
 export async function GET(request) {
-  const session = await getServerSession(authOptions);
-  if (!session) {
+  const user = await getCurrentUser();
+  if (!user) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
   }
 
@@ -51,8 +50,8 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
-  const session = await getServerSession(authOptions);
-  if (!session) {
+  const user = await getCurrentUser();
+  if (!user) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
   }
 
@@ -93,7 +92,7 @@ export async function POST(request) {
     await prisma.contentRevision.create({
       data: {
         contentId: entry.id,
-        authorId: session.user?.id ?? null,
+        authorId: user.id,
         status,
         data: JSON.stringify(data),
       },

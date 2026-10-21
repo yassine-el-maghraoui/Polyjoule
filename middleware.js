@@ -9,6 +9,10 @@ export default withAuth(
         if (pathname.startsWith('/admin/login')) {
           return true;
         }
+        // Le rôle contenu dans le jeton peut être périmé jusqu'à 4h (compte
+        // promu/rétrogradé après la connexion) : la vérification du rôle
+        // admin se fait en base dans la page et les routes /api/admin/users,
+        // pas ici.
         return !!token;
       },
     },

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { signIn, useSession } from 'next-auth/react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 export default function AdminLoginPage() {
@@ -11,12 +11,28 @@ export default function AdminLoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [sessionExpired, setSessionExpired] = useState(false);
+
+  // Si le tableau de bord a renvoyé ici avec ?expired=1, le compte a été
+  // supprimé ou rétrogradé pendant que le jeton de session était encore
+  // valide : il faut déconnecter ce jeton plutôt que de renvoyer vers
+  // /admin, sinon ça boucle indéfiniment entre les deux pages.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('expired') === '1') {
+      setSessionExpired(true);
+      if (status === 'authenticated') {
+        signOut({ redirect: false });
+      }
+    }
+  }, [status]);
 
   useEffect(() => {
-    if (status === 'authenticated') {
+    if (status === 'authenticated' && !sessionExpired) {
       router.replace('/admin');
     }
-  }, [status, router]);
+  }, [status, sessionExpired, router]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -47,7 +63,7 @@ export default function AdminLoginPage() {
     setCallbackUrl(url);
   }, []);
 
-  if (status === 'authenticated') {
+  if (status === 'authenticated' && !sessionExpired) {
     return null;
   }
 
@@ -58,7 +74,12 @@ export default function AdminLoginPage() {
         <p className="text-secondary mb-4">
           Connectez-vous pour gérer le contenu du site. Identifiez-vous avec votre adresse e-mail et votre mot de passe.
         </p>
-        {callbackUrl ? (
+        {sessionExpired ? (
+          <div className="alert alert-warning py-2">
+            Votre accès a été retiré ou a expiré. Merci de vous reconnecter.
+          </div>
+        ) : null}
+        {callbackUrl && !sessionExpired ? (
           <div className="alert alert-info py-2">
             Merci de vous identifier pour accéder à la ressource demandée.
           </div>

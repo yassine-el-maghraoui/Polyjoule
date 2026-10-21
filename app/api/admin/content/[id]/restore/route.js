@@ -1,19 +1,18 @@
 export const runtime = 'nodejs';
 
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import { z } from 'zod';
 
 import prisma from '@/lib/prisma';
-import { authOptions } from '@/lib/auth';
+import { getCurrentUser } from '@/lib/auth';
 
 const schema = z.object({
   revisionId: z.number(),
 });
 
 export async function POST(request, { params }) {
-  const session = await getServerSession(authOptions);
-  if (!session) {
+  const user = await getCurrentUser();
+  if (!user) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
   }
 
@@ -52,7 +51,7 @@ export async function POST(request, { params }) {
   await prisma.contentRevision.create({
     data: {
       contentId: id,
-      authorId: session.user?.id ?? null,
+      authorId: user.id,
       status: revision.status,
       data: revision.data,
     },

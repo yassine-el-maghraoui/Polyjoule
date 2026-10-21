@@ -1,13 +1,12 @@
 export const runtime = 'nodejs';
 
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import fs from 'fs/promises';
 import path from 'path';
 import { put } from '@vercel/blob';
 
 import prisma from '@/lib/prisma';
-import { authOptions } from '@/lib/auth';
+import { getCurrentUser } from '@/lib/auth';
 
 function sanitizeFilename(filename) {
   const timestamp = Date.now();
@@ -18,8 +17,8 @@ function sanitizeFilename(filename) {
 }
 
 export async function POST(request) {
-  const session = await getServerSession(authOptions);
-  if (!session) {
+  const user = await getCurrentUser();
+  if (!user) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
   }
 
