@@ -10,3 +10,5 @@ dev.db
 prisma/dev.db
 .vercel
 .env*.local
+.DS_Store
+Photos/
