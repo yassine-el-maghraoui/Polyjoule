@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import prisma from '@/lib/prisma';
+import { getCurrentUser } from '@/lib/auth';
 
 export const metadata = {
   title: 'Back-office Polyjoule',
@@ -17,7 +18,7 @@ async function getStats() {
 }
 
 export default async function AdminDashboardPage() {
-  const stats = await getStats();
+  const [stats, user] = await Promise.all([getStats(), getCurrentUser()]);
 
   return (
     <div className="container-fluid px-0">
@@ -64,7 +65,16 @@ export default async function AdminDashboardPage() {
             <div className="card-body">
               <p className="text-uppercase text-secondary small fw-semibold">Comptes éditeurs</p>
               <h2 className="display-6 fw-bold text-primary">{stats.users}</h2>
-              <p className="text-secondary mb-0">Contactez l’administrateur pour gérer les accès.</p>
+              {user?.role === 'admin' ? (
+                <>
+                  <p className="text-secondary">Créez ou modifiez les comptes de l’équipe.</p>
+                  <Link href="/admin/utilisateurs" className="btn btn-sm btn-outline-primary">
+                    Gérer les comptes
+                  </Link>
+                </>
+              ) : (
+                <p className="text-secondary mb-0">Contactez l’administrateur pour gérer les accès.</p>
+              )}
             </div>
           </div>
         </div>
