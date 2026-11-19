@@ -1,7 +1,26 @@
+import { NextResponse } from 'next/server';
 import { withAuth } from 'next-auth/middleware';
 
+const FIRST_LOGIN_PAGE = '/admin/premiere-connexion';
+const PENDING_PASSWORD_ALLOWED = [FIRST_LOGIN_PAGE, '/admin/login', '/api/admin/account/password'];
+
 export default withAuth(
-  function middleware() {},
+  function middleware(req) {
+    const { pathname } = req.nextUrl;
+    if (!req.nextauth.token?.mustChangePassword) {
+      return;
+    }
+    if (PENDING_PASSWORD_ALLOWED.some((path) => pathname.startsWith(path))) {
+      return;
+    }
+    if (pathname.startsWith('/api/')) {
+      return NextResponse.json(
+        { error: 'Changez votre mot de passe temporaire avant de continuer.' },
+        { status: 403 }
+      );
+    }
+    return NextResponse.redirect(new URL(FIRST_LOGIN_PAGE, req.url));
+  },
   {
     callbacks: {
       authorized: ({ req, token }) => {
@@ -9,10 +28,6 @@ export default withAuth(
         if (pathname.startsWith('/admin/login')) {
           return true;
         }
-        // Le rôle contenu dans le jeton peut être périmé jusqu'à 4h (compte
-        // promu/rétrogradé après la connexion) : la vérification du rôle
-        // admin se fait en base dans la page et les routes /api/admin/users,
-        // pas ici.
         return !!token;
       },
     },

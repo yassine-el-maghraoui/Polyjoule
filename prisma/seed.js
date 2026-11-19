@@ -61,6 +61,7 @@ async function main() {
       name: 'Administrateur Polyjoule',
       passwordHash,
       role: 'admin',
+      mustChangePassword: true,
     },
   });
 

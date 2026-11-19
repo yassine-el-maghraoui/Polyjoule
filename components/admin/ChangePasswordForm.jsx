@@ -1,8 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { signOut } from 'next-auth/react';
 
-export default function ChangePasswordForm() {
+import { PASSWORD_MIN_LENGTH, validateNewPassword } from '@/lib/password';
+
+export default function ChangePasswordForm({ currentPasswordLabel = 'Mot de passe actuel' }) {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -19,6 +22,11 @@ export default function ChangePasswordForm() {
       setError('Les deux mots de passe ne correspondent pas.');
       return;
     }
+    const policyError = validateNewPassword(newPassword);
+    if (policyError) {
+      setError(policyError);
+      return;
+    }
 
     setSaving(true);
     try {
@@ -32,13 +40,10 @@ export default function ChangePasswordForm() {
       if (!res.ok) {
         throw new Error(details.error || 'Modification impossible');
       }
-      setMessage('Mot de passe mis à jour.');
-      setCurrentPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
+      setMessage('Mot de passe mis à jour. Reconnexion…');
+      await signOut({ callbackUrl: '/admin/login?changed=1' });
     } catch (err) {
       setError(err.message);
-    } finally {
       setSaving(false);
     }
   };
@@ -56,12 +61,13 @@ export default function ChangePasswordForm() {
         </div>
       ) : null}
       <div>
-        <label className="form-label fw-semibold">Mot de passe actuel</label>
+        <label className="form-label fw-semibold">{currentPasswordLabel}</label>
         <input
           type="password"
           className="form-control"
           value={currentPassword}
           onChange={(event) => setCurrentPassword(event.target.value)}
+          autoComplete="current-password"
           required
         />
       </div>
@@ -72,9 +78,14 @@ export default function ChangePasswordForm() {
           className="form-control"
           value={newPassword}
           onChange={(event) => setNewPassword(event.target.value)}
-          minLength={8}
+          minLength={PASSWORD_MIN_LENGTH}
+          autoComplete="new-password"
           required
         />
+        <p className="text-secondary small mb-0 mt-1">
+          {PASSWORD_MIN_LENGTH} caractères minimum, sans votre nom ni des mots courants. Astuce : une phrase de
+          plusieurs mots est facile à retenir et difficile à deviner.
+        </p>
       </div>
       <div>
         <label className="form-label fw-semibold">Confirmer le nouveau mot de passe</label>
@@ -83,7 +94,8 @@ export default function ChangePasswordForm() {
           className="form-control"
           value={confirmPassword}
           onChange={(event) => setConfirmPassword(event.target.value)}
-          minLength={8}
+          minLength={PASSWORD_MIN_LENGTH}
+          autoComplete="new-password"
           required
         />
       </div>

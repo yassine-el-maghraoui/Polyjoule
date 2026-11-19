@@ -8,20 +8,80 @@ const ROLE_LABELS = {
   editor: 'Éditeur',
 };
 
-function generatePassword() {
-  const alphabet = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
-  const bytes = new Uint32Array(12);
-  crypto.getRandomValues(bytes);
-  let value = '';
-  for (let i = 0; i < bytes.length; i += 1) {
-    value += alphabet[bytes[i] % alphabet.length];
-  }
-  return value;
-}
-
 function formatDate(value) {
   if (!value) return '-';
-  return new Date(value).toLocaleDateString('fr-FR');
+  return new Date(value).toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris' });
+}
+
+function formatDateTime(value) {
+  return new Date(value).toLocaleString('fr-FR', {
+    dateStyle: 'short',
+    timeStyle: 'short',
+    timeZone: 'Europe/Paris',
+  });
+}
+
+function AccountStatus({ user }) {
+  const now = Date.now();
+  if (user.lockedUntil && new Date(user.lockedUntil).getTime() > now) {
+    return (
+      <span className="badge text-bg-danger" title="Trop de mots de passe erronés">
+        Bloqué jusqu’à {formatDateTime(user.lockedUntil)}
+      </span>
+    );
+  }
+  if (user.mustChangePassword) {
+    if (user.temporaryPasswordExpiresAt && new Date(user.temporaryPasswordExpiresAt).getTime() < now) {
+      return <span className="badge text-bg-danger">Accès temporaire expiré</span>;
+    }
+    return (
+      <span className="badge text-bg-warning">
+        En attente de première connexion
+        {user.temporaryPasswordExpiresAt ? ` (avant le ${formatDate(user.temporaryPasswordExpiresAt)})` : ''}
+      </span>
+    );
+  }
+  return (
+    <span className="text-secondary small">
+      {user.lastLoginAt ? `Dernière connexion : ${formatDateTime(user.lastLoginAt)}` : 'Actif'}
+    </span>
+  );
+}
+
+function TemporaryCredentials({ credentials, onDismiss }) {
+  const [copied, setCopied] = useState(false);
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(credentials.password);
+      setCopied(true);
+    } catch {
+      setCopied(false);
+    }
+  };
+
+  return (
+    <div className="alert alert-info mt-3 mb-0">
+      <div className="mb-2">
+        {credentials.title} pour <strong>{credentials.email}</strong>. Mot de passe temporaire :{' '}
+        <code className="fs-6">{credentials.password}</code>{' '}
+        <button type="button" className="btn btn-sm btn-outline-primary ms-1" onClick={copy}>
+          {copied ? 'Copié' : 'Copier'}
+        </button>
+      </div>
+      <ul className="small mb-2 ps-3">
+        <li>Il ne sera plus affiché après avoir fermé ce message.</li>
+        <li>
+          Envoyez l’adresse de connexion et le mot de passe par <strong>deux canaux différents</strong> (par ex.
+          l’adresse par e-mail, le mot de passe par SMS ou en main propre).
+        </li>
+        <li>La personne devra choisir son propre mot de passe à la première connexion.</li>
+        <li>Ce mot de passe temporaire expire dans 7 jours.</li>
+      </ul>
+      <button type="button" className="btn btn-sm btn-outline-secondary" onClick={onDismiss}>
+        J’ai transmis le mot de passe, masquer
+      </button>
+    </div>
+  );
 }
 
 export default function UserManager({ initialUsers, currentUserId }) {
@@ -30,17 +90,13 @@ export default function UserManager({ initialUsers, currentUserId }) {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
 
-  // Nouveau compte
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('editor');
-  const [password, setPassword] = useState('');
   const [creating, setCreating] = useState(false);
   const [createdCredentials, setCreatedCredentials] = useState(null);
 
-  // Édition (par ligne)
   const [busyId, setBusyId] = useState(null);
-  const [resetPasswords, setResetPasswords] = useState({});
   const [resetResult, setResetResult] = useState(null);
 
   const refresh = async () => {
@@ -63,18 +119,21 @@ export default function UserManager({ initialUsers, currentUserId }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ name, email, role, password }),
+        body: JSON.stringify({ name, email, role }),
       });
       const details = await res.json().catch(() => ({}));
       if (!res.ok) {
         throw new Error(details.error || 'Création impossible');
       }
 
-      setCreatedCredentials({ email: details.user.email, password });
+      setCreatedCredentials({
+        title: 'Compte créé',
+        email: details.user.email,
+        password: details.temporaryPassword,
+      });
       setName('');
       setEmail('');
       setRole('editor');
-      setPassword('');
       await refresh();
       router.refresh();
     } catch (err) {
@@ -110,8 +169,12 @@ export default function UserManager({ initialUsers, currentUserId }) {
   };
 
   const handleResetPassword = async (userId, userLabel) => {
-    const newPassword = resetPasswords[userId]?.trim() || generatePassword();
-    if (!window.confirm(`Réinitialiser le mot de passe de ${userLabel} ?`)) {
+    const confirmed = window.confirm(
+      `Réinitialiser le mot de passe de ${userLabel} ?\n\n` +
+        'Cette personne sera déconnectée immédiatement et devra choisir un nouveau mot de passe ' +
+        'avec le mot de passe temporaire que vous allez lui transmettre. Le compte sera aussi débloqué.'
+    );
+    if (!confirmed) {
       return;
     }
     setError('');
@@ -122,14 +185,18 @@ export default function UserManager({ initialUsers, currentUserId }) {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ password: newPassword }),
+        body: JSON.stringify({ resetPassword: true }),
       });
       const details = await res.json().catch(() => ({}));
       if (!res.ok) {
         throw new Error(details.error || 'Réinitialisation impossible');
       }
-      setResetResult({ userId, email: details.user.email, password: newPassword });
-      setResetPasswords((prev) => ({ ...prev, [userId]: '' }));
+      setResetResult({
+        title: 'Mot de passe réinitialisé',
+        email: details.user.email,
+        password: details.temporaryPassword,
+      });
+      await refresh();
     } catch (err) {
       setError(err.message);
     } finally {
@@ -212,28 +279,10 @@ export default function UserManager({ initialUsers, currentUserId }) {
               </select>
             </div>
             <div className="col-md-8">
-              <label className="form-label fw-semibold">Mot de passe initial</label>
-              <div className="input-group">
-                <input
-                  type="text"
-                  className="form-control"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                  placeholder="8 caractères minimum"
-                  required
-                  minLength={8}
-                />
-                <button
-                  type="button"
-                  className="btn btn-outline-secondary"
-                  onClick={() => setPassword(generatePassword())}
-                >
-                  Générer
-                </button>
-              </div>
-              <p className="text-secondary small mb-0 mt-1">
-                Communiquez ce mot de passe à la personne concernée (par un moyen autre que le site, par ex. en
-                main propre ou par un message privé). Il ne sera plus affiché ensuite.
+              <p className="text-secondary small mb-0">
+                Un mot de passe temporaire aléatoire est généré à la création. Il est valable 7 jours et la
+                personne doit le remplacer par le sien dès sa première connexion. Préférez le rôle Éditeur sauf
+                besoin réel de gérer les comptes.
               </p>
             </div>
             <div className="col-md-4 d-flex align-items-end">
@@ -244,10 +293,7 @@ export default function UserManager({ initialUsers, currentUserId }) {
           </form>
 
           {createdCredentials ? (
-            <div className="alert alert-info mt-3 mb-0">
-              Compte créé pour <strong>{createdCredentials.email}</strong>. Mot de passe initial :{' '}
-              <code>{createdCredentials.password}</code>
-            </div>
+            <TemporaryCredentials credentials={createdCredentials} onDismiss={() => setCreatedCredentials(null)} />
           ) : null}
         </div>
       </div>
@@ -262,6 +308,7 @@ export default function UserManager({ initialUsers, currentUserId }) {
                   <th scope="col">Nom</th>
                   <th scope="col">E-mail</th>
                   <th scope="col">Rôle</th>
+                  <th scope="col">Statut</th>
                   <th scope="col">Créé le</th>
                   <th scope="col" className="text-end">
                     Actions
@@ -291,28 +338,20 @@ export default function UserManager({ initialUsers, currentUserId }) {
                           <option value="admin">{ROLE_LABELS.admin}</option>
                         </select>
                       </td>
+                      <td>
+                        <AccountStatus user={user} />
+                      </td>
                       <td>{formatDate(user.createdAt)}</td>
                       <td className="text-end">
                         <div className="d-flex flex-column flex-md-row gap-2 justify-content-end">
-                          <div className="input-group input-group-sm" style={{ maxWidth: '260px' }}>
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder="Nouveau mot de passe"
-                              value={resetPasswords[user.id] ?? ''}
-                              onChange={(event) =>
-                                setResetPasswords((prev) => ({ ...prev, [user.id]: event.target.value }))
-                              }
-                            />
-                            <button
-                              type="button"
-                              className="btn btn-outline-primary"
-                              disabled={isBusy}
-                              onClick={() => handleResetPassword(user.id, user.name || user.email)}
-                            >
-                              Réinitialiser
-                            </button>
-                          </div>
+                          <button
+                            type="button"
+                            className="btn btn-sm btn-outline-primary"
+                            disabled={isSelf || isBusy}
+                            onClick={() => handleResetPassword(user.id, user.name || user.email)}
+                          >
+                            Réinitialiser le mot de passe
+                          </button>
                           <button
                             type="button"
                             className="btn btn-sm btn-outline-danger"
@@ -331,11 +370,7 @@ export default function UserManager({ initialUsers, currentUserId }) {
           </div>
 
           {resetResult ? (
-            <div className="alert alert-info mb-0">
-              Nouveau mot de passe pour <strong>{resetResult.email}</strong> : <code>{resetResult.password}</code>
-              <br />
-              Communiquez-le à la personne concernée ; il ne sera plus affiché ensuite.
-            </div>
+            <TemporaryCredentials credentials={resetResult} onDismiss={() => setResetResult(null)} />
           ) : null}
         </div>
       </div>

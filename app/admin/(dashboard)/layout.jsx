@@ -38,15 +38,13 @@ const navigationGroups = [
 ];
 
 export default async function AdminLayout({ children }) {
-  // Relit le rôle en base : le JWT peut rester valide jusqu'à 4h après
-  // qu'un compte soit supprimé ou rétrogradé.
-  const user = await getCurrentUser();
+  const user = await getCurrentUser({ allowPendingPasswordChange: true });
 
   if (!user) {
-    // ?expired=1 : distingue "jamais connecté" de "compte supprimé/rétrogradé
-    // mais jeton de session encore valide" pour que la page de connexion ne
-    // tente pas de renvoyer vers /admin en boucle avec ce jeton.
     redirect('/admin/login?expired=1');
+  }
+  if (user.mustChangePassword) {
+    redirect('/admin/premiere-connexion');
   }
 
   return (

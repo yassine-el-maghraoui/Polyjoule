@@ -11,15 +11,23 @@ export const metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function UsersPage() {
-  // Le middleware bloque déjà les non-admins sur cette route ; on revérifie
-  // ici en base au cas où le rôle du token serait périmé.
   const currentUser = await getCurrentUser();
   if (!currentUser || currentUser.role !== 'admin') {
     notFound();
   }
 
   const users = await prisma.user.findMany({
-    select: { id: true, email: true, name: true, role: true, createdAt: true },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      role: true,
+      mustChangePassword: true,
+      temporaryPasswordExpiresAt: true,
+      lockedUntil: true,
+      lastLoginAt: true,
+      createdAt: true,
+    },
     orderBy: { createdAt: 'asc' },
   });
 

@@ -12,14 +12,12 @@ export default function AdminLoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [sessionExpired, setSessionExpired] = useState(false);
+  const [passwordChanged, setPasswordChanged] = useState(false);
 
-  // Si le tableau de bord a renvoyé ici avec ?expired=1, le compte a été
-  // supprimé ou rétrogradé pendant que le jeton de session était encore
-  // valide : il faut déconnecter ce jeton plutôt que de renvoyer vers
-  // /admin, sinon ça boucle indéfiniment entre les deux pages.
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const params = new URLSearchParams(window.location.search);
+    setPasswordChanged(params.get('changed') === '1');
     if (params.get('expired') === '1') {
       setSessionExpired(true);
       if (status === 'authenticated') {
@@ -46,7 +44,11 @@ export default function AdminLoginPage() {
     });
 
     if (!result || result.error) {
-      setError('Identifiants incorrects.');
+      setError(
+        result?.error === 'TemporaryPasswordExpired'
+          ? 'Votre mot de passe temporaire a expiré. Demandez-en un nouveau à un administrateur.'
+          : 'Identifiants incorrects. Après 5 essais erronés, le compte est bloqué 15 minutes.'
+      );
       setLoading(false);
       return;
     }
@@ -74,12 +76,17 @@ export default function AdminLoginPage() {
         <p className="text-secondary mb-4">
           Connectez-vous pour gérer le contenu du site. Identifiez-vous avec votre adresse e-mail et votre mot de passe.
         </p>
+        {passwordChanged ? (
+          <div className="alert alert-success py-2">
+            Mot de passe enregistré. Reconnectez-vous avec votre nouveau mot de passe.
+          </div>
+        ) : null}
         {sessionExpired ? (
           <div className="alert alert-warning py-2">
             Votre accès a été retiré ou a expiré. Merci de vous reconnecter.
           </div>
         ) : null}
-        {callbackUrl && !sessionExpired ? (
+        {callbackUrl && !sessionExpired && !passwordChanged ? (
           <div className="alert alert-info py-2">
             Merci de vous identifier pour accéder à la ressource demandée.
           </div>
@@ -97,6 +104,7 @@ export default function AdminLoginPage() {
               className="form-control"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
+              autoComplete="username"
               required
             />
           </div>
@@ -107,6 +115,7 @@ export default function AdminLoginPage() {
               className="form-control"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
+              autoComplete="current-password"
               required
             />
           </div>

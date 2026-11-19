@@ -6,12 +6,17 @@ import { z } from 'zod';
 
 import prisma from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
+import { generateTemporaryPassword, TEMPORARY_PASSWORD_TTL_MS } from '@/lib/password';
 
 const USER_SELECT = {
   id: true,
   email: true,
   name: true,
   role: true,
+  mustChangePassword: true,
+  temporaryPasswordExpiresAt: true,
+  lockedUntil: true,
+  lastLoginAt: true,
   createdAt: true,
   updatedAt: true,
 };
@@ -20,7 +25,6 @@ const createSchema = z.object({
   email: z.string().trim().toLowerCase().email('Adresse e-mail invalide'),
   name: z.string().trim().min(1, 'Nom requis').max(120),
   role: z.enum(['admin', 'editor']).default('editor'),
-  password: z.string().min(8, 'Le mot de passe doit contenir au moins 8 caractères'),
 });
 
 export async function GET() {
@@ -58,15 +62,23 @@ export async function POST(request) {
     );
   }
 
-  const { email, name, role, password } = parsed.data;
-  const passwordHash = await bcrypt.hash(password, 12);
+  const { email, name, role } = parsed.data;
+  const temporaryPassword = generateTemporaryPassword();
+  const passwordHash = await bcrypt.hash(temporaryPassword, 12);
 
   try {
     const user = await prisma.user.create({
-      data: { email, name, role, passwordHash },
+      data: {
+        email,
+        name,
+        role,
+        passwordHash,
+        mustChangePassword: true,
+        temporaryPasswordExpiresAt: new Date(Date.now() + TEMPORARY_PASSWORD_TTL_MS),
+      },
       select: USER_SELECT,
     });
-    return NextResponse.json({ user }, { status: 201 });
+    return NextResponse.json({ user, temporaryPassword }, { status: 201 });
   } catch (error) {
     if (error.code === 'P2002') {
       return NextResponse.json({ error: 'Cette adresse e-mail est déjà utilisée.' }, { status: 409 });
