@@ -29,9 +29,7 @@ export default async function HomePage() {
     <>
       <AnnouncementBar announcements={announcements} />
 
-      {/* ===== HERO ===== */}
       <section className="hero-section" id="hero">
-        {/* Full-width Background Photo */}
         <div className="hero-main-bg" aria-hidden="true">
           <Image
             src="/assets/polyjoule-2.jpg"
@@ -44,7 +42,6 @@ export default async function HomePage() {
           <div className="hero-main-bg-overlay"></div>
         </div>
 
-        {/* Animated particles */}
         <div className="hero-particles" aria-hidden="true">
           <span className="particle particle-1"></span>
           <span className="particle particle-2"></span>
@@ -107,7 +104,6 @@ export default async function HomePage() {
           </div>
         </div>
 
-        {/* Wave separator */}
         <div className="hero-wave" aria-hidden="true">
           <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
             <path
@@ -118,7 +114,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ===== STATS ===== */}
       <section className="section-stats" id="stats">
         <div className="container">
           <div className="stats-grid">
@@ -165,7 +160,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ===== QUICK LINKS ===== */}
       <section className="section-quicklinks" id="explorer">
         <div className="container">
           <ScrollReveal animation="fade-up">
@@ -202,13 +196,11 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ===== ABOUT PREVIEW ===== */}
       <section className="section-about" id="about">
         <div className="container">
           <div className="about-grid">
             <ScrollReveal animation="fade-right">
               <div className="about-image-wrap">
-                {/* 📷 REMPLACEZ le src ci-dessous par votre propre photo d'équipe/véhicule */}
                 <Image
                   src="/assets/equipe.JPG"
                   alt="L'équipe Polyjoule en action"
@@ -246,7 +238,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ===== GALLERY SHOWCASE ===== */}
       <section className="section-gallery-showcase" id="gallery-showcase">
         <div className="container">
           <ScrollReveal animation="fade-up">
@@ -289,7 +280,6 @@ export default async function HomePage() {
             </ScrollReveal>
             <ScrollReveal animation="scale-in" delay={200} className="mosaic-item">
               <div className="mosaic-card">
-                {/* 📷 Remplacez par une photo d'équipe pour plus de variété */}
                 <Image
                   src="/assets/track2.jpg"
                   alt="Action Shell Eco Marathon"
@@ -330,7 +320,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ===== PARTNERS ===== */}
       <section className="section-partners" id="partenaires">
         <div className="container">
           <ScrollReveal animation="fade-up">
@@ -379,7 +368,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ===== CTA FINAL ===== */}
       <section className="section-cta-final" id="rejoindre">
         <div className="cta-particles" aria-hidden="true">
           <span className="cta-particle cta-particle-1"></span>

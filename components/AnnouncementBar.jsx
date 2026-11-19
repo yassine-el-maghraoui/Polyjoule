@@ -6,7 +6,6 @@ export default function AnnouncementBar({ announcements }) {
   const items = announcements.map((entry) => entry.data ?? {}).filter((d) => d.message);
   if (items.length === 0) return null;
 
-  // Dupliqué pour boucler le défilement sans coupure visuelle.
   const track = [...items, ...items];
 
   return (

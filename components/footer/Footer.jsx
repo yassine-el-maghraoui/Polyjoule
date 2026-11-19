@@ -14,7 +14,6 @@ export default function SiteFooter() {
       <div className={styles.mainSection}>
         <div className={styles.container}>
 
-          {/* COLONNE 1 : MARQUE */}
           <div className={styles.brandColumn}>
             <Link href="/" className={styles.logo}>
               <Image
@@ -30,7 +29,6 @@ export default function SiteFooter() {
             </p>
           </div>
 
-          {/* COLONNE 2 : NAVIGATION */}
           <div>
             <h3 className={styles.columnTitle}>Explorer</h3>
             <ul className={styles.linkList}>
@@ -42,9 +40,6 @@ export default function SiteFooter() {
             </ul>
           </div>
 
-
-
-          {/* COLONNE 4 : LÉGAL */}
           <div>
             <h3 className={styles.columnTitle}>Légal</h3>
             <ul className={styles.linkList}>
@@ -53,7 +48,6 @@ export default function SiteFooter() {
               <li><Link href="/admin/login" className={styles.footerLink}>Connexion Membre</Link></li>
             </ul>
           </div>
-          {/* COLONNE 3 : CONTACT & RÉSEAUX */}
           <div>
             <h3 className={styles.columnTitle}>Contact</h3>
             <div className={styles.linkList}>
@@ -67,17 +61,14 @@ export default function SiteFooter() {
               </div>
             </div>
 
-            {/* RÉSEAUX SOCIAUX */}
             <div className={styles.socialWrapper}>
 
-              {/* Facebook (Icon filled) */}
               <Link href={siteConfig.social.facebook} target="_blank" rel="noreferrer" className={styles.socialLink} aria-label="Facebook">
                 <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
                   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
                 </svg>
               </Link>
 
-              {/* Instagram (Icon stroke/outline pour être propre) */}
               <a href={siteConfig.social.instagram} target="_blank" rel="noreferrer" className={styles.socialLink} aria-label="Instagram">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
@@ -86,7 +77,6 @@ export default function SiteFooter() {
                 </svg>
               </a>
 
-              {/* LinkedIn (Icon filled) */}
               <a href={siteConfig.social.linkedin} target="_blank" rel="noreferrer" className={styles.socialLink} aria-label="LinkedIn">
                 <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
                   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>

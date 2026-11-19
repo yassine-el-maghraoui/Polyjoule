@@ -17,7 +17,6 @@ export default async function PresentationPage() {
 
   return (
     <div className="pt-5">
-      {/* Hero Section */}
       <div className="container">
         <div className="text-center mb-5">
           <span className="badge badge-soft-primary">Depuis 2005</span>
@@ -67,19 +66,14 @@ export default async function PresentationPage() {
         </div>
       </div>
 
-
       <div className="container">
-        {/* Values Grid */}
-        {/* Main Content & History */}
         <section className="py-5">
-          {/* History Section - Full Width */}
           <div className="bg-white p-5 rounded-5 shadow-sm border mb-5">
             <span className="text-primary fw-bold small-caps mb-2 d-block">Notre Histoire</span>
             <h2 className="h1 fw-bold mb-4 text-dark">Une aventure humaine</h2>
             <div className="text-secondary fs-5" dangerouslySetInnerHTML={{ __html: data.bodyHtml ?? '' }} />
           </div>
 
-          {/* Stats Section - Full Width Grid */}
           <div className="row g-4">
             <div className="col-12">
               <div className="row g-4">
@@ -100,12 +94,10 @@ export default async function PresentationPage() {
           </div>
         </section>
 
-        {/* TeamSection */}
         {data.showTeamSection && data.teamMembers?.length > 0 ? (
           <TeamSection members={data.teamMembers} />
         ) : null}
 
-        {/* Call to Action */}
         <section className="cta-section p-5 mt-4 mb-5 text-center">
           <h2 className="fw-bold mb-3">Envie de découvrir nos prototypes ?</h2>
           <p className="lead mb-4 opacity-75">
@@ -123,7 +115,6 @@ export default async function PresentationPage() {
 function TeamSection({ members }) {
   if (!members || !members.length) return null;
 
-  // Grouping Logic
   const groups = [];
   let currentGroup = { title: null, members: [] };
 

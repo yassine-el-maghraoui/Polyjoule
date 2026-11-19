@@ -31,7 +31,6 @@ export default function SiteNav() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu on resize to desktop
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) {
@@ -46,20 +45,17 @@ export default function SiteNav() {
 
   return (
     <>
-      {/* SPACER */}
       <div
         className={clsx(styles.spacer, { [styles.scrolled]: isScrolled })}
         aria-hidden="true"
       />
 
-      {/* HEADER */}
       <header
         className={clsx(styles.header, {
           [styles.scrolled]: isScrolled
         })}
       >
         <div className={styles.container}>
-          {/* LOGO */}
           <Link href="/" className={styles.logo} onClick={closeMenu}>
             <Image
               src={siteConfig.assets.logo}
@@ -71,7 +67,6 @@ export default function SiteNav() {
             />
           </Link>
 
-          {/* DESKTOP NAV */}
           <nav className={styles.desktopNav}>
             {LINKS.map((link) => {
               const isActive = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
@@ -87,7 +82,6 @@ export default function SiteNav() {
             })}
           </nav>
 
-          {/* BURGER */}
           <button
             className={clsx(styles.burger, { [styles.burgerOpen]: isOpen })}
             onClick={() => setIsOpen(!isOpen)}
@@ -99,7 +93,6 @@ export default function SiteNav() {
           </button>
         </div>
 
-        {/* MOBILE MENU (Enfant du header pour synchroniser couleurs et position) */}
         <nav
           className={clsx(styles.mobileMenu, {
             [styles.mobileMenuOpen]: isOpen

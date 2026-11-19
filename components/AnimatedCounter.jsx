@@ -2,10 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-/**
- * AnimatedCounter — counts from 0 to `value` when scrolled into view.
- * Supports a prefix (e.g. "+") and suffix (e.g. "ans").
- */
 export default function AnimatedCounter({ value, prefix = '', suffix = '', duration = 2000 }) {
   const [count, setCount] = useState(0);
   const [hasAnimated, setHasAnimated] = useState(false);

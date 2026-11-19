@@ -15,7 +15,6 @@ export default function PartnerConfigToggle() {
                 const res = await fetch('/api/admin/content?collection=partners-config&slug=config');
                 if (res.ok) {
                     const data = await res.json();
-                    // data could be null if singleton entry doesn't exist yet
                     if (data && data.data) {
                         setIsEnabled(!!data.data.enablePartnersSlider);
                     }
@@ -31,11 +30,9 @@ export default function PartnerConfigToggle() {
 
     const handleToggle = async (newValue) => {
         setSaving(true);
-        // Optimistic update
         setIsEnabled(newValue);
 
         try {
-            // First, get the entry to know if we need to create or update (and get ID)
             const getRes = await fetch('/api/admin/content?collection=partners-config&slug=config');
             let entryId = null;
             let existingData = {};
@@ -72,10 +69,9 @@ export default function PartnerConfigToggle() {
                 throw new Error('Failed to save config');
             }
 
-            router.refresh(); // Refresh to update any server components if needed
+            router.refresh();
         } catch (error) {
             console.error('Error saving partner config:', error);
-            // Revert on error
             setIsEnabled(!newValue);
             alert('Erreur lors de la sauvegarde de la configuration.');
         } finally {

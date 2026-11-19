@@ -13,7 +13,6 @@ export async function generateMetadata({ params }) {
     return { title: 'Événement - Polyjoule' };
   }
 
-
   const ogImage = entry.data?.imagePath
     ? [{ url: entry.data.imagePath, width: 1200, height: 630, alt: entry.title }]
     : [];
@@ -38,13 +37,12 @@ export default async function EventDetailPage({ params }) {
 
   const data = entry.data ?? {};
 
-  // Schema.org Event
   const eventJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Event',
     name: data.title ?? entry.title,
-    startDate: data.date, // Assumes 'date' field exists in ISO format or similar
-    endDate: data.dateEnd ?? data.date, // Optional end date
+    startDate: data.date,
+    endDate: data.dateEnd ?? data.date,
     eventStatus: 'https://schema.org/EventScheduled',
     eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
     location: {
@@ -52,7 +50,7 @@ export default async function EventDetailPage({ params }) {
       name: data.location ?? 'Nantes',
       address: {
         '@type': 'PostalAddress',
-        addressLocality: 'Nantes', // Default or dynamic if available
+        addressLocality: 'Nantes',
         addressCountry: 'FR',
       },
     },

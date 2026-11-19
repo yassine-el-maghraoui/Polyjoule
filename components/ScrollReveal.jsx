@@ -2,17 +2,6 @@
 
 import { useEffect, useRef } from 'react';
 
-/**
- * ScrollReveal — wraps children and animates them into view
- * when they enter the viewport via IntersectionObserver.
- *
- * Props:
- *  - animation: 'fade-up' | 'fade-in' | 'fade-left' | 'fade-right' | 'scale-in' (default: 'fade-up')
- *  - delay: delay in ms before the animation triggers (default: 0)
- *  - threshold: 0‒1, how much of the element must be visible (default: 0.15)
- *  - className: extra className to merge
- *  - as: wrapper element tag (default: 'div')
- */
 export default function ScrollReveal({
   children,
   animation = 'fade-up',
@@ -31,7 +20,6 @@ export default function ScrollReveal({
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          // Apply delay then reveal
           setTimeout(() => {
             el.classList.add('sr-visible');
           }, delay);

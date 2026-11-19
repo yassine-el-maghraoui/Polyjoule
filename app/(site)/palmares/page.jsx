@@ -13,7 +13,6 @@ export default async function PalmaresPage() {
   const { isEnabled: preview } = await draftMode();
   let records = await getCollectionEntries('palmares', { includeDrafts: preview });
 
-  // Trier par année décroissante (le plus récent en haut)
   records.sort((a, b) => {
     const yearA = parseInt(a.data?.year || a.slug || '0', 10);
     const yearB = parseInt(b.data?.year || b.slug || '0', 10);
@@ -39,10 +38,8 @@ export default async function PalmaresPage() {
 
             return (
               <div className="row g-0 align-items-center justify-content-center mb-5 position-relative" key={record.id}>
-                {/* Ligne centrale (dot) */}
                 <div className="timeline-dot" />
 
-                {/* Colonne Gauche */}
                 <div className="col-md-5 d-flex justify-content-md-end justify-content-start">
                   {isLeft && (
                     <div className="timeline-card-content me-md-4">
@@ -59,10 +56,8 @@ export default async function PalmaresPage() {
                   )}
                 </div>
 
-                {/* Espace Central (Spacer) */}
                 <div className="col-md-2"></div>
 
-                {/* Colonne Droite */}
                 <div className="col-md-5 d-flex justify-content-md-start justify-content-start">
                   {!isLeft && (
                     <div className="timeline-card-content ms-md-4">

@@ -251,9 +251,6 @@ export default function ContentForm({ collection, definition, entry, revisions =
     handleFieldChange(name, result.path);
   };
 
-  // ... (rest of component) ...
-
-
   const openImageEditor = ({ name, sourceUrl, fileName, fileType, rawFile, revokeUrl, aspect }) => {
     setImageEditors((prev) => {
       const current = prev[name];
@@ -1206,7 +1203,6 @@ export default function ContentForm({ collection, definition, entry, revisions =
                   <div className="col-12" key={field.name}>
                     <label className="form-label fw-semibold">{field.label}</label>
 
-                    {/* List of existing images */}
                     {images.length > 0 && (
                       <div className="row g-3 mb-3">
                         {images.map((img, idx) => (
@@ -1230,7 +1226,6 @@ export default function ContentForm({ collection, definition, entry, revisions =
                       </div>
                     )}
 
-                    {/* Upload Input */}
                     <div className="d-flex flex-column gap-2">
                       <input
                         type="file"
@@ -1263,7 +1258,7 @@ export default function ContentForm({ collection, definition, entry, revisions =
                             setError("Erreur lors de l'upload");
                           } finally {
                             setIsSaving(false);
-                            event.target.value = ''; // Reset input
+                            event.target.value = '';
                           }
                         }}
                       />

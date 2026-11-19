@@ -4,7 +4,6 @@ import { getCollectionEntries } from '@/lib/content';
 export default async function sitemap() {
     const baseUrl = siteConfig.url;
 
-    // Static pages with specific priorities
     const routes = [
         { path: '', priority: 1.0, changeFrequency: 'weekly' },
         { path: '/calendrier', priority: 0.9, changeFrequency: 'daily' },
@@ -22,7 +21,6 @@ export default async function sitemap() {
         priority,
     }));
 
-    // Dynamic pages: Calendar Events
     const events = await getCollectionEntries('calendar');
     const eventRoutes = events.map((event) => ({
         url: `${baseUrl}/calendrier/${event.slug}`,
