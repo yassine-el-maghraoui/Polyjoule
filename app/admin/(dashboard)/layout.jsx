@@ -8,31 +8,37 @@ import { COLLECTION_DEFINITIONS } from '@/lib/collections';
 
 const navigationGroups = [
   {
-    label: 'Accueil',
+    label: 'Publier',
     items: [
+      { collection: 'events' },
       { collection: 'announcements' },
-      { collection: 'page-cagnotte' },
+      { collection: 'gallery-slides' },
+      { collection: 'palmares' },
+    ],
+  },
+  {
+    label: 'Accueil du site',
+    items: [
       { collection: 'home-hero' },
       { collection: 'quick-links' },
       { collection: 'partners' },
+      { collection: 'page-cagnotte' },
     ],
   },
   {
-    label: 'Pages clés',
+    label: 'Pages',
     items: [
-      { collection: 'palmares' },
-      { collection: 'timeline' },
-      { collection: 'vehicles' },
       { collection: 'page-presentation' },
+      { collection: 'vehicles' },
+      { collection: 'timeline' },
     ],
   },
   {
-    label: 'Calendrier & galerie',
+    label: 'Ancien calendrier',
     items: [
       { collection: 'events-upcoming' },
       { collection: 'events-past' },
       { collection: 'event-detail' },
-      { collection: 'gallery-slides' },
     ],
   },
 ];

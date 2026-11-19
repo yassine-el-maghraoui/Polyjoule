@@ -15,6 +15,32 @@ const payloadSchema = z.object({
   data: z.record(z.any()).optional(),
 });
 
+const SHARED_SLUG_COLLECTIONS = {
+  events: ['events', 'event-detail'],
+};
+
+async function findFreeSlug(collection, slug, data) {
+  const collections = SHARED_SLUG_COLLECTIONS[collection];
+  if (!collections) return slug;
+
+  const taken = new Set(
+    (
+      await prisma.contentEntry.findMany({
+        where: { collection: { in: collections }, slug: { startsWith: slug } },
+        select: { slug: true },
+      })
+    ).map((entry) => entry.slug)
+  );
+  if (!taken.has(slug)) return slug;
+
+  const year = /^\d{4}/.exec(data.startDate || '')?.[0];
+  const base = year && !slug.endsWith(year) ? `${slug}-${year}` : slug;
+  if (!taken.has(base)) return base;
+  for (let suffix = 2; ; suffix += 1) {
+    if (!taken.has(`${base}-${suffix}`)) return `${base}-${suffix}`;
+  }
+}
+
 export async function GET(request) {
   const user = await getCurrentUser();
   if (!user) {
@@ -62,9 +88,10 @@ export async function POST(request) {
     return NextResponse.json({ error: 'Données invalides', details: parsed.error.format() }, { status: 400 });
   }
 
-  const { collection, slug, title, position, status, data = {} } = parsed.data;
+  const { collection, title, position, status, data = {} } = parsed.data;
 
   try {
+    const slug = await findFreeSlug(collection, parsed.data.slug, data);
     let finalPosition = position;
 
     if (finalPosition === undefined || finalPosition === null || Number.isNaN(finalPosition)) {

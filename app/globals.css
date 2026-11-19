@@ -1694,3 +1694,21 @@ body {
   transform: scale(1.15);
   box-shadow: 0 15px 35px rgba(27, 111, 255, 0.25) !important;
   border-color: rgba(27, 111, 255, 0.4) !important;
+}
+
+.admin-quick-action {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.admin-quick-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1.25rem rgba(27, 111, 255, 0.15) !important;
+}
+
+.admin-feed-item:hover {
+  background: var(--bs-light);
+}
+
+.admin-feed-text {
+  min-width: 0;
+}

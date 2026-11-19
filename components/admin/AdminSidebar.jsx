@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 
 const COLLECTION_ICONS = {
+  events: 'ri-calendar-event-line',
   announcements: 'ri-megaphone-line',
   'page-cagnotte': 'ri-hand-coin-line',
   'home-hero': 'ri-image-line',
@@ -20,9 +21,9 @@ const COLLECTION_ICONS = {
   'gallery-slides': 'ri-image-2-line',
 };
 
-function NavLink({ href, label, icon }) {
+function NavLink({ href, label, icon, exact = false }) {
   const pathname = usePathname();
-  const isActive = pathname === href || pathname.startsWith(`${href}/`);
+  const isActive = pathname === href || (!exact && pathname.startsWith(`${href}/`));
 
   return (
     <li>
@@ -56,6 +57,10 @@ export default function AdminSidebar({ navigationGroups, collectionDefinitions, 
             <span>Voir le site</span>
           </a>
         </div>
+
+        <ul className="list-unstyled d-grid gap-2 mb-4">
+          <NavLink href="/admin" label="Fil d’activité" icon="ri-home-4-line" exact />
+        </ul>
 
         {navigationGroups.map((group) => (
           <div key={group.label} className="mb-4">

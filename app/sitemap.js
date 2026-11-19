@@ -1,5 +1,7 @@
 import { siteConfig } from '@/lib/site.config';
-import { getCollectionEntries } from '@/lib/content';
+import { getEventSlugs } from '@/lib/events';
+
+export const revalidate = 3600;
 
 export default async function sitemap() {
     const baseUrl = siteConfig.url;
@@ -21,7 +23,7 @@ export default async function sitemap() {
         priority,
     }));
 
-    const events = await getCollectionEntries('calendar');
+    const events = await getEventSlugs();
     const eventRoutes = events.map((event) => ({
         url: `${baseUrl}/calendrier/${event.slug}`,
         lastModified: new Date(event.updatedAt),

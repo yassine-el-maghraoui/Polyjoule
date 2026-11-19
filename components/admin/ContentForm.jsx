@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 
 import ImageCropper from '@/components/admin/ImageCropper';
 import RichTextEditor from '@/components/admin/RichTextEditor';
+import { compressImage } from '@/lib/compressImage';
 
 function normaliseTeamList(value) {
   if (Array.isArray(value)) return value;
@@ -73,6 +74,15 @@ function normaliseGalleryInput(value) {
     .split(',')
     .map((line) => line.trim())
     .filter(Boolean);
+}
+
+function formatIsoDate(value) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value || '')) return '';
+  return new Date(`${value}T12:00:00`).toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
 }
 
 function fileTypeFromPath(path) {
@@ -206,7 +216,7 @@ export default function ContentForm({ collection, definition, entry, revisions =
   const handleLocalUpload = async (fieldName, file) => {
     if (!file) return;
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('file', await compressImage(file));
     formData.append('altText', '');
 
     try {
@@ -234,7 +244,7 @@ export default function ContentForm({ collection, definition, entry, revisions =
   const handleUpload = async (name, file) => {
     if (!file) return;
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('file', await compressImage(file));
     formData.append('altText', '');
 
     const response = await fetch('/api/admin/upload', {
@@ -412,7 +422,8 @@ export default function ContentForm({ collection, definition, entry, revisions =
     values.imagePath || values.illustrationPath || values.logoPath || '';
   const previewAltText = values.imageAlt || values.altText || previewTitle || 'Aperçu';
   const previewSummary = values.summary || values.intro || values.description || values.lead || '';
-  const previewDate = values.date || values.year || values.category || '';
+  const previewDate =
+    formatIsoDate(values.startDate) || values.date || values.year || values.category || '';
   const previewCtaLabel = values.ctaLabel || 'En savoir plus';
   const previewBodyHtml = getPreviewHtmlValue(
     values.bodyHtml || '',
@@ -421,7 +432,7 @@ export default function ContentForm({ collection, definition, entry, revisions =
   const previewGallery = normaliseGalleryInput(values.galleryPaths || '');
 
   const renderPreview = () => {
-    if (collection === 'events-upcoming' || collection === 'events-past') {
+    if (collection === 'events' || collection === 'events-upcoming' || collection === 'events-past') {
       return (
         <div className="col-md-8 col-lg-6">
           <div className="card event-card h-100">
@@ -1240,9 +1251,10 @@ export default function ContentForm({ collection, definition, entry, revisions =
                           const newPaths = [];
 
                           try {
-                            for (const file of files) {
+                            for (const [index, file] of files.entries()) {
+                              setMessage(`Envoi des photos… ${index + 1}/${files.length}`);
                               const formData = new FormData();
-                              formData.append('file', file);
+                              formData.append('file', await compressImage(file));
                               const res = await fetch('/api/admin/upload', {
                                 method: 'POST',
                                 body: formData,
@@ -1253,7 +1265,9 @@ export default function ContentForm({ collection, definition, entry, revisions =
                               }
                             }
                             handleFieldChange(field.name, [...images, ...newPaths]);
-                            setMessage(`${newPaths.length} image(s) ajoutée(s).`);
+                            const failed = files.length - newPaths.length;
+                            setMessage(`${newPaths.length} photo(s) ajoutée(s). Pensez à enregistrer.`);
+                            if (failed) setError(`${failed} photo(s) n'ont pas pu être envoyées.`);
                           } catch (e) {
                             setError("Erreur lors de l'upload");
                           } finally {
@@ -1267,6 +1281,24 @@ export default function ContentForm({ collection, definition, entry, revisions =
                       </small>
                     </div>
 
+                    {field.helpText ? (
+                      <small className="text-secondary d-block mt-1">{field.helpText}</small>
+                    ) : null}
+                  </div>
+                );
+              }
+
+              if (field.type === 'date') {
+                return (
+                  <div className="col-md-6" key={field.name}>
+                    <label className="form-label fw-semibold">{field.label}</label>
+                    <input
+                      type="date"
+                      className="form-control"
+                      value={value}
+                      onChange={(event) => handleFieldChange(field.name, event.target.value)}
+                      required={field.required}
+                    />
                     {field.helpText ? (
                       <small className="text-secondary d-block mt-1">{field.helpText}</small>
                     ) : null}

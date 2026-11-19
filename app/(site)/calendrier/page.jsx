@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { draftMode } from 'next/headers';
-import { getCollectionEntries } from '@/lib/content';
+import { getCalendar } from '@/lib/events';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,28 +11,29 @@ export const metadata = {
 };
 
 function EventCard({ event, variant = 'primary' }) {
-  const data = event.data ?? {};
   const buttonClass = variant === 'primary' ? 'btn btn-primary' : 'btn btn-outline-primary';
 
   return (
     <div className="col-sm-6 col-lg-4">
       <div className="card event-card h-100">
-        {data.imagePath ? (
+        {event.imagePath ? (
           <Image
-            src={data.imagePath}
-            alt={data.title ?? event.title}
+            src={event.imagePath}
+            alt={event.title}
             width={480}
             height={320}
             className="card-img-top"
           />
         ) : null}
         <div className="card-body d-flex flex-column">
-          <span className="text-uppercase text-secondary fw-semibold small mb-2">{data.date}</span>
-          <h3 className="h5 fw-bold">{data.title ?? event.title}</h3>
-          <p className="text-secondary">{data.summary}</p>
-          {data.ctaHref ? (
-            <Link className={`${buttonClass} mt-auto`} href={data.ctaHref}>
-              {data.ctaLabel ?? 'Explorer'}
+          <span className="text-uppercase text-secondary fw-semibold small mb-2">
+            {[event.date, event.location].filter(Boolean).join(' · ')}
+          </span>
+          <h3 className="h5 fw-bold">{event.title}</h3>
+          <p className="text-secondary">{event.summary}</p>
+          {event.href ? (
+            <Link className={`${buttonClass} mt-auto`} href={event.href}>
+              {event.ctaLabel}
             </Link>
           ) : null}
         </div>
@@ -43,8 +44,7 @@ function EventCard({ event, variant = 'primary' }) {
 
 export default async function CalendrierPage() {
   const { isEnabled: preview } = await draftMode();
-  const upcoming = await getCollectionEntries('events-upcoming', { includeDrafts: preview });
-  const past = await getCollectionEntries('events-past', { includeDrafts: preview });
+  const { upcoming, past } = await getCalendar({ includeDrafts: preview });
 
   return (
     <section className="py-5">
@@ -59,11 +59,15 @@ export default async function CalendrierPage() {
 
         <div className="mb-5">
           <h2 className="h4 fw-bold text-primary mb-4">Événements à venir</h2>
-          <div className="row g-4">
-            {upcoming.map((event) => (
-              <EventCard key={event.id} event={event} variant="primary" />
-            ))}
-          </div>
+          {upcoming.length ? (
+            <div className="row g-4">
+              {upcoming.map((event) => (
+                <EventCard key={event.id} event={event} variant="primary" />
+              ))}
+            </div>
+          ) : (
+            <p className="text-secondary">Les prochaines dates arrivent bientôt.</p>
+          )}
         </div>
 
         <div>
